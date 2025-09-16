@@ -196,3 +196,157 @@ All colors MUST be HSL for consistency and theming support.
     transform: scale(1);
   }
 }
+
+/* Responsive Utilities */
+@layer utilities {
+  /* Touch-friendly sizing for mobile */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+
+  /* Responsive text sizing */
+  .text-responsive-xs {
+    @apply text-xs sm:text-sm;
+  }
+  
+  .text-responsive-sm {
+    @apply text-sm sm:text-base;
+  }
+  
+  .text-responsive-base {
+    @apply text-base sm:text-lg;
+  }
+  
+  .text-responsive-lg {
+    @apply text-lg sm:text-xl lg:text-2xl;
+  }
+  
+  .text-responsive-xl {
+    @apply text-xl sm:text-2xl lg:text-3xl;
+  }
+
+  /* Responsive spacing */
+  .space-responsive {
+    @apply space-y-4 sm:space-y-6 lg:space-y-8;
+  }
+  
+  .gap-responsive {
+    @apply gap-4 sm:gap-6 lg:gap-8;
+  }
+
+  /* Responsive padding */
+  .p-responsive {
+    @apply p-4 sm:p-6 lg:p-8;
+  }
+  
+  .px-responsive {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+  
+  .py-responsive {
+    @apply py-16 sm:py-20 lg:py-24;
+  }
+
+  /* Hide/show utilities for different screen sizes */
+  .mobile-only {
+    @apply block sm:hidden;
+  }
+  
+  .tablet-up {
+    @apply hidden sm:block;
+  }
+  
+  .desktop-only {
+    @apply hidden lg:block;
+  }
+
+  /* Responsive container */
+  .container-responsive {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Safe area for mobile devices */
+  .safe-area-inset {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Aspect ratio utilities for responsive media */
+  .aspect-video-responsive {
+    @apply aspect-video rounded-lg overflow-hidden;
+  }
+  
+  .aspect-square-responsive {
+    @apply aspect-square rounded-lg overflow-hidden;
+  }
+
+  /* Foldable device optimizations */
+  @media (min-width: 344px) and (max-width: 884px) and (min-height: 600px) {
+    .hero-section-foldable {
+      padding-top: 4rem !important; /* Reduced from 6rem for better mobile experience */
+      padding-bottom: 2rem;
+    }
+    
+    .hero-badge-foldable {
+      margin-bottom: 2.5rem !important;
+    }
+    
+    .hero-logo-foldable {
+      margin-bottom: 3rem !important;
+    }
+    
+    .hero-subtitle-foldable {
+      margin-top: 1.5rem !important;
+      margin-bottom: 2.5rem !important;
+    }
+    
+    .hero-buttons-foldable {
+      margin-bottom: 2rem !important;
+    }
+    
+    .hero-stats-foldable {
+      margin-top: 3rem !important;
+      padding-top: 2rem !important;
+    }
+  }
+
+  /* Galaxy Z Fold specific optimizations */
+  @media (min-width: 344px) and (max-width: 884px) and (orientation: portrait) {
+    .hero-content-fold {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 5rem; /* Extra padding for navigation */
+    }
+  }
+
+  /* Enhanced section spacing for mobile/tablet transitions */
+  @media (min-width: 640px) and (max-width: 1024px) {
+    .hero-section-foldable {
+      padding-top: 5rem !important;
+    }
+  }
+
+  /* Mobile specific optimizations (< 640px) */
+  @media (max-width: 639px) {
+    .hero-section-foldable {
+      padding-top: 2.5rem !important; /* Reduced gap for mobile */
+    }
+  }
+
+  /* Laptop specific optimizations (1024px - 1440px) */
+  @media (min-width: 1024px) and (max-width: 1440px) {
+    .hero-stats-foldable {
+      margin-top: 3rem !important;
+      padding-top: 2rem !important;
+    }
+    
+    /* Increase spacing between hero and about sections on laptops */
+    #about {
+      padding-top: 8rem !important;
+    }
+  }
+}
