@@ -39,13 +39,40 @@ const HeroSection = () => {
             </span>
           </div>
 
+
+          
+        {/* Logo and Title */}
+        <div className="mb-8">
+          <div className="flex items-center justify-center mb-4">
+            <div className="text-6xl font-bold text-white tracking-wider">
+              KESS <span className="text-orange-400">INSPIRE</span>
+            </div>
+            <div className="ml-4 text-orange-400 text-4xl font-bold">2025</div>
+            <div className="ml-4">
+              <div className="w-12 h-12 bg-orange-400 rounded-full flex items-center justify-center">
+                <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
+                  <div className="w-4 h-4 bg-orange-400 rounded-full" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="text-white text-lg tracking-widest font-light">KEGALLE ENGINEERING STUDENTS' SOCIETY</div>
+        </div>
+
+     
+
+
+
+
+
+
           {/* Main heading */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary-foreground mb-6">
+          {/* <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary-foreground mb-6">
             KESS
             <span className="block bg-gradient-to-r from-accent to-accent/80 bg-clip-text text-transparent">
               INSPIRE
             </span>
-          </h1>
+          </h1> */}
 
           {/* Subtitle */}
           <p className="text-xl sm:text-2xl text-primary-foreground/90 mb-8 max-w-2xl mx-auto leading-relaxed">
