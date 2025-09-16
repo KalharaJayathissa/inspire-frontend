@@ -37,7 +37,12 @@ const Footer = () => {
     if (href.startsWith('#')) {
       const element = document.querySelector(href);
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+        const navHeight = window.innerWidth >= 768 ? 80 : 64;
+        const elementPosition = (element as HTMLElement).offsetTop - navHeight;
+        window.scrollTo({
+          top: elementPosition,
+          behavior: "smooth"
+        });
       }
     } else {
       window.open(href, '_blank');
@@ -46,47 +51,47 @@ const Footer = () => {
 
   return (
     <footer className="bg-gradient-to-br from-primary/5 via-background to-accent/5 border-t border-border">
-      <div className="container mx-auto px-4 sm:px-6">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
-        <div className="py-16">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="py-12 sm:py-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {/* Company Info */}
-            <div className="lg:col-span-1">
-              <div className="mb-6">
-                <h3 className="text-2xl font-bold bg-gradient-hero bg-clip-text text-transparent mb-4">
+            <div className="lg:col-span-1 text-center sm:text-left">
+              <div className="mb-4 sm:mb-6">
+                <h3 className="text-xl sm:text-2xl font-bold bg-gradient-hero bg-clip-text text-transparent mb-3 sm:mb-4">
                   KESS INSPIRE
                 </h3>
-                <p className="text-muted-foreground leading-relaxed">
+                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
                   Kegalle Engineering Students' Society - Empowering A/L Physical Stream students through academic competition and excellence in Kegalle District.
                 </p>
               </div>
               
               {/* Contact Info */}
-              <div className="space-y-3">
-                <div className="flex items-center space-x-3 text-sm text-muted-foreground">
-                  <Mail className="h-4 w-4 text-primary" />
+              <div className="space-y-2 sm:space-y-3">
+                <div className="flex items-center justify-center sm:justify-start space-x-3 text-xs sm:text-sm text-muted-foreground">
+                  <Mail className="h-3 w-3 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
                   <span>inspire@kess.lk</span>
                 </div>
-                <div className="flex items-center space-x-3 text-sm text-muted-foreground">
-                  <Phone className="h-4 w-4 text-primary" />
+                <div className="flex items-center justify-center sm:justify-start space-x-3 text-xs sm:text-sm text-muted-foreground">
+                  <Phone className="h-3 w-3 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
                   <span>+94 77 123 4567</span>
                 </div>
-                <div className="flex items-center space-x-3 text-sm text-muted-foreground">
-                  <MapPin className="h-4 w-4 text-primary" />
+                <div className="flex items-center justify-center sm:justify-start space-x-3 text-xs sm:text-sm text-muted-foreground">
+                  <MapPin className="h-3 w-3 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
                   <span>Kegalle District, Sri Lanka</span>
                 </div>
               </div>
             </div>
 
             {/* Quick Links */}
-            <div>
-              <h4 className="font-semibold text-foreground mb-6">Quick Links</h4>
-              <ul className="space-y-3">
+            <div className="text-center sm:text-left">
+              <h4 className="font-semibold text-foreground mb-4 sm:mb-6 text-base sm:text-lg">Quick Links</h4>
+              <ul className="space-y-2 sm:space-y-3">
                 {quickLinks.map((link) => (
                   <li key={link.label}>
                     <button
                       onClick={() => scrollToSection(link.href)}
-                      className="text-muted-foreground hover:text-primary transition-colors duration-200 text-sm"
+                      className="text-muted-foreground hover:text-primary transition-colors duration-200 text-xs sm:text-sm"
                     >
                       {link.label}
                     </button>
@@ -96,14 +101,14 @@ const Footer = () => {
             </div>
 
             {/* Support */}
-            <div>
-              <h4 className="font-semibold text-foreground mb-6">Support</h4>
-              <ul className="space-y-3">
+            <div className="text-center sm:text-left">
+              <h4 className="font-semibold text-foreground mb-4 sm:mb-6 text-base sm:text-lg">Support</h4>
+              <ul className="space-y-2 sm:space-y-3">
                 {supportLinks.map((link) => (
                   <li key={link.label}>
                     <button
                       onClick={() => scrollToSection(link.href)}
-                      className="text-muted-foreground hover:text-primary transition-colors duration-200 text-sm"
+                      className="text-muted-foreground hover:text-primary transition-colors duration-200 text-xs sm:text-sm"
                     >
                       {link.label}
                     </button>
@@ -113,21 +118,21 @@ const Footer = () => {
             </div>
 
             {/* Newsletter Signup */}
-            <div>
-              <h4 className="font-semibold text-foreground mb-6">Stay Updated</h4>
-              <p className="text-muted-foreground text-sm mb-4">
+            <div className="text-center sm:text-left">
+              <h4 className="font-semibold text-foreground mb-4 sm:mb-6 text-base sm:text-lg">Stay Updated</h4>
+              <p className="text-muted-foreground text-xs sm:text-sm mb-3 sm:mb-4">
                 Get the latest resources, tips, and opportunities delivered to your inbox.
               </p>
-              <div className="space-y-3">
-                <div className="flex space-x-2">
+              <div className="space-y-2 sm:space-y-3">
+                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                   <input
                     type="email"
                     placeholder="Enter your email"
-                    className="flex-1 px-3 py-2 text-sm bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    className="flex-1 px-3 py-2 text-xs sm:text-sm bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50"
                   />
                   <Button 
                     size="sm"
-                    className="bg-gradient-hero text-primary-foreground hover:shadow-soft transition-all duration-300"
+                    className="bg-gradient-hero text-primary-foreground hover:shadow-soft transition-all duration-300 text-xs sm:text-sm h-8 sm:h-9 w-full sm:w-auto"
                   >
                     Subscribe
                   </Button>
@@ -141,46 +146,49 @@ const Footer = () => {
         </div>
 
         {/* Bottom Footer */}
-        <div className="border-t border-border py-8">
-          <div className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
+        <div className="border-t border-border py-6 sm:py-8">
+          <div className="flex flex-col items-center justify-center space-y-4 sm:space-y-6 text-center">
             {/* Copyright */}
-            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-              <span>© {currentYear} KESS Inspire. Made with</span>
-              <Heart className="h-4 w-4 text-red-500 fill-current" />
-              <span>for student success.</span>
+            <div className="flex flex-col sm:flex-row items-center space-y-1 sm:space-y-0 sm:space-x-2 text-xs sm:text-sm text-muted-foreground">
+              <span>© {currentYear} KESS Inspire.</span>
+              <div className="flex items-center space-x-1">
+                <span>Made with</span>
+                <Heart className="h-3 w-3 sm:h-4 sm:w-4 text-red-500 fill-current" />
+                <span>for student success.</span>
+              </div>
             </div>
 
             {/* Social Links */}
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-muted-foreground">Follow us:</span>
+            <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
+              <span className="text-xs sm:text-sm text-muted-foreground">Follow us:</span>
               <div className="flex space-x-2">
                 {socialLinks.map((social) => (
                   <Button
                     key={social.label}
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 hover:bg-primary/10 hover:text-primary transition-colors duration-200"
+                    className="h-7 w-7 sm:h-8 sm:w-8 hover:bg-primary/10 hover:text-primary transition-colors duration-200"
                     onClick={() => scrollToSection(social.href)}
                     aria-label={social.label}
                   >
-                    {social.icon}
+                    <div className="scale-75 sm:scale-100">{social.icon}</div>
                   </Button>
                 ))}
               </div>
             </div>
-          </div>
 
-          {/* Legal Links */}
-          <div className="flex flex-wrap justify-center gap-6 mt-6 pt-6 border-t border-border/50">
-            {legalLinks.map((link, index) => (
-              <button
-                key={link.label}
-                onClick={() => scrollToSection(link.href)}
-                className="text-xs text-muted-foreground hover:text-primary transition-colors duration-200"
-              >
-                {link.label}
-              </button>
-            ))}
+            {/* Legal Links */}
+            <div className="flex flex-wrap justify-center gap-3 sm:gap-6 pt-3 sm:pt-6 border-t border-border/50">
+              {legalLinks.map((link, index) => (
+                <button
+                  key={link.label}
+                  onClick={() => scrollToSection(link.href)}
+                  className="text-xs text-muted-foreground hover:text-primary transition-colors duration-200"
+                >
+                  {link.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

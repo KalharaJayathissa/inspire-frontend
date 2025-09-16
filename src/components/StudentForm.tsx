@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "framer-motion";
+import { motion, easeOut } from "framer-motion";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,7 +25,7 @@ import { CheckCircle, Users, BookOpen, Target } from "lucide-react";
 // Motion variants
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: easeOut } },
 };
 
 const stagger = {
@@ -111,94 +111,94 @@ const StudentForm = () => {
   return (
     <motion.section
       id="student-form"
-      className="py-20 bg-muted/30"
+      className="py-16 sm:py-20 lg:py-24 bg-muted/30"
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, amount: 0.2 }}
       variants={stagger}
     >
-      <div className="container mx-auto px-4 sm:px-6">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          className="text-center mb-16"
+          className="text-center mb-12 sm:mb-16"
           variants={fadeUp}
         >
-          <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4">
             Register for KESS Inspire
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
             Join 500+ A/L Physical Stream students in Kegalle District for this
             3-day competitive examination covering Mathematics, Physics, and
             Chemistry.
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 max-w-6xl mx-auto">
           {/* Benefits */}
           <motion.div
-            className="space-y-8"
+            className="space-y-6 sm:space-y-8 order-2 lg:order-1"
             variants={stagger}
           >
             {[
               {
-                icon: <Users className="h-6 w-6 text-primary" />,
+                icon: <Users className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />,
                 title: "Personalized Mentorship",
                 desc: "Get matched with experienced mentors in your field of study.",
               },
               {
-                icon: <BookOpen className="h-6 w-6 text-primary" />,
+                icon: <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />,
                 title: "Exclusive Resources",
                 desc: "Access study materials, career guides, and academic tools.",
               },
               {
-                icon: <Target className="h-6 w-6 text-primary" />,
+                icon: <Target className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />,
                 title: "Goal Achievement",
                 desc: "Track your progress and celebrate your academic milestones.",
               },
               {
-                icon: <CheckCircle className="h-6 w-6 text-success" />,
+                icon: <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-success" />,
                 title: "100% Free",
                 desc: "All our services are completely free for students.",
               },
             ].map((benefit, idx) => (
               <motion.div
                 key={idx}
-                className="flex items-start space-x-4"
+                className="flex items-start space-x-3 sm:space-x-4"
                 variants={fadeUp}
                 whileHover={{ scale: 1.02 }}
               >
-                <div className="p-2 rounded-lg bg-primary/10">
+                <div className="p-2 rounded-lg bg-primary/10 flex-shrink-0">
                   {benefit.icon}
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-foreground mb-2">
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-base sm:text-lg font-semibold text-foreground mb-1 sm:mb-2">
                     {benefit.title}
                   </h3>
-                  <p className="text-muted-foreground">{benefit.desc}</p>
+                  <p className="text-sm sm:text-base text-muted-foreground">{benefit.desc}</p>
                 </div>
               </motion.div>
             ))}
           </motion.div>
 
           {/* Form */}
-          <motion.div variants={fadeUp}>
+          <motion.div variants={fadeUp} className="order-1 lg:order-2">
             <Card className="card-gradient border-0 shadow-soft">
-              <CardHeader>
-                <CardTitle className="text-2xl font-bold text-center">
+              <CardHeader className="pb-4 sm:pb-6">
+                <CardTitle className="text-xl sm:text-2xl font-bold text-center">
                   Competition Registration
                 </CardTitle>
-                <CardDescription className="text-center">
+                <CardDescription className="text-center text-sm sm:text-base">
                   Register for the KESS Inspire Academic Competition
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6">
+              <CardContent className="pt-0">
+                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                   {/* Inputs */}
                   <motion.div
                     className="grid sm:grid-cols-2 gap-4"
                     variants={stagger}
                   >
                     <motion.div className="space-y-2" variants={fadeUp}>
-                      <Label htmlFor="name">Full Name *</Label>
+                      <Label htmlFor="name" className="text-sm sm:text-base">Full Name *</Label>
                       <Input
                         id="name"
                         type="text"
@@ -207,11 +207,12 @@ const StudentForm = () => {
                           handleInputChange("name", e.target.value)
                         }
                         placeholder="Enter your full name"
+                        className="h-10 sm:h-11"
                         required
                       />
                     </motion.div>
                     <motion.div className="space-y-2" variants={fadeUp}>
-                      <Label htmlFor="email">Email Address *</Label>
+                      <Label htmlFor="email" className="text-sm sm:text-base">Email Address *</Label>
                       <Input
                         id="email"
                         type="email"
@@ -220,13 +221,14 @@ const StudentForm = () => {
                           handleInputChange("email", e.target.value)
                         }
                         placeholder="your.email@example.com"
+                        className="h-10 sm:h-11"
                         required
                       />
                     </motion.div>
                   </motion.div>
 
                   <motion.div className="space-y-2" variants={fadeUp}>
-                    <Label htmlFor="phone">Phone Number</Label>
+                    <Label htmlFor="phone" className="text-sm sm:text-base">Phone Number</Label>
                     <Input
                       id="phone"
                       type="tel"
@@ -235,6 +237,7 @@ const StudentForm = () => {
                         handleInputChange("phone", e.target.value)
                       }
                       placeholder="+1 (555) 123-4567"
+                      className="h-10 sm:h-11"
                     />
                   </motion.div>
 
@@ -243,13 +246,13 @@ const StudentForm = () => {
                     variants={stagger}
                   >
                     <motion.div className="space-y-2" variants={fadeUp}>
-                      <Label htmlFor="program">Program of Study *</Label>
+                      <Label htmlFor="program" className="text-sm sm:text-base">Program of Study *</Label>
                       <Select
                         onValueChange={(value) =>
                           handleInputChange("program", value)
                         }
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="h-10 sm:h-11">
                           <SelectValue placeholder="Select your program" />
                         </SelectTrigger>
                         <SelectContent>
@@ -262,13 +265,13 @@ const StudentForm = () => {
                       </Select>
                     </motion.div>
                     <motion.div className="space-y-2" variants={fadeUp}>
-                      <Label htmlFor="year">Academic Year</Label>
+                      <Label htmlFor="year" className="text-sm sm:text-base">Academic Year</Label>
                       <Select
                         onValueChange={(value) =>
                           handleInputChange("year", value)
                         }
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="h-10 sm:h-11">
                           <SelectValue placeholder="Select your year" />
                         </SelectTrigger>
                         <SelectContent>
@@ -283,7 +286,7 @@ const StudentForm = () => {
                   </motion.div>
 
                   <motion.div className="space-y-2" variants={fadeUp}>
-                    <Label htmlFor="goals">Academic Goals *</Label>
+                    <Label htmlFor="goals" className="text-sm sm:text-base">Academic Goals *</Label>
                     <Textarea
                       id="goals"
                       value={formData.goals}
@@ -291,13 +294,13 @@ const StudentForm = () => {
                         handleInputChange("goals", e.target.value)
                       }
                       placeholder="What are your academic and career goals?"
-                      className="min-h-[100px] resize-none"
+                      className="min-h-[80px] sm:min-h-[100px] resize-none"
                       required
                     />
                   </motion.div>
 
                   <motion.div className="space-y-2" variants={fadeUp}>
-                    <Label htmlFor="challenges">Current Challenges</Label>
+                    <Label htmlFor="challenges" className="text-sm sm:text-base">Current Challenges</Label>
                     <Textarea
                       id="challenges"
                       value={formData.challenges}
@@ -305,7 +308,7 @@ const StudentForm = () => {
                         handleInputChange("challenges", e.target.value)
                       }
                       placeholder="What challenges are you currently facing?"
-                      className="min-h-[80px] resize-none"
+                      className="min-h-[60px] sm:min-h-[80px] resize-none"
                     />
                   </motion.div>
 
@@ -313,9 +316,7 @@ const StudentForm = () => {
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.97 }}
-                      className="w-full bg-gradient-hero text-primary-foreground hover:shadow-glow transition-all duration-300 py-6 text-lg font-semibold"
+                      className="w-full bg-gradient-hero text-primary-foreground hover:shadow-glow transition-all duration-300 py-4 sm:py-6 text-base sm:text-lg font-semibold"
                     >
                       {isSubmitting ? "Submitting..." : "Submit Application"}
                     </Button>
