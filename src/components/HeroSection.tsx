@@ -1,9 +1,12 @@
 "use client";
-import { ArrowRight, Star } from "lucide-react";
+import { ArrowRight, Star, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Counter from "@/components/ui/counter-animation";
+import { useNavigate } from "react-router-dom";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+  
   const scrollToForm = () => {
     const element = document.querySelector("#student-form");
     if (element) {
@@ -14,6 +17,10 @@ const HeroSection = () => {
         behavior: "smooth"
       });
     }
+  };
+
+  const goToComingSoon = () => {
+    navigate("/coming-soon");
   };
 
   return (
@@ -108,6 +115,16 @@ const HeroSection = () => {
               className="border-primary-foreground/30 text-black hover:text-white hover:bg-primary-foreground/10 hover:border-primary-foreground/50 transition-all duration-300 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg w-full sm:w-auto"
             >
               Explore Resources
+            </Button>
+
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={goToComingSoon}
+              className="border-primary/50 text-primary hover:text-white hover:bg-primary/20 hover:border-primary transition-all duration-300 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg w-full sm:w-auto group"
+            >
+              <Eye className="mr-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:scale-110 transition-transform" />
+              Preview Coming Soon
             </Button>
           </div>
 

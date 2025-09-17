@@ -2,60 +2,59 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Kess Inspire Design System - Modern Educational Platform
-All colors MUST be HSL for consistency and theming support.
-*/
+/* Luxury Black & Gold Design System */
 
 @layer base {
   :root {
-    /* Base colors - Light, clean foundation */
-    --background: 240 20% 99%;
-    --foreground: 240 15% 15%;
+    /* Core Colors - Black & Gold Theme with White Text */
+    --background: 0 0% 6%;
+    --foreground: 0 0% 95%;
 
-    /* Card components - Soft, elevated */
-    --card: 0 0% 100%;
-    --card-foreground: 240 15% 15%;
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 95%;
 
-    /* Popover elements */
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 15% 15%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 95%;
 
-    /* Primary brand - KESS Teal Theme */
-    --primary: 180 65% 45%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 180 70% 60%;
+    --primary: 45 100% 50%;
+    --primary-foreground: 0 0% 8%;
 
-    /* Secondary - Soft, professional */
-    --secondary: 240 20% 96%;
-    --secondary-foreground: 240 15% 25%;
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 95%;
 
-    /* Muted elements */
-    --muted: 240 15% 95%;
-    --muted-foreground: 240 10% 50%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 75%;
 
-    /* Accent - Complementary orange */
-    --accent: 20 85% 60%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 45 100% 60%;
+    --accent-foreground: 0 0% 8%;
 
-    /* Status colors */
-    --destructive: 0 75% 60%;
-    --destructive-foreground: 0 0% 100%;
-    --success: 120 60% 50%;
-    --success-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
 
-    /* Form elements */
-    --border: 240 15% 90%;
-    --input: 240 15% 97%;
-    --ring: 245 70% 55%;
+    --border: 45 30% 25%;
+    --input: 0 0% 12%;
+    --ring: 45 100% 50%;
+
+    /* Glass Effect Variables */
+    --glass-bg: 0 0% 8% / 0.1;
+    --glass-border: 45 100% 50% / 0.2;
+    --glass-shadow: 45 100% 50% / 0.3;
+
+    /* Gradients */
+    --gradient-gold: linear-gradient(135deg, hsl(45 100% 50%), hsl(38 100% 45%));
+    --gradient-dark: linear-gradient(180deg, hsl(0 0% 8%), hsl(0 0% 4%));
+    --gradient-glass: linear-gradient(135deg, hsl(0 0% 10% / 0.1), hsl(45 100% 50% / 0.05));
+
+    /* Shadows */
+    --shadow-glow: 0 0 50px hsl(45 100% 50% / 0.3);
+    --shadow-luxury: 0 25px 50px -12px hsl(0 0% 0% / 0.8);
+    --shadow-glass: 0 8px 32px hsl(0 0% 0% / 0.4);
+
+    /* Animation Variables */
+    --transition-luxury: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     --radius: 0.75rem;
-
-    /* Design system enhancements */
-    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-glow)) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(240 15% 98%) 100%);
-    --shadow-soft: 0 4px 20px -4px hsl(var(--primary) / 0.15);
-    --shadow-card: 0 2px 15px -3px hsl(240 15% 15% / 0.08);
-    --shadow-glow: 0 0 30px hsl(var(--primary-glow) / 0.3);
 
     --sidebar-background: 0 0% 98%;
 
@@ -111,6 +110,47 @@ All colors MUST be HSL for consistency and theming support.
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+
+  /* Custom Animation Classes */
+  @keyframes glow-pulse {
+    0%, 100% { box-shadow: var(--shadow-glow); }
+    50% { box-shadow: 0 0 80px hsl(45 100% 50% / 0.5); }
+  }
+
+  @keyframes scroll-left {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-20%, 0, 0); }
+  }
+
+  @keyframes circular-flow {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-16.666%, 0, 0); }
+  }
+
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes fade-in-up {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes glass-shine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
 }
 
 @layer base {
@@ -119,234 +159,38 @@ All colors MUST be HSL for consistency and theming support.
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
-  }
-
-  /* Smooth scrolling */
-  html {
-    scroll-behavior: smooth;
-  }
-}
-
-@layer components {
-  /* Hero section styling */
-  .hero-gradient {
-    background: var(--gradient-hero);
-  }
-
-  .card-gradient {
-    background: var(--gradient-card);
-    box-shadow: var(--shadow-card);
-  }
-
-  /* Animation utilities */
-  .animate-fade-in {
-    animation: fadeIn 0.6s ease-out forwards;
-  }
-
-  .animate-slide-up {
-    animation: slideUp 0.8s ease-out forwards;
-  }
-
-  .animate-scale-in {
-    animation: scaleIn 0.4s ease-out forwards;
+    @apply bg-background text-foreground;
   }
 }
 
 @layer utilities {
-  .shadow-soft {
-    box-shadow: var(--shadow-soft);
+  .animate-glow-pulse {
+    animation: glow-pulse 2s ease-in-out infinite;
   }
 
-  .shadow-glow {
-    box-shadow: var(--shadow-glow);
-  }
-}
-
-/* Animation keyframes */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Responsive Utilities */
-@layer utilities {
-  /* Touch-friendly sizing for mobile */
-  .touch-target {
-    @apply min-h-[44px] min-w-[44px];
+  .animate-scroll-left {
+    animation: scroll-left 30s linear infinite;
   }
 
-  /* Responsive text sizing */
-  .text-responsive-xs {
-    @apply text-xs sm:text-sm;
-  }
-  
-  .text-responsive-sm {
-    @apply text-sm sm:text-base;
-  }
-  
-  .text-responsive-base {
-    @apply text-base sm:text-lg;
-  }
-  
-  .text-responsive-lg {
-    @apply text-lg sm:text-xl lg:text-2xl;
-  }
-  
-  .text-responsive-xl {
-    @apply text-xl sm:text-2xl lg:text-3xl;
+  .animate-scroll-left-infinite {
+    animation: scroll-left 5s linear infinite;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
   }
 
-  /* Responsive spacing */
-  .space-responsive {
-    @apply space-y-4 sm:space-y-6 lg:space-y-8;
-  }
-  
-  .gap-responsive {
-    @apply gap-4 sm:gap-6 lg:gap-8;
+  .animate-circular-flow {
+    animation: circular-flow 3s linear infinite;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
   }
 
-  /* Responsive padding */
-  .p-responsive {
-    @apply p-4 sm:p-6 lg:p-8;
-  }
-  
-  .px-responsive {
-    @apply px-4 sm:px-6 lg:px-8;
-  }
-  
-  .py-responsive {
-    @apply py-16 sm:py-20 lg:py-24;
+  .animate-scroll {
+    animation: scroll 25s linear infinite;
   }
 
-  /* Hide/show utilities for different screen sizes */
-  .mobile-only {
-    @apply block sm:hidden;
-  }
-  
-  .tablet-up {
-    @apply hidden sm:block;
-  }
-  
-  .desktop-only {
-    @apply hidden lg:block;
-  }
-
-  /* Responsive container */
-  .container-responsive {
-    @apply container mx-auto px-4 sm:px-6 lg:px-8;
-  }
-
-  /* Safe area for mobile devices */
-  .safe-area-inset {
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  /* Aspect ratio utilities for responsive media */
-  .aspect-video-responsive {
-    @apply aspect-video rounded-lg overflow-hidden;
-  }
-  
-  .aspect-square-responsive {
-    @apply aspect-square rounded-lg overflow-hidden;
-  }
-
-  /* Foldable device optimizations */
-  @media (min-width: 344px) and (max-width: 884px) and (min-height: 600px) {
-    .hero-section-foldable {
-      padding-top: 4rem !important; /* Reduced from 6rem for better mobile experience */
-      padding-bottom: 2rem;
-    }
-    
-    .hero-badge-foldable {
-      margin-bottom: 2.5rem !important;
-    }
-    
-    .hero-logo-foldable {
-      margin-bottom: 3rem !important;
-    }
-    
-    .hero-subtitle-foldable {
-      margin-top: 1.5rem !important;
-      margin-bottom: 2.5rem !important;
-    }
-    
-    .hero-buttons-foldable {
-      margin-bottom: 2rem !important;
-    }
-    
-    .hero-stats-foldable {
-      margin-top: 3rem !important;
-      padding-top: 2rem !important;
-    }
-  }
-
-  /* Galaxy Z Fold specific optimizations */
-  @media (min-width: 344px) and (max-width: 884px) and (orientation: portrait) {
-    .hero-content-fold {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding-top: 5rem; /* Extra padding for navigation */
-    }
-  }
-
-  /* Enhanced section spacing for mobile/tablet transitions */
-  @media (min-width: 640px) and (max-width: 1024px) {
-    .hero-section-foldable {
-      padding-top: 5rem !important;
-    }
-  }
-
-  /* Mobile specific optimizations (< 640px) */
-  @media (max-width: 639px) {
-    .hero-section-foldable {
-      padding-top: 2.5rem !important; /* Reduced gap for mobile */
-    }
-  }
-
-  /* Laptop specific optimizations (1024px - 1440px) */
-  @media (min-width: 1024px) and (max-width: 1440px) {
-    .hero-stats-foldable {
-      margin-top: 3rem !important;
-      padding-top: 2rem !important;
-    }
-    
-    /* Increase spacing between hero and about sections on laptops */
-    #about {
-      padding-top: 8rem !important;
-    }
+  .animate-fade-in-up {
+    animation: fade-in-up 0.8s ease-out forwards;
   }
 }
