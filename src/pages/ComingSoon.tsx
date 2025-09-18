@@ -120,7 +120,7 @@ const ComingSoon = () => {
                 }}
               />
               <h1 className="text-lg sm:text-xl md:text-3xl font-bold text-white tracking-wide">
-                <span className="text-primary">K</span>ess Inspire
+                <span className="text-primary">K</span>ESS Inspire
               </h1>
             </div>
           </div>
@@ -185,7 +185,7 @@ const ComingSoon = () => {
           }`}
         >
           <p className="text-sm sm:text-base text-white/50 font-light">
-            © 2025 Kess Inspire. All rights reserved.
+            © 2025 KESS Inspire. All rights reserved.
           </p>
         </footer>
       </div>
