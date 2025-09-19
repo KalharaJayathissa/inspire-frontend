@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CountdownTimer from "@/components/CountdownTimer";
 import { useNavigate } from "react-router-dom";
+import Countdowntimer2 from "./Countdowntimer2";
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -47,42 +48,53 @@ const HeroSection = () => {
           <div className="space-y-6">
             <div className="space-y-4">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 tracking-tight leading-none">
-                KESS <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600">INSPIRE 2025</span>
+                KESS <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600">INSPIRE</span>
               </h1>
-              {/* <div className="text-xl sm:text-2xl lg:text-3xl font-semibold text-orange-500">2025</div> */}
+              <div className="text-xl sm:text-2xl lg:text-3xl font-semibold text-orange-500">2025</div>
             </div>
             <p className="text-sm sm:text-base lg:text-lg text-gray-600 tracking-widest font-light">
-              KEGALLE ENGINEERING STUDENTS' SOCIETY
+              One last Mock shy
             </p>
           </div>
 
           {/* Subtitle - Updated content */}
-          <p className="text-lg sm:text-xl lg:text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed font-light">
-            A leading academic competition designed for A/L Physical Stream
+          <p className="text-xl text-gray-700 w-full px-6 leading-normal font-normal">
+            {/* A leading academic competition designed for A/L Physical Stream
             students in Kegalle District. Organized by the Kegalle Engineering
-            Students' Society (KESS).
+            Students' Society (KESS). */}
+            KESS Inspire is a leading academic competition designed for 500+
+              A/L Physical Stream students in the Kegalle District. The program
+              is conducted as a 3-day exam session consisting of 3 subject papers. After evaluation, students are ranked using a Z-score
+              system, and gifts are awarded to the top performers to recognize their achievements and inspire excellence.
           </p>
 
           {/* Single Register Now Button */}
-          <div className="flex justify-center items-center pt-6">
-            <Button
+          <div className="flex justify-center items-center pt-2 ">
+            {/* <Button
               onClick={scrollToForm}
               size="lg"
-              className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold text-xl px-12 py-5 rounded-full shadow-xl hover:shadow-orange-500/25 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 group"
+              className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-500 hover:to-blue-800 text-white font-semibold text-3xl px-24 py-10 rounded-full shadow-xl hover:shadow-orange-500/25 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 group"
             >
               Register Now
               <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-1 transition-transform" />
+            </Button> */}
+            <Button
+              onClick={scrollToForm}
+              size="lg"
+              className="bg-ice/70 backdrop-blur-md text-blue-800 font-semibold text-2xl px-24 py-9 rounded-2xl border border-blue-200 shadow-lg hover:bg-ice/90 hover:shadow-blue-300/40 transition-all duration-300 transform hover:scale-105"
+            >
+              Register Now!
             </Button>
           </div>
 
           {/* Countdown Section */}
-          <div className="pt-8 sm:pt-12">
+          <div className="pt-8 sm:pt-2">
             <div className="text-center space-y-6">
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1">
                 Get Ready! Countdown to Exam Series
               </h2>
               <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl p-4 sm:p-6 shadow-xl max-w-4xl mx-auto">
-                <CountdownTimer />
+                <Countdowntimer2 />
               </div>
             </div>
           </div>
