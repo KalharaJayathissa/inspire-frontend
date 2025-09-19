@@ -1,0 +1,28 @@
+/* === flipclock.css overrides === */
+
+/* Remove the middle horizontal divider line inside each flip card */
+.flip-clock__piece .flip-card::after,
+.flip-clock__piece .flip-clock__card::after {
+  display: none !important;
+}
+
+/* Optional: add spacing between time blocks if gap-* doesn’t apply well */
+.flip-clock {
+  gap: 2rem; /* increase/decrease spacing */
+}
+
+/* Optional: make labels clearer */
+.flip-clock__slot {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #374151; /* gray-700 */
+}
+
+/* Optional: smooth flip animation look */
+.flip-clock__card {
+  border-radius: 12px !important;
+  overflow: hidden;
+  box-shadow: 0 10px 10px rgba(0,0,0,0.1);
+}
