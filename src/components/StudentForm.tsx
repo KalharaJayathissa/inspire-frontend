@@ -1,334 +1,501 @@
-"use client";
-import { motion, easeOut } from "framer-motion";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { toast } from "@/hooks/use-toast";
-import { CheckCircle, Users, BookOpen, Target } from "lucide-react";
+import React, { useState } from 'react';
+import { AlertCircle, User, CreditCard, BookOpen, MapPin, Phone, School, CheckCircle } from 'lucide-react';
 
-// Motion variants
-const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: easeOut } },
-};
+interface FormData {
+  fullName: string;
+  nicNumber: string;
+  subjectStream: string;
+  school: string;
+  address: string;
+  mobileNumber: string;
+  examLocation: string;
+}
 
-const stagger = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.2 } },
-};
+interface FormErrors {
+  fullName?: string;
+  nicNumber?: string;
+  subjectStream?: string;
+  school?: string;
+  address?: string;
+  mobileNumber?: string;
+  examLocation?: string;
+}
 
-const StudentForm = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    program: "",
-    year: "",
-    goals: "",
-    challenges: "",
+const StudentRegistrationForm = () => {
+  const [formData, setFormData] = useState<FormData>({
+    fullName: '',
+    nicNumber: '',
+    subjectStream: '',
+    school: '',
+    address: '',
+    mobileNumber: '',
+    examLocation: ''
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [nicWarning, setNicWarning] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCheckingNic, setIsCheckingNic] = useState(false);
+
+  // Simulate existing NIC numbers in database - Replace this with Supabase query later
+  const existingNics = ['123456789012', '987654321098', '456789123456'];
+
+  const schools = [
+    'Select School',
+    'Kegalle Vidyalaya',
+    'Kegalle Balika Vidyalaya',
+    'St. Joseph\'s College, Kegalle',
+    'Kegalle Maha Vidyalaya',
+    'Ruwanwella Central College',
+    'Pinnawala Central College',
+    'Royal College Colombo',
+    'Trinity College Kandy',
+    'Ananda College',
+    'Nalanda College'
+  ];
+
+  const validateForm = () => {
+    const newErrors: FormErrors = {};
+
+    // Full name validation
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = 'Full name is required';
+    }
+
+    // NIC validation
+    if (!formData.nicNumber) {
+      newErrors.nicNumber = 'NIC number is required';
+    } else if (!/^\d{12}$/.test(formData.nicNumber)) {
+      newErrors.nicNumber = 'NIC number must be exactly 12 digits';
+    }
+
+    // Subject stream validation
+    if (!formData.subjectStream) {
+      newErrors.subjectStream = 'Subject stream is required';
+    }
+
+    // School validation
+    if (!formData.school || formData.school === 'Select School') {
+      newErrors.school = 'School selection is required';
+    }
+
+    // Address validation
+    if (!formData.address.trim()) {
+      newErrors.address = 'Address is required';
+    }
+
+    // Mobile number validation
+    if (!formData.mobileNumber) {
+      newErrors.mobileNumber = 'Mobile number is required';
+    } else if (!/^\d{10}$/.test(formData.mobileNumber)) {
+      newErrors.mobileNumber = 'Mobile number must be exactly 10 digits';
+    }
+
+    // Exam location validation
+    if (!formData.examLocation) {
+      newErrors.examLocation = 'Exam location preference is required';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Function to check if NIC exists in Supabase - Replace with actual Supabase query
+  const checkNicExists = async (nic) => {
+    if (!nic || nic.length !== 12) return;
+    
+    setIsCheckingNic(true);
+    
+    try {
+      // Simulate API delay - Replace this with actual Supabase query
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      // TODO: Replace with actual Supabase query
+      // const { data, error } = await supabase
+      //   .from('students')
+      //   .select('nic_number')
+      //   .eq('nic_number', nic)
+      //   .single();
+      
+      const exists = existingNics.includes(nic);
+      
+      if (exists) {
+        setNicWarning('⚠️ This NIC number already exists in our records');
+      } else {
+        setNicWarning('');
+      }
+    } catch (error) {
+      console.error('Error checking NIC:', error);
+    } finally {
+      setIsCheckingNic(false);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    
+    let processedValue = value;
+    
+    // Process specific field types
+    if (name === 'nicNumber') {
+      processedValue = value.replace(/\D/g, '').slice(0, 12);
+    } else if (name === 'mobileNumber') {
+      processedValue = value.replace(/\D/g, '').slice(0, 10);
+    }
+    
+    setFormData(prev => ({ ...prev, [name]: processedValue }));
+
+    // Clear error when user starts typing
+    if (errors[name as keyof FormErrors]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+
+    // Check NIC for duplicates when 12 digits are entered
+    if (name === 'nicNumber' && processedValue.length === 12) {
+      checkNicExists(processedValue);
+    } else if (name === 'nicNumber') {
+      setNicWarning('');
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
-
-    const requiredFields = ["name", "email", "program", "goals"];
-    const missingFields = requiredFields.filter(
-      (field) => !formData[field as keyof typeof formData]
-    );
-
-    if (missingFields.length > 0) {
-      toast({
-        title: "Missing Information",
-        description: "Please fill in all required fields.",
-        variant: "destructive",
-      });
-      setIsSubmitting(false);
+    
+    if (!validateForm()) {
       return;
     }
 
+    if (nicWarning) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      toast({
-        title: "Application Submitted!",
-        description:
-          "We'll review your application and get back to you within 24 hours.",
-      });
-
+      // TODO: Replace with actual Supabase insertion
+      // const { data, error } = await supabase
+      //   .from('students')
+      //   .insert([formData]);
+      
+      // if (error) throw error;
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      alert('Registration submitted successfully!');
+      
+      // Reset form
       setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        program: "",
-        year: "",
-        goals: "",
-        challenges: "",
+        fullName: '',
+        nicNumber: '',
+        subjectStream: '',
+        school: '',
+        address: '',
+        mobileNumber: '',
+        examLocation: ''
       });
+      setNicWarning('');
+      setErrors({});
     } catch (error) {
-      toast({
-        title: "Submission Failed",
-        description: "Please try again later or contact support.",
-        variant: "destructive",
-      });
+      console.error('Registration error:', error);
+      alert('Registration failed. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const programs = [
-    "Mathematics Stream",
-    "Physics Stream",
-    "Chemistry Stream",
-    "Biology Stream (Physics & Chemistry only)",
-    "Combined Mathematics",
-    "Other A/L Stream",
-  ];
-
-  const years = ["Grade 12", "Grade 13", "A/L Completed", "Repeat Student"];
-
   return (
-    <motion.section
-      id="student-form"
-      className="py-16 sm:py-20 lg:py-24 bg-muted/30"
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, amount: 0.2 }}
-      variants={stagger}
-    >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          className="text-center mb-12 sm:mb-16"
-          variants={fadeUp}
-        >
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4">
-            Register for KESS Inspire
-          </h2>
-          <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
-            Join 500+ A/L Physical Stream students in Kegalle District for this
-            3-day competitive examination covering Mathematics, Physics, and
-            Chemistry.
-          </p>
-        </motion.div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-4 sm:py-8 lg:py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-4xl mx-auto">
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 border border-gray-100">
+          
+          {/* Header */}
+          <div className="text-center mb-6 sm:mb-8">
+            {/* <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+              <User className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+            </div> */}
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-2">
+              Student Registration
+            </h1>
+            <p className="text-sm sm:text-base text-gray-600">
+              Please fill out all required information
+            </p>
+          </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 max-w-6xl mx-auto">
-          {/* Benefits */}
-          <motion.div
-            className="space-y-6 sm:space-y-8 order-2 lg:order-1"
-            variants={stagger}
-          >
-            {[
-              {
-                icon: <Users className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />,
-                title: "Personalized Mentorship",
-                desc: "Get matched with experienced mentors in your field of study.",
-              },
-              {
-                icon: <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />,
-                title: "Exclusive Resources",
-                desc: "Access study materials, career guides, and academic tools.",
-              },
-              {
-                icon: <Target className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />,
-                title: "Goal Achievement",
-                desc: "Track your progress and celebrate your academic milestones.",
-              },
-              {
-                icon: <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-success" />,
-                title: "100% Free",
-                desc: "All our services are completely free for students.",
-              },
-            ].map((benefit, idx) => (
-              <motion.div
-                key={idx}
-                className="flex items-start space-x-3 sm:space-x-4"
-                variants={fadeUp}
-                whileHover={{ scale: 1.02 }}
+          <div className="space-y-4 sm:space-y-6">
+            
+            {/* Full Name */}
+            <div>
+              <label className="block text-sm sm:text-base font-semibold text-gray-700 mb-2">
+                <User className="w-4 h-4 inline mr-2" />
+                Full Name *
+              </label>
+              <input
+                type="text"
+                name="fullName"
+                value={formData.fullName}
+                onChange={handleInputChange}
+                className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors text-gray-900 placeholder-gray-400 text-sm sm:text-base ${
+                  errors.fullName ? 'border-red-500 bg-red-50' : 'border-gray-300 hover:border-gray-400'
+                }`}
+                placeholder="Enter your full name as per NIC"
+              />
+              {errors.fullName && (
+                <p className="mt-1 text-xs sm:text-sm text-red-600 flex items-center">
+                  <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" />
+                  {errors.fullName}
+                </p>
+              )}
+            </div>
+
+            {/* NIC Number */}
+            <div>
+              <label className="block text-sm sm:text-base font-semibold text-gray-700 mb-2">
+                <CreditCard className="w-4 h-4 inline mr-2" />
+                NIC Number *
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  name="nicNumber"
+                  value={formData.nicNumber}
+                  onChange={handleInputChange}
+                  maxLength={12}
+                  className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 rounded-lg focus:ring-2 transition-colors text-gray-900 placeholder-gray-400 text-sm sm:text-base ${
+                    errors.nicNumber || nicWarning 
+                      ? 'border-red-500 bg-red-50 focus:border-red-500' 
+                      : formData.nicNumber.length === 12 && !nicWarning
+                        ? 'border-green-500 bg-green-50 focus:border-green-500'
+                        : 'border-gray-300 hover:border-gray-400 focus:border-indigo-500'
+                  }`}
+                  placeholder="Enter 12-digit NIC number"
+                />
+                {isCheckingNic && (
+                  <div className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2">
+                    <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-2 border-indigo-500 border-t-transparent"></div>
+                  </div>
+                )}
+                {formData.nicNumber.length === 12 && !nicWarning && !isCheckingNic && (
+                  <div className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2">
+                    <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-500" />
+                  </div>
+                )}
+              </div>
+              {errors.nicNumber && (
+                <p className="mt-1 text-xs sm:text-sm text-red-600 flex items-center">
+                  <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" />
+                  {errors.nicNumber}
+                </p>
+              )}
+              {nicWarning && (
+                <p className="mt-1 text-xs sm:text-sm text-amber-600 flex items-center">
+                  <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" />
+                  {nicWarning}
+                </p>
+              )}
+              <p className="mt-1 text-xs sm:text-sm text-gray-500">
+                Enter your 12-digit National Identity Card number
+              </p>
+            </div>
+
+            {/* Two Column Layout for larger screens */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+              
+              {/* Subject Stream */}
+              <div>
+                <label className="block text-sm sm:text-base font-semibold text-gray-700 mb-3">
+                  <BookOpen className="w-4 h-4 inline mr-2" />
+                  Subject Stream *
+                </label>
+                <div className="space-y-2 sm:space-y-3">
+                  <label className="flex items-center p-3 sm:p-4 border-2 rounded-lg cursor-pointer hover:bg-indigo-50 hover:border-indigo-200 transition-colors">
+                    <input
+                      type="radio"
+                      name="subjectStream"
+                      value="physical-science"
+                      checked={formData.subjectStream === 'physical-science'}
+                      onChange={handleInputChange}
+                      className="mr-3 text-indigo-600 focus:ring-indigo-500 w-4 h-4"
+                    />
+                    <span className="text-gray-700 text-sm sm:text-base">Physical Science</span>
+                  </label>
+                  <label className="flex items-center p-3 sm:p-4 border-2 rounded-lg cursor-pointer hover:bg-indigo-50 hover:border-indigo-200 transition-colors">
+                    <input
+                      type="radio"
+                      name="subjectStream"
+                      value="biological-science"
+                      checked={formData.subjectStream === 'biological-science'}
+                      onChange={handleInputChange}
+                      className="mr-3 text-indigo-600 focus:ring-indigo-500 w-4 h-4"
+                    />
+                    <span className="text-gray-700 text-sm sm:text-base">Biological Science</span>
+                  </label>
+                </div>
+                {errors.subjectStream && (
+                  <p className="mt-1 text-xs sm:text-sm text-red-600 flex items-center">
+                    <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" />
+                    {errors.subjectStream}
+                  </p>
+                )}
+              </div>
+
+              {/* School */}
+              <div>
+                <label className="block text-sm sm:text-base font-semibold text-gray-700 mb-2">
+                  <School className="w-4 h-4 inline mr-2" />
+                  School *
+                </label>
+                <select
+                  name="school"
+                  value={formData.school}
+                  onChange={handleInputChange}
+                  className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 rounded-lg focus:ring-2 focus:border-indigo-500 transition-colors text-gray-900 text-sm sm:text-base ${
+                    errors.school ? 'border-red-500 bg-red-50' : 'border-gray-300 hover:border-gray-400'
+                  }`}
+                >
+                  {schools.map((school, index) => (
+                    <option key={index} value={school} disabled={index === 0} className="text-gray-900">
+                      {school}
+                    </option>
+                  ))}
+                </select>
+                {errors.school && (
+                  <p className="mt-1 text-xs sm:text-sm text-red-600 flex items-center">
+                    <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" />
+                    {errors.school}
+                  </p>
+                )}
+              </div>
+
+            </div>
+
+            {/* Address */}
+            <div>
+              <label className="block text-sm sm:text-base font-semibold text-gray-700 mb-2">
+                <MapPin className="w-4 h-4 inline mr-2" />
+                Home Address *
+              </label>
+              <textarea
+                name="address"
+                value={formData.address}
+                onChange={handleInputChange}
+                rows={3}
+                className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 rounded-lg focus:ring-2 focus:border-indigo-500 transition-colors resize-none text-gray-900 placeholder-gray-400 text-sm sm:text-base ${
+                  errors.address ? 'border-red-500 bg-red-50' : 'border-gray-300 hover:border-gray-400'
+                }`}
+                placeholder="Enter your complete home address"
+              />
+              {errors.address && (
+                <p className="mt-1 text-xs sm:text-sm text-red-600 flex items-center">
+                  <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" />
+                  {errors.address}
+                </p>
+              )}
+            </div>
+
+            {/* Mobile Number */}
+            <div>
+              <label className="block text-sm sm:text-base font-semibold text-gray-700 mb-2">
+                <Phone className="w-4 h-4 inline mr-2" />
+                Mobile Number *
+              </label>
+              <div className="relative">
+                <input
+                  type="tel"
+                  name="mobileNumber"
+                  value={formData.mobileNumber}
+                  onChange={handleInputChange}
+                  maxLength={10}
+                  className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 rounded-lg focus:ring-2 transition-colors text-gray-900 placeholder-gray-400 text-sm sm:text-base ${
+                    errors.mobileNumber 
+                      ? 'border-red-500 bg-red-50 focus:border-red-500' 
+                      : formData.mobileNumber.length === 10
+                        ? 'border-green-500 bg-green-50 focus:border-green-500'
+                        : 'border-gray-300 hover:border-gray-400 focus:border-indigo-500'
+                  }`}
+                  placeholder="Enter 10-digit mobile number"
+                />
+                {formData.mobileNumber.length === 10 && !errors.mobileNumber && (
+                  <div className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2">
+                    <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-500" />
+                  </div>
+                )}
+              </div>
+              {errors.mobileNumber && (
+                <p className="mt-1 text-xs sm:text-sm text-red-600 flex items-center">
+                  <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" />
+                  {errors.mobileNumber}
+                </p>
+              )}
+              <p className="mt-1 text-xs sm:text-sm text-gray-500">
+                Enter your 10-digit mobile number (e.g., 0771234567)
+              </p>
+            </div>
+
+            {/* Exam Location */}
+            <div>
+              <label className="block text-sm sm:text-base font-semibold text-gray-700 mb-3">
+                Where do you prefer to write exam? *
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                <label className="flex items-center p-3 sm:p-4 border-2 rounded-lg cursor-pointer hover:bg-indigo-50 hover:border-indigo-200 transition-colors">
+                  <input
+                    type="radio"
+                    name="examLocation"
+                    value="in-school"
+                    checked={formData.examLocation === 'in-school'}
+                    onChange={handleInputChange}
+                    className="mr-3 text-indigo-600 focus:ring-indigo-500 w-4 h-4"
+                  />
+                  <span className="text-gray-700 text-sm sm:text-base">In my school</span>
+                </label>
+                <label className="flex items-center p-3 sm:p-4 border-2 rounded-lg cursor-pointer hover:bg-indigo-50 hover:border-indigo-200 transition-colors">
+                  <input
+                    type="radio"
+                    name="examLocation"
+                    value="external-kegalle"
+                    checked={formData.examLocation === 'external-kegalle'}
+                    onChange={handleInputChange}
+                    className="mr-3 text-indigo-600 focus:ring-indigo-500 w-4 h-4"
+                  />
+                  <span className="text-gray-700 text-sm sm:text-base">External location in Kegalle</span>
+                </label>
+              </div>
+              {errors.examLocation && (
+                <p className="mt-1 text-xs sm:text-sm text-red-600 flex items-center">
+                  <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" />
+                  {errors.examLocation}
+                </p>
+              )}
+            </div>
+
+            {/* Submit Button */}
+            <div className="pt-4 sm:pt-6">
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={isSubmitting || !!nicWarning}
+                className={`w-full py-3 sm:py-4 px-6 rounded-lg font-semibold text-white transition-all duration-200 text-sm sm:text-base lg:text-lg ${
+                  isSubmitting || nicWarning
+                    ? 'bg-gray-400 cursor-not-allowed opacity-60'
+                    : 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl'
+                }`}
               >
-                <div className="p-2 rounded-lg bg-primary/10 flex-shrink-0">
-                  {benefit.icon}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h3 className="text-base sm:text-lg font-semibold text-foreground mb-1 sm:mb-2">
-                    {benefit.title}
-                  </h3>
-                  <p className="text-sm sm:text-base text-muted-foreground">{benefit.desc}</p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* Form */}
-          <motion.div variants={fadeUp} className="order-1 lg:order-2">
-            <Card className="card-gradient border-0 shadow-soft">
-              <CardHeader className="pb-4 sm:pb-6">
-                <CardTitle className="text-xl sm:text-2xl font-bold text-center">
-                  Competition Registration
-                </CardTitle>
-                <CardDescription className="text-center text-sm sm:text-base">
-                  Register for the KESS Inspire Academic Competition
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
-                  {/* Inputs */}
-                  <motion.div
-                    className="grid sm:grid-cols-2 gap-4"
-                    variants={stagger}
-                  >
-                    <motion.div className="space-y-2" variants={fadeUp}>
-                      <Label htmlFor="name" className="text-sm sm:text-base">Full Name *</Label>
-                      <Input
-                        id="name"
-                        type="text"
-                        value={formData.name}
-                        onChange={(e) =>
-                          handleInputChange("name", e.target.value)
-                        }
-                        placeholder="Enter your full name"
-                        className="h-10 sm:h-11"
-                        required
-                      />
-                    </motion.div>
-                    <motion.div className="space-y-2" variants={fadeUp}>
-                      <Label htmlFor="email" className="text-sm sm:text-base">Email Address *</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) =>
-                          handleInputChange("email", e.target.value)
-                        }
-                        placeholder="your.email@example.com"
-                        className="h-10 sm:h-11"
-                        required
-                      />
-                    </motion.div>
-                  </motion.div>
-
-                  <motion.div className="space-y-2" variants={fadeUp}>
-                    <Label htmlFor="phone" className="text-sm sm:text-base">Phone Number</Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      value={formData.phone}
-                      onChange={(e) =>
-                        handleInputChange("phone", e.target.value)
-                      }
-                      placeholder="+1 (555) 123-4567"
-                      className="h-10 sm:h-11"
-                    />
-                  </motion.div>
-
-                  <motion.div
-                    className="grid sm:grid-cols-2 gap-4"
-                    variants={stagger}
-                  >
-                    <motion.div className="space-y-2" variants={fadeUp}>
-                      <Label htmlFor="program" className="text-sm sm:text-base">Program of Study *</Label>
-                      <Select
-                        onValueChange={(value) =>
-                          handleInputChange("program", value)
-                        }
-                      >
-                        <SelectTrigger className="h-10 sm:h-11">
-                          <SelectValue placeholder="Select your program" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {programs.map((program) => (
-                            <SelectItem key={program} value={program}>
-                              {program}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </motion.div>
-                    <motion.div className="space-y-2" variants={fadeUp}>
-                      <Label htmlFor="year" className="text-sm sm:text-base">Academic Year</Label>
-                      <Select
-                        onValueChange={(value) =>
-                          handleInputChange("year", value)
-                        }
-                      >
-                        <SelectTrigger className="h-10 sm:h-11">
-                          <SelectValue placeholder="Select your year" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {years.map((year) => (
-                            <SelectItem key={year} value={year}>
-                              {year}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </motion.div>
-                  </motion.div>
-
-                  <motion.div className="space-y-2" variants={fadeUp}>
-                    <Label htmlFor="goals" className="text-sm sm:text-base">Academic Goals *</Label>
-                    <Textarea
-                      id="goals"
-                      value={formData.goals}
-                      onChange={(e) =>
-                        handleInputChange("goals", e.target.value)
-                      }
-                      placeholder="What are your academic and career goals?"
-                      className="min-h-[80px] sm:min-h-[100px] resize-none"
-                      required
-                    />
-                  </motion.div>
-
-                  <motion.div className="space-y-2" variants={fadeUp}>
-                    <Label htmlFor="challenges" className="text-sm sm:text-base">Current Challenges</Label>
-                    <Textarea
-                      id="challenges"
-                      value={formData.challenges}
-                      onChange={(e) =>
-                        handleInputChange("challenges", e.target.value)
-                      }
-                      placeholder="What challenges are you currently facing?"
-                      className="min-h-[60px] sm:min-h-[80px] resize-none"
-                    />
-                  </motion.div>
-
-                  <motion.div variants={fadeUp}>
-                    <Button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="w-full bg-gradient-hero text-primary-foreground hover:shadow-glow transition-all duration-300 py-4 sm:py-6 text-base sm:text-lg font-semibold"
-                    >
-                      {isSubmitting ? "Submitting..." : "Submit Application"}
-                    </Button>
-                  </motion.div>
-                </form>
-              </CardContent>
-            </Card>
-          </motion.div>
+                {isSubmitting ? (
+                  <div className="flex items-center justify-center">
+                    <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Submitting Registration...
+                  </div>
+                ) : (
+                  'Submit Registration'
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </motion.section>
+    </div>
   );
 };
 
-export default StudentForm;
+export default StudentRegistrationForm;
