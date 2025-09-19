@@ -7,6 +7,7 @@ import ComingSoon from "./pages/ComingSoon";
 import Login from "./pages/login";
 import AdminPage from "./pages/admin";
 import MarkerPage from "./pages/marker";
+import ResourcesSection from "./components/ResourcesSection";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -21,6 +22,7 @@ const App = () => (
           <Route path='/admin/' element={<AdminPage />} />
           <Route path='/marker' element={<MarkerPage />} />
           <Route path="/" element={<ComingSoon />} />
+          <Route path = "/resource" element= {<ResourcesSection/>}></Route>
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
