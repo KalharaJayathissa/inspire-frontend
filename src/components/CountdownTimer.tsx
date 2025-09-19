@@ -17,8 +17,8 @@ const CountdownTimer = () => {
 
   useEffect(() => {
     // Set target date to 4 days from now
-    const targetDate = new Date();
-    targetDate.setDate(targetDate.getDate() + 4);
+    const targetDate = new Date("2025-09-21T00:00:00");  //site launch date
+    //targetDate.setDate(targetDate.getDate() + 4);
 
     const timer = setInterval(() => {
       const now = new Date().getTime();
