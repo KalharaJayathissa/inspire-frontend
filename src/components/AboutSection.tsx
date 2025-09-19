@@ -48,7 +48,7 @@ const AboutSection = () => {
           </div>
 
           {/* Mission Statement */}
-          <div className="bg-white rounded-xl lg:rounded-2xl p-6 sm:p-8 mb-8 sm:mb-12 shadow-lg border border-gray-200">
+          {/* <div className="bg-white rounded-xl lg:rounded-2xl p-6 sm:p-8 mb-8 sm:mb-12 shadow-lg border border-gray-200">
             <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3 sm:mb-4 text-center">
               What is KESS Inspire?
             </h3>
@@ -60,7 +60,7 @@ const AboutSection = () => {
               system, and gifts are awarded to the top performers to recognize
               their achievements and inspire excellence.
             </p>
-          </div>
+          </div> */}
 
           {/* Features Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12">
