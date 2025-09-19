@@ -3,11 +3,13 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Index from "./pages/Index";
+import Register from "./pages/Register";
 import ComingSoon from "./pages/ComingSoon";
+import NotFound from "./pages/NotFound";
 import Login from "./pages/login";
 import AdminPage from "./pages/admin";
 import MarkerPage from "./pages/marker";
-import ResourcesSection from "./components/ResourcesSection";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -17,12 +19,15 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          {/* All routes now redirect to Coming Soon page */}
+          {/* Main landing page */}
+          <Route path="/index" element={<Index />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/" element={<ComingSoon />} />
           <Route path='/login' element={<Login />} />
           <Route path='/admin/' element={<AdminPage />} />
           <Route path='/marker' element={<MarkerPage />} />
           <Route path="/" element={<ComingSoon />} />
-          <Route path = "/resource" element= {<ResourcesSection/>}></Route>
+          
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
