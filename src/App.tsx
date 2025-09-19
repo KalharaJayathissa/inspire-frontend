@@ -20,14 +20,14 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           {/* Main landing page */}
+          <Route path="/" element={<Index />} />
           <Route path="/index" element={<Index />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/" element={<ComingSoon />} />
+          <Route path="/coming-soon" element={<ComingSoon />} />
           <Route path='/login' element={<Login />} />
           <Route path='/admin/' element={<AdminPage />} />
           <Route path='/marker' element={<MarkerPage />} />
-          <Route path="/" element={<ComingSoon />} />
-          
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

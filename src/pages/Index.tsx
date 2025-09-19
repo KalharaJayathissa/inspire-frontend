@@ -1,19 +1,26 @@
-import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
-import ResourcesSection from "@/components/ResourcesSection";
-import ContactForm from "@/components/ContactForm";
-import Footer from "@/components/Footer";
+import KessLogo from "@/assets/kess-logo-removebg-preview.png";
 
 const Index = () => {
   return (
-    <div className="min-h-screen">
-      <Navigation />
+    <div className="min-h-screen bg-white">
+      {/* Logo in top left corner */}
+      <div className="fixed top-4 left-4 sm:top-6 sm:left-6 z-50">
+        <div className="flex items-center space-x-3 bg-white/90 backdrop-blur-sm rounded-lg px-4 py-2 shadow-lg border border-gray-200">
+          <img 
+            src={KessLogo} 
+            alt="KESS Logo" 
+            className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
+          />
+          <h1 className="text-lg sm:text-xl font-bold text-gray-800">
+            KESS INSPIRE
+          </h1>
+        </div>
+      </div>
+      
       <HeroSection />
       <AboutSection />
-      <ResourcesSection />
-      <ContactForm />
-      <Footer />
     </div>
   );
 };

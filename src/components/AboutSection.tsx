@@ -4,25 +4,25 @@ import { ScrollAnimation } from "@/components/ui/scroll-animation";
 const AboutSection = () => {
   const features = [
     {
-      icon: <GraduationCap className="h-8 w-8 text-primary" />,
+      icon: <GraduationCap className="h-8 w-8 text-orange-500" />,
       title: "Academic Excellence",
       description:
         "Empowering A/L Physical Stream students through competitive examinations and academic challenges.",
     },
     {
-      icon: <Users className="h-8 w-8 text-primary" />,
+      icon: <Users className="h-8 w-8 text-orange-500" />,
       title: "University Connection",
       description:
         "Direct interaction with engineering students from University of Moratuwa to bridge the gap to higher education.",
     },
     {
-      icon: <Target className="h-8 w-8 text-primary" />,
+      icon: <Target className="h-8 w-8 text-orange-500" />,
       title: "Student Motivation",
       description:
         "Z-score ranking system with awards to recognize achievements and inspire excellence in education.",
     },
     {
-      icon: <BookOpen className="h-8 w-8 text-primary" />,
+      icon: <BookOpen className="h-8 w-8 text-orange-500" />,
       title: "Comprehensive Subjects",
       description:
         "Covers Mathematics, Physics, and Chemistry for both Maths stream and Bio stream students.",
@@ -30,15 +30,15 @@ const AboutSection = () => {
   ];
 
   return (
-    <section id="about" className="py-16 sm:py-20 lg:py-32 xl:py-24 bg-muted/30">
+    <section id="about" className="py-16 sm:py-20 lg:py-32 xl:py-24 bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4 sm:mb-6">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">
               About KESS
             </h2>
-            <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
+            <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
               The Kegalle Engineering Students' Society (KESS) is a collective
               of engineering graduates & undergraduates from the University of
               Moratuwa united by a vision to apply knowledge for meaningful
@@ -48,14 +48,14 @@ const AboutSection = () => {
           </div>
 
           {/* Mission Statement */}
-          <div className="bg-card rounded-xl lg:rounded-2xl p-6 sm:p-8 mb-8 sm:mb-12 shadow-soft border">
-            <h3 className="text-xl sm:text-2xl font-semibold text-foreground mb-3 sm:mb-4 text-center">
+          <div className="bg-white rounded-xl lg:rounded-2xl p-6 sm:p-8 mb-8 sm:mb-12 shadow-lg border border-gray-200">
+            <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3 sm:mb-4 text-center">
               What is KESS Inspire?
             </h3>
-            <p className="text-sm sm:text-base text-muted-foreground text-center leading-relaxed">
+            <p className="text-sm sm:text-base text-gray-600 text-center leading-relaxed">
               KESS Inspire is a leading academic competition designed for 500+
               A/L Physical Stream students in the Kegalle District. The program
-              is conducted as a 3-day exam session consisting of 4 subject
+              is conducted as a 3-day exam session consisting of 3 subject
               papers. After evaluation, students are ranked using a Z-score
               system, and gifts are awarded to the top performers to recognize
               their achievements and inspire excellence.
@@ -66,16 +66,16 @@ const AboutSection = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12">
             {features.map((feature, index) => (
               <ScrollAnimation key={index} delay={index * 0.1}>
-                <div className="p-4 sm:p-6 bg-background rounded-lg shadow-soft hover:shadow-glow transition-shadow duration-300">
+                <div className="p-4 sm:p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100">
                   <div className="flex items-start sm:items-center space-x-3 sm:space-x-4">
                     <div className="flex-shrink-0 mt-1 sm:mt-0">
                       {feature.icon}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h3 className="text-base sm:text-lg font-semibold text-foreground mb-1 sm:mb-2">
+                      <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-1 sm:mb-2">
                         {feature.title}
                       </h3>
-                      <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                      <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
                         {feature.description}
                       </p>
                     </div>
@@ -83,55 +83,6 @@ const AboutSection = () => {
                 </div>
               </ScrollAnimation>
             ))}
-          </div>
-
-          {/* Objectives */}
-          <div className="mt-12 sm:mt-16 bg-gradient-to-r from-primary/5 to-accent/5 rounded-xl lg:rounded-2xl p-6 sm:p-8 border">
-            <h3 className="text-xl sm:text-2xl font-semibold text-foreground mb-4 sm:mb-6 text-center">
-              Our Objectives
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-              <ScrollAnimation delay={0.3}>
-                <div className="space-y-3 sm:space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0"></div>
-                    <p className="text-sm sm:text-base text-muted-foreground">
-                      <strong>Student Motivation:</strong> Encourage students to
-                      study diligently and perform at their best through
-                      competitive examination.
-                    </p>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0"></div>
-                    <p className="text-sm sm:text-base text-muted-foreground">
-                      <strong>Academic Improvement:</strong> Raise the number of
-                      merit pass students by identifying potential early and
-                      providing academic challenges.
-                    </p>
-                  </div>
-                </div>
-              </ScrollAnimation>
-              <ScrollAnimation delay={0.4}>
-                <div className="space-y-3 sm:space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0"></div>
-                    <p className="text-sm sm:text-base text-muted-foreground">
-                      <strong>Bridge to Higher Education:</strong> Connect
-                      students with university-level engineering students to
-                      prepare them for future academic journeys.
-                    </p>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0"></div>
-                    <p className="text-sm sm:text-base text-muted-foreground">
-                      <strong>Community Impact:</strong> Build lasting
-                      relationships between schools and KESS, enhancing academic
-                      reputation in the district.
-                    </p>
-                  </div>
-                </div>
-              </ScrollAnimation>
-            </div>
           </div>
         </div>
       </div>
