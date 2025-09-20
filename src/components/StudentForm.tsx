@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AlertCircle, User, CreditCard, BookOpen, MapPin, Phone, School, CheckCircle, Mail } from 'lucide-react';
 import { registerStudent, checkNicExists } from "@/lib/api";
+import { toast } from 'react-hot-toast';
 
 interface FormData {
   fullName: string;
@@ -47,9 +48,6 @@ const StudentRegistrationForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCheckingNic, setIsCheckingNic] = useState(false);
 
-  // Simulate existing NIC numbers in database - Replace this with Supabase query later
-  // const existingNics = ['123456789012', '987654321098', '456789123456'];
-
   const schools = [
     'Kegalu Vidyalaya',
     'Kegalu Balika Vidyalaya',
@@ -58,7 +56,8 @@ const StudentRegistrationForm = () => {
     'Dudley Senanayake Central College, Tholangamuwa',
     'Pinnawala Central College',
     'Zahira College, Mawanella',
-    'Swarna Jayanthi Maha Vidyalaya'
+    'Swarna Jayanthi Maha Vidyalaya',
+    'Ruwanwella Rajasinghe Central College'
   ];
 
   const validateForm = () => {
@@ -138,12 +137,15 @@ const StudentRegistrationForm = () => {
     
     if (result.exists) {
       setNicWarning('⚠️ This NIC number already exists in our records');
+      toast.error('This NIC number is already registered in our system');
     } else {
       setNicWarning('');
+      toast.success('NIC number is available');
     }
   } catch (error) {
     console.error('Error checking NIC:', error);
     setNicWarning(''); // Clear warning on error
+    toast.error('Error checking NIC number. Please try again.');
   } finally {
     setIsCheckingNic(false);
   }
@@ -180,10 +182,12 @@ const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   
   if (!validateForm()) {
+    toast.error('Please fill in all required fields correctly');
     return;
   }
 
   if (nicWarning) {
+    toast.error('Please resolve the NIC number issue before submitting');
     return;
   }
 
@@ -195,7 +199,9 @@ const handleSubmit = async (e: React.FormEvent) => {
     const result = await registerStudent(formData);
     
     console.log("Registration successful:", result); // Debug log
-    alert('Registration submitted successfully!');
+    toast.success('🎉 Registration submitted successfully! Welcome to KESS Inspire 2025!', {
+      duration: 5000,
+    });
     
     // Reset form
     setFormData({
@@ -223,8 +229,10 @@ const handleSubmit = async (e: React.FormEvent) => {
     } else if (error.message) {
       errorMessage = error.message;
     }
-    
-    alert(errorMessage);
+
+    toast.error(`❌ ${errorMessage}`, {
+      duration: 4000,
+    });
   } finally {
     setIsSubmitting(false);
   }
