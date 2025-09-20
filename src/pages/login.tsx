@@ -3,6 +3,10 @@ import { supabase } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
+  
+
+  console.log('Rendering Login component');
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -23,10 +27,27 @@ function Login() {
       setLoading(false);
       return;
     }
+
+    //printing the access token to console
+    console.log('Access Token:', data.session?.access_token);
+
     // Get user id from token
     const userId = data.user.id;
     // Fetch role from user_role table
     console.log('Fetching role for user ID:', userId);
+
+//*******USED FOR TESTING PURPOSES *********//
+//     const { data: allRoles, error } = await supabase
+//   .from('user_role')
+//   .select('*'); // select all columns for all rows
+
+// if (error) {
+//   console.error('Error fetching all roles:', error);
+// } else {
+//   console.log('All user_role data:', allRoles);
+// }
+// console.log("ahhh");
+
     const { data: roleData, error: roleError } = await supabase
       .from('user_role')
       .select('role')
@@ -40,6 +61,7 @@ function Login() {
       return;
     }
     // Redirect based on role
+   
     if (roleData.role === 'admin') {
       navigate('/admin/');
     } else if (roleData.role === 'marker') {

@@ -7,7 +7,7 @@ import ComingSoon from "./pages/ComingSoon";
 import Login from "./pages/login";
 import AdminPage from "./pages/admin";
 import MarkerPage from "./pages/marker";
-import Attendent from "./pages/Attendent";
+import Invigilator from "./pages/Invigilator";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -21,7 +21,7 @@ const App = () => (
           <Route path='/login' element={<Login />} />
           <Route path='/admin/' element={<AdminPage />} />
           <Route path='/marker' element={<MarkerPage />} />
-          <Route path='/attendent' element={<Attendent />} />
+          <Route path='/invigilator' element={<Invigilator />} />
           <Route path="/" element={<ComingSoon />} />
         </Routes>
       </BrowserRouter>

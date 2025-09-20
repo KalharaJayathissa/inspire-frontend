@@ -65,7 +65,7 @@ const initialStudents: Student[] = [
   }
 ];
 
-function Attendent() {
+function Invigilator() {
   const [currentPage, setCurrentPage] = useState<Page>('schools');
   const [selectedSchool, setSelectedSchool] = useState<string>('');
   const [students, setStudents] = useState<Student[]>(initialStudents);
@@ -156,4 +156,4 @@ function Attendent() {
   );
 }
 
-export default  Attendent;
+export default  Invigilator;
