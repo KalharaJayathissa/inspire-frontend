@@ -66,6 +66,8 @@ function Login() {
       navigate('/admin/');
     } else if (roleData.role === 'marker') {
       navigate('/marker');
+    } else if (roleData.role === 'invigilator') {
+      navigate('/invigilator');
     } else {
       setError('Unauthorized role');
     }
