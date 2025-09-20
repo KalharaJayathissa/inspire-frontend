@@ -1,5 +1,8 @@
 import { GraduationCap, Users, Target, BookOpen } from "lucide-react";
 import { ScrollAnimation } from "@/components/ui/scroll-animation";
+import Timeline from "./Timeline";
+import EducationBackground from "./EducationBackground";
+import LogoCarousel from "./LogoCarousel";
 
 const AboutSection = () => {
   const features = [
@@ -30,9 +33,13 @@ const AboutSection = () => {
   ];
 
   return (
-    <section id="about" className="py-16 sm:py-20 lg:py-32 xl:py-24 bg-gray-50">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
+    <section id="about" className="py-16 sm:py-20 lg:py-32 xl:py-24 relative overflow-hidden bg-gray-50 ">
+      {/* Shared education-themed light green background */}
+      <EducationBackground />
+
+  <div className="container mx-w-2xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 ">
+      <Timeline />
+  <div className="max-w-4xl mx-auto mt-12">
           {/* Section Header */}
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">
@@ -84,8 +91,18 @@ const AboutSection = () => {
               </ScrollAnimation>
             ))}
           </div>
+          <div className="text-center mb-2 sm:mb-3 md:mb-4">
+            <p className="text-sm sm:text-base md:text-lg text-white/50 font-light px-4 sm:px-6">
+              Trusted by Leading Schools
+            </p>
+          </div>
+          {/* Logo Carousel with green borders and background-removed images */}
+          
         </div>
       </div>
+      <div className="my-4">
+            <LogoCarousel />
+          </div>
     </section>
   );
 };

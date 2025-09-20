@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import CountdownTimer from "@/components/CountdownTimer";
 import { useNavigate } from "react-router-dom";
 import Countdowntimer2 from "./Countdowntimer2";
+import BackgroundImg from '@/assets/Background.jpg';
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -31,6 +32,13 @@ const HeroSection = () => {
       {/* Background decoration - Light gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-50 to-gray-100"></div>
       <div className="absolute inset-0 bg-gradient-to-t from-orange-400/10 via-transparent to-purple-500/10"></div>
+      {/* Background image with low opacity
+      <img
+        src={require('@/assets/Background.jpg')}
+        alt="Background"
+        className="absolute inset-0 w-full h-full object-cover opacity-15 pointer-events-none z-0"
+        style={{mixBlendMode: 'multiply'}}
+      /> */}
 
       {/* Geometric decorative elements */}
       <div className="absolute top-20 left-8 w-64 h-64 bg-orange-400/20 rounded-full blur-3xl"></div>
@@ -47,8 +55,11 @@ const HeroSection = () => {
           {/* Main Title - Reduced font sizes */}
           <div className="space-y-6">
             <div className="space-y-4">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 tracking-tight leading-none">
+              {/* <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 tracking-tight leading-none">
                 KESS <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600">INSPIRE</span>
+              </h1> */}
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 tracking-tight leading-none">
+                KESS <span className="text-[#2D620A]">INSPIRE</span>
               </h1>
               <div className="text-xl sm:text-2xl lg:text-3xl font-semibold text-orange-500">2025</div>
             </div>
@@ -81,7 +92,7 @@ const HeroSection = () => {
             <Button
               onClick={scrollToForm}
               size="lg"
-              className="bg-ice/70 backdrop-blur-md text-blue-800 font-semibold text-2xl px-24 py-9 rounded-2xl border border-blue-200 shadow-lg hover:bg-ice/90 hover:shadow-blue-300/40 transition-all duration-300 transform hover:scale-105"
+              className="bg-ice/70 backdrop-blur-md text-green-900 font-semibold text-2xl px-24 py-9 rounded-2xl border border-green-2001 shadow-lg hover:bg-ice/90 hover:shadow-blue-300/40 transition-all duration-300 transform hover:scale-105"
             >
               Register Now!
             </Button>
@@ -91,7 +102,7 @@ const HeroSection = () => {
           <div className="pt-8 sm:pt-2">
             <div className="text-center space-y-6">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1">
-                Get Ready! Countdown to Exam Series
+                Get Ready!
               </h2>
               <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl p-4 sm:p-6 shadow-xl max-w-4xl mx-auto">
                 <Countdowntimer2 />
