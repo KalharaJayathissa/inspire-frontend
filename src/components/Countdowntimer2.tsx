@@ -95,17 +95,17 @@ const Countdowntimer2: React.FC = () => {
           fontSize: 28,
           fontWeight: 1000,
           textTransform: "uppercase",
-          color: "#374151", // gray-700
+          color: "#247739ff", // gray-700
         }}
         digitBlockStyle={{
           background: "#283f25ff", // gray-100
-          color: "#ffffffff", // gray-800
+          color: "#69a569ff", // gray-800
           fontSize: 38,
           width:60,
           borderRadius: "12px",
           boxShadow: "0 18px 10px rgba(247, 30, 30, 0.1)",
         }}
-        dividerStyle={{ color: "#6b7280" }} // gray-500
+        dividerStyle={{ color: "#428862ff" }} // gray-500
       />
     </div>
   );
