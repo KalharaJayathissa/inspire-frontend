@@ -27,11 +27,21 @@ const HeroSection = () => {
   return (
     <section
       id="home"
-      className="relative flex items-center justify-center bg-white overflow-hidden pt-20 sm:pt-24 md:pt-28 pb-8 sm:pb-12"
+      className="relative flex items-center justify-center bg-white/80 backdrop-blur-sm overflow-hidden pt-20 sm:pt-24 md:pt-28 pb-8 sm:pb-12"
     >
+      {/* Background image with low opacity */}
+      <div className="absolute inset-0 -z-10">
+        <img
+          src={BackgroundImg}
+          alt="Background"
+          className="w-full h-full object-cover pointer-events-none opacity-40"
+          style={{mixBlendMode: 'multiply'}}
+        />
+      </div>
+      
       {/* Background decoration - Light gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-50 to-gray-100"></div>
-      <div className="absolute inset-0 bg-gradient-to-t from-orange-400/10 via-transparent to-purple-500/10"></div>
+      {/* <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-50 to-gray-100"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-orange-400/10 via-transparent to-purple-500/10"></div> */}
       {/* Background image with low opacity
       <img
         src={require('@/assets/Background.jpg')}
@@ -41,13 +51,14 @@ const HeroSection = () => {
       /> */}
 
       {/* Geometric decorative elements */}
-      <div className="absolute top-20 left-8 w-64 h-64 bg-orange-400/20 rounded-full blur-3xl"></div>
+      {/* <div className="absolute top-20 left-8 w-64 h-64 bg-orange-400/20 rounded-full blur-3xl"></div>
       <div className="absolute bottom-20 right-8 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl"></div>
-      
+       */}
+
       {/* Modern floating elements */}
-      <div className="absolute top-32 left-16 w-4 h-4 bg-orange-400/60 rounded-full animate-pulse"></div>
+      {/* <div className="absolute top-32 left-16 w-4 h-4 bg-orange-400/60 rounded-full animate-pulse"></div>
       <div className="absolute top-48 right-24 w-6 h-6 bg-purple-400/60 rounded-full animate-bounce" style={{animationDelay: '1s'}}></div>
-      <div className="absolute bottom-32 left-24 w-5 h-5 bg-blue-400/60 rounded-full animate-pulse" style={{animationDelay: '2s'}}></div>
+      <div className="absolute bottom-32 left-24 w-5 h-5 bg-blue-400/60 rounded-full animate-pulse" style={{animationDelay: '2s'}}></div> */}
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-5xl mx-auto space-y-6 sm:space-y-8 lg:space-y-10">
@@ -63,13 +74,13 @@ const HeroSection = () => {
               </h1>
               <div className="text-xl sm:text-2xl lg:text-3xl font-semibold text-orange-500">2025</div>
             </div>
-            <p className="text-sm sm:text-base lg:text-lg text-gray-600 tracking-widest font-light">
+            <p className="text-sm sm:text-base lg:text-lg text-orange-600 tracking-widest font-semibold bg-orange-100 rounded px-3 py-1 inline-block border border-orange-300">
               One last Mock shy
             </p>
           </div>
 
           {/* Subtitle - Updated content */}
-          <p className="text-xl text-gray-700 w-full px-6 leading-normal font-normal">
+          <p className="text-xl text-black w-full px-6 leading-normal font-normal">
             {/* A leading academic competition designed for A/L Physical Stream
             students in Kegalle District. Organized by the Kegalle Engineering
             Students' Society (KESS). */}
@@ -92,7 +103,7 @@ const HeroSection = () => {
             <Button
               onClick={scrollToForm}
               size="lg"
-              className="bg-ice/70 backdrop-blur-md text-green-900 font-semibold text-2xl px-24 py-9 rounded-2xl border border-green-2001 shadow-lg hover:bg-ice/90 hover:shadow-blue-300/40 transition-all duration-300 transform hover:scale-105"
+              className="bg-[#2D620A] backdrop-blur-md text-white-700 font-semibold text-2xl px-24 py-9 rounded-2xl border border-green-600 shadow-lg hover:bg-ice/90 hover:shadow-green-300/40 transition-all duration-300 transform hover:scale-105"
             >
               Register Now!
             </Button>
@@ -104,7 +115,7 @@ const HeroSection = () => {
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1">
                 Get Ready!
               </h2>
-              <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl p-4 sm:p-6 shadow-xl max-w-4xl mx-auto">
+              <div className="bg-green/90 backdrop-blur-sm border border-gray-200 rounded-2xl p-4 sm:p-6 shadow-xl max-w-4xl mx-auto">
                 <Countdowntimer2 />
               </div>
             </div>

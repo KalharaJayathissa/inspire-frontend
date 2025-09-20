@@ -92,7 +92,7 @@ const AboutSection = () => {
             ))}
           </div>
           <div className="text-center mb-2 sm:mb-3 md:mb-4">
-            <p className="text-sm sm:text-base md:text-lg text-white/50 font-light px-4 sm:px-6">
+            <p className="text-sm sm:text-base md:text-lg text-black font-semibold px-6 sm:px-6">
               Trusted by Leading Schools
             </p>
           </div>
@@ -102,7 +102,7 @@ const AboutSection = () => {
       </div>
       <div className="my-4">
             <LogoCarousel />
-          </div>
+      </div>
     </section>
   );
 };
