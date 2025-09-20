@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { AlertCircle, User, CreditCard, BookOpen, MapPin, Phone, School, CheckCircle } from 'lucide-react';
+import { AlertCircle, User, CreditCard, BookOpen, MapPin, Phone, School, CheckCircle, Mail } from 'lucide-react';
 
 interface FormData {
   fullName: string;
   nicNumber: string;
+  email: string;
+  shy: string;
+  gender: string;
   subjectStream: string;
   school: string;
   address: string;
@@ -14,6 +17,9 @@ interface FormData {
 interface FormErrors {
   fullName?: string;
   nicNumber?: string;
+  email?: string;
+  shy?: string;
+  gender?: string;
   subjectStream?: string;
   school?: string;
   address?: string;
@@ -25,6 +31,9 @@ const StudentRegistrationForm = () => {
   const [formData, setFormData] = useState<FormData>({
     fullName: '',
     nicNumber: '',
+    email: '',
+    shy: '',
+    gender: '',
     subjectStream: '',
     school: '',
     address: '',
@@ -67,6 +76,23 @@ const StudentRegistrationForm = () => {
       newErrors.nicNumber = 'NIC number is required';
     } else if (!/^\d{12}$/.test(formData.nicNumber)) {
       newErrors.nicNumber = 'NIC number must be exactly 12 digits';
+    }
+
+    // Email validation
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+
+    // Shy validation
+    if (!formData.shy) {
+      newErrors.shy = 'Attempt selection is required';
+    }
+
+    // Gender validation
+    if (!formData.gender) {
+      newErrors.gender = 'Gender selection is required';
     }
 
     // Subject stream validation
@@ -188,6 +214,9 @@ const StudentRegistrationForm = () => {
       setFormData({
         fullName: '',
         nicNumber: '',
+        email: '',
+        shy: '',
+        gender: '',
         subjectStream: '',
         school: '',
         address: '',
@@ -207,22 +236,22 @@ const StudentRegistrationForm = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-4 sm:py-8 lg:py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-4xl mx-auto">
-        <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 border border-gray-100">
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
           
           {/* Header */}
-          <div className="text-center mb-6 sm:mb-8">
-            {/* <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-              <User className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
-            </div> */}
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-2">
+          <div className="text-center mb-6 sm:mb-8 lg:mb-8 xl:mb-10  bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 -m-4 sm:-m-6 lg:-m-8 p-6 sm:p-8 lg:p-10 rounded-t-xl sm:rounded-t-2xl">
+            
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl lg:mt-2 xl:mt-4 font-bold text-white mb-2">
               Student Registration
             </h1>
-            <p className="text-sm sm:text-base text-gray-600">
+            <p className="text-sm sm:text-base text-white/90">
               Please fill out all required information
             </p>
           </div>
 
-          <div className="space-y-4 sm:space-y-6">
+          {/* Form Content - Properly separated from header */}
+          <div className="px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6 lg:pb-8">
+            <div className="space-y-4 sm:space-y-6">
             
             {/* Full Name */}
             <div>
@@ -298,6 +327,95 @@ const StudentRegistrationForm = () => {
               </p>
             </div>
 
+            {/* Email */}
+            <div>
+              <label className="block text-sm sm:text-base font-semibold text-gray-700 mb-2">
+                <Mail className="w-4 h-4 inline mr-2" />
+                Email Address *
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 rounded-lg focus:ring-2 focus:border-indigo-500 transition-colors text-gray-900 placeholder-gray-400 text-sm sm:text-base ${
+                  errors.email ? 'border-red-500 bg-red-50' : 'border-gray-300 hover:border-gray-400'
+                }`}
+                placeholder="Enter your email address"
+              />
+              {errors.email && (
+                <p className="mt-1 text-xs sm:text-sm text-red-600 flex items-center">
+                  <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" />
+                  {errors.email}
+                </p>
+              )}
+            </div>
+
+            {/* Year */}
+            <div>
+              <label className="block text-sm sm:text-base font-semibold text-gray-700 mb-2">
+                <BookOpen className="w-4 h-4 inline mr-2" />
+                Attempt *
+              </label>
+              <select
+                name="shy"
+                value={formData.shy}
+                onChange={handleInputChange}
+                className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 rounded-lg focus:ring-2 focus:border-indigo-500 transition-colors text-gray-900 text-sm sm:text-base bg-white ${
+                  errors.shy ? 'border-red-500 bg-red-50' : 'border-gray-300 hover:border-gray-400'
+                }`}
+              >
+                <option value="" disabled className="text-gray-500 bg-white">Select Attempt</option>
+                <option value="1st" className="text-gray-900 bg-white">1st Shy</option>
+                <option value="2nd" className="text-gray-900 bg-white">2nd Shy</option>
+                <option value="3rd" className="text-gray-900 bg-white">3rd Shy</option>
+              </select>
+              {errors.shy && (
+                <p className="mt-1 text-xs sm:text-sm text-red-600 flex items-center">
+                  <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" />
+                  {errors.shy}
+                </p>
+              )}
+            </div>
+
+            {/* Gender */}
+            <div>
+              <label className="block text-sm sm:text-base font-semibold text-gray-700 mb-3">
+                <User className="w-4 h-4 inline mr-2" />
+                Gender *
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                <label className="flex items-center p-3 sm:p-4 border-2 rounded-lg cursor-pointer hover:bg-indigo-50 hover:border-indigo-200 transition-colors">
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="male"
+                    checked={formData.gender === 'male'}
+                    onChange={handleInputChange}
+                    className="mr-3 text-indigo-600 focus:ring-indigo-500 w-4 h-4"
+                  />
+                  <span className="text-gray-700 text-sm sm:text-base">Male</span>
+                </label>
+                <label className="flex items-center p-3 sm:p-4 border-2 rounded-lg cursor-pointer hover:bg-indigo-50 hover:border-indigo-200 transition-colors">
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="female"
+                    checked={formData.gender === 'female'}
+                    onChange={handleInputChange}
+                    className="mr-3 text-indigo-600 focus:ring-indigo-500 w-4 h-4"
+                  />
+                  <span className="text-gray-700 text-sm sm:text-base">Female</span>
+                </label>
+              </div>
+              {errors.gender && (
+                <p className="mt-1 text-xs sm:text-sm text-red-600 flex items-center">
+                  <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" />
+                  {errors.gender}
+                </p>
+              )}
+            </div>
+
             {/* Two Column Layout for larger screens */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
               
@@ -317,7 +435,7 @@ const StudentRegistrationForm = () => {
                       onChange={handleInputChange}
                       className="mr-3 text-indigo-600 focus:ring-indigo-500 w-4 h-4"
                     />
-                    <span className="text-gray-700 text-sm sm:text-base">Physical Science</span>
+                    <span className="text-gray-700 text-sm sm:text-base">Physical Science (Maths)</span>
                   </label>
                   <label className="flex items-center p-3 sm:p-4 border-2 rounded-lg cursor-pointer hover:bg-indigo-50 hover:border-indigo-200 transition-colors">
                     <input
@@ -328,7 +446,7 @@ const StudentRegistrationForm = () => {
                       onChange={handleInputChange}
                       className="mr-3 text-indigo-600 focus:ring-indigo-500 w-4 h-4"
                     />
-                    <span className="text-gray-700 text-sm sm:text-base">Biological Science</span>
+                    <span className="text-gray-700 text-sm sm:text-base">Biological Science (Bio)</span>
                   </label>
                 </div>
                 {errors.subjectStream && (
@@ -349,12 +467,12 @@ const StudentRegistrationForm = () => {
                   name="school"
                   value={formData.school}
                   onChange={handleInputChange}
-                  className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 rounded-lg focus:ring-2 focus:border-indigo-500 transition-colors text-gray-900 text-sm sm:text-base ${
+                  className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 rounded-lg focus:ring-2 focus:border-indigo-500 transition-colors text-gray-900 text-sm sm:text-base bg-white ${
                     errors.school ? 'border-red-500 bg-red-50' : 'border-gray-300 hover:border-gray-400'
                   }`}
                 >
                   {schools.map((school, index) => (
-                    <option key={index} value={school} disabled={index === 0} className="text-gray-900">
+                    <option key={index} value={school} disabled={index === 0} className="text-gray-900 bg-white">
                       {school}
                     </option>
                   ))}
@@ -491,6 +609,7 @@ const StudentRegistrationForm = () => {
                 )}
               </button>
             </div>
+          </div>
           </div>
         </div>
       </div>
