@@ -105,7 +105,7 @@ const Countdowntimer2: React.FC = () => {
           borderRadius: "12px",
           boxShadow: "0 18px 10px rgba(247, 30, 30, 0.1)",
         }}
-        dividerStyle={{ color: "#428862ff" }} // gray-500
+        dividerStyle={{ color: "#6b8074ff" }} // gray-500
       />
     </div>
   );

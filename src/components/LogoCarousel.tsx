@@ -31,8 +31,9 @@ const LogoCarousel = () => {
       <img
         src={logoSrc}
         alt={`Partner logo ${index + 1}`}
-        className="w-full h-full object-contain p-2 rounded-lg"
+        className="w-20 h-auto sm:w-28 md:w-36 lg:w-44 object-contain p-2 rounded-lg mx-auto"
       />
+
     </div>
   );
 
