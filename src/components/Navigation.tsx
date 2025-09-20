@@ -70,17 +70,20 @@ const Navigation = () => {
       }`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div
-          className={`flex items-center ${
-            isRegisterPage ? "justify-center" : "justify-between"
-          } h-16 md:h-20`}
-        >
-          {/* Logo */}
-          {!isRegisterPage && (
-            <div className="flex-shrink-0">
+        <div className="flex items-center justify-between h-16 md:h-20">
+          {/* Logo - Always visible in left corner */}
+          <div className="flex-shrink-0">
+            <div className="flex items-center space-x-3">
+              {/* Logo Icon */}
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-400 rounded-full flex items-center justify-center">
+                <div className="w-5 h-5 sm:w-6 sm:h-6 bg-black rounded-full flex items-center justify-center">
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 bg-orange-400 rounded-full" />
+                </div>
+              </div>
+              {/* Logo Text */}
               <h1
-                className={`text-xl sm:text-2xl lg:text-3xl font-bold transition-all duration-300 ${
-                  isScrolled
+                className={`text-lg sm:text-xl lg:text-2xl font-bold transition-all duration-300 ${
+                  isScrolled || isRegisterPage
                     ? "bg-gradient-hero bg-clip-text text-transparent"
                     : "text-slate-100"
                 }`}
@@ -88,7 +91,7 @@ const Navigation = () => {
                 KESS INSPIRE
               </h1>
             </div>
-          )}
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center">

@@ -1,29 +1,32 @@
 import { useEffect, useState } from "react";
 
 // Import all logo images
-import logo2 from "@/assets/Logos/2.png";
-import logo3 from "@/assets/Logos/3.png";
-import logo4 from "@/assets/Logos/4.png";
-import logo5 from "@/assets/Logos/5.png";
-import logo6 from "@/assets/Logos/6.png";
-import logo7 from "@/assets/Logos/7.png";
-import logo8 from "@/assets/Logos/8.png";
-import logo9 from "@/assets/Logos/9.png";
-import logo10 from "@/assets/Logos/10.png";
+// Use images from background-removed folder
+const logoPaths = [
+  '/src/assets/background-removed-logos/2-removebg-preview.png',
+  '/src/assets/background-removed-logos/3-removebg-preview.png',
+  '/src/assets/background-removed-logos/4-removebg-preview.png',
+  '/src/assets/background-removed-logos/5-removebg-preview.png',
+  '/src/assets/background-removed-logos/6-removebg-preview.png',
+  '/src/assets/background-removed-logos/7-removebg-preview.png',
+  '/src/assets/background-removed-logos/8-removebg-preview.png',
+  '/src/assets/background-removed-logos/9-removebg-preview.png',
+  '/src/assets/background-removed-logos/10-removebg-preview.png',
+];
 
 const LogoCarousel = () => {
   const [logos, setLogos] = useState<string[]>([]);
 
   useEffect(() => {
-    setLogos([logo2, logo3, logo4, logo5, logo6, logo7, logo8, logo9, logo10]);
+    setLogos(logoPaths);
   }, []);
 
   const LogoItem = ({ logoSrc, index }: { logoSrc: string; index: number }) => (
     <div
       key={`logo-${index}`}
-      className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 mx-2 flex items-center justify-center 
-                 bg-card/10 backdrop-blur-sm border border-primary/20 rounded-lg
-                 hover:border-primary/40 transition-colors duration-300"
+      className="flex-shrink-0 w-22 h-22 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 mx-2 flex items-center justify-center 
+                 bg-card/10 backdrop-blur-sm border-2 border-green-700 rounded-lg
+                 hover:border-green-900 transition-colors duration-300"
     >
       <img
         src={logoSrc}
@@ -33,16 +36,25 @@ const LogoCarousel = () => {
     </div>
   );
 
-  // Duplicate logos ONCE for seamless looping
-  const circularLogos = [...logos, ...logos];
+  // Duplicate logos multiple times for seamless infinite scroll
+  const circularLogos = Array(6).fill(logos).flat();
 
   return (
     <div className="w-full overflow-hidden py-6">
-      <div className="flex w-max animate-scroll">
+      <div className="flex logo-carousel-scroll" style={{ minWidth: '600%', width: 'max-content' }}>
         {circularLogos.map((logoSrc, index) => (
           <LogoItem key={`logo-${index}`} logoSrc={logoSrc} index={index} />
         ))}
       </div>
+      <style>{`
+        @keyframes logo-scroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-16.66%); }
+        }
+        .logo-carousel-scroll {
+          animation: logo-scroll 60s linear infinite;
+        }
+      `}</style>
     </div>
   );
 };

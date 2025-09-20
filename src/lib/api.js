@@ -22,4 +22,13 @@ export async function getstudents() {
   // Handle case where response.data has a 'students' property
   return response.data.students || response.data;
 }
-    
+
+export async function registerStudent(studentData) {
+  const response = await axios.post(`${baseURL}/api/public/students/register`, studentData);
+  return response.data;
+}
+
+export async function checkNicExists(nicNumber) {
+  const response = await axios.get(`${baseURL}/api/public/students/check-nic/${nicNumber}`);
+  return response.data;
+}
