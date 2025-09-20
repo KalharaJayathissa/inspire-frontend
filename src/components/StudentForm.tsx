@@ -48,20 +48,17 @@ const StudentRegistrationForm = () => {
   const [isCheckingNic, setIsCheckingNic] = useState(false);
 
   // Simulate existing NIC numbers in database - Replace this with Supabase query later
-  const existingNics = ['123456789012', '987654321098', '456789123456'];
+  // const existingNics = ['123456789012', '987654321098', '456789123456'];
 
   const schools = [
-    'Select School',
-    'Kegalle Vidyalaya',
-    'Kegalle Balika Vidyalaya',
-    'St. Joseph\'s College, Kegalle',
-    'Kegalle Maha Vidyalaya',
-    'Ruwanwella Central College',
+    'Kegalu Vidyalaya',
+    'Kegalu Balika Vidyalaya',
+    'St.Joesph’s Balika Vidyalaya',
+    'St.Mary’s College',
+    'Dudley Senanayake Central College, Tholangamuwa',
     'Pinnawala Central College',
-    'Royal College Colombo',
-    'Trinity College Kandy',
-    'Ananda College',
-    'Nalanda College'
+    'Zahira College, Mawanella',
+    'Swarna Jayanthi Maha Vidyalaya'
   ];
 
   const validateForm = () => {
@@ -240,7 +237,7 @@ const handleSubmit = async (e: React.FormEvent) => {
           {/* Header */}
           <div className="text-center mb-6 sm:mb-8 lg:mb-8 xl:mb-10  bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 -m-4 sm:-m-6 lg:-m-8 p-6 sm:p-8 lg:p-10 rounded-t-xl sm:rounded-t-2xl">
             
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl lg:mt-2 xl:mt-4 font-bold text-white mb-2">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl sm:mt-1 lg:mt-2 xl:mt-4 font-bold text-white mb-2">
               Student Registration
             </h1>
             <p className="text-sm sm:text-base text-white/90">
@@ -470,8 +467,11 @@ const handleSubmit = async (e: React.FormEvent) => {
                     errors.school ? 'border-red-500 bg-red-50' : 'border-gray-300 hover:border-gray-400'
                   }`}
                 >
+                <option value="" disabled>
+                   Select your school 
+                </option>
                   {schools.map((school, index) => (
-                    <option key={index} value={school} disabled={index === 0} className="text-gray-900 bg-white">
+                    <option key={index} value={school} className="text-gray-900 bg-white">
                       {school}
                     </option>
                   ))}
