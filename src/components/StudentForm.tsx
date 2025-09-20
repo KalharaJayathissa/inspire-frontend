@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AlertCircle, User, CreditCard, BookOpen, MapPin, Phone, School, CheckCircle, Mail } from 'lucide-react';
+import { registerStudent, checkNicExists } from "@/lib/api";
 
 interface FormData {
   fullName: string;
@@ -122,117 +123,115 @@ const StudentRegistrationForm = () => {
       newErrors.examLocation = 'Exam location preference is required';
     }
 
+    // Note: shy, gender, subjectStream, address, examLocation are optional
+    // since they won't be stored in the current database structure
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   // Function to check if NIC exists in Supabase - Replace with actual Supabase query
-  const checkNicExists = async (nic) => {
-    if (!nic || nic.length !== 12) return;
+  const checkNicExistsInDB = async (nic: string) => {
+  if (!nic || nic.length !== 12) return;
+  
+  setIsCheckingNic(true);
+  
+  try {
+    const result = await checkNicExists(nic);
     
-    setIsCheckingNic(true);
-    
-    try {
-      // Simulate API delay - Replace this with actual Supabase query
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      // TODO: Replace with actual Supabase query
-      // const { data, error } = await supabase
-      //   .from('students')
-      //   .select('nic_number')
-      //   .eq('nic_number', nic)
-      //   .single();
-      
-      const exists = existingNics.includes(nic);
-      
-      if (exists) {
-        setNicWarning('⚠️ This NIC number already exists in our records');
-      } else {
-        setNicWarning('');
-      }
-    } catch (error) {
-      console.error('Error checking NIC:', error);
-    } finally {
-      setIsCheckingNic(false);
+    if (result.exists) {
+      setNicWarning('⚠️ This NIC number already exists in our records');
+    } else {
+      setNicWarning('');
     }
-  };
+  } catch (error) {
+    console.error('Error checking NIC:', error);
+    setNicWarning(''); // Clear warning on error
+  } finally {
+    setIsCheckingNic(false);
+  }
+};
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
+  const { name, value } = e.target;
+  
+  let processedValue = value;
+  
+  // Process specific field types
+  if (name === 'nicNumber') {
+    processedValue = value.replace(/\D/g, '').slice(0, 12);
+  } else if (name === 'mobileNumber') {
+    processedValue = value.replace(/\D/g, '').slice(0, 10);
+  }
+  
+  setFormData(prev => ({ ...prev, [name]: processedValue }));
+
+  // Clear error when user starts typing
+  if (errors[name as keyof FormErrors]) {
+    setErrors(prev => ({ ...prev, [name]: '' }));
+  }
+
+  // Check NIC for duplicates when 12 digits are entered
+  if (name === 'nicNumber' && processedValue.length === 12) {
+    checkNicExistsInDB(processedValue); // Use the new function
+  } else if (name === 'nicNumber') {
+    setNicWarning('');
+  }
+};
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  
+  if (!validateForm()) {
+    return;
+  }
+
+  if (nicWarning) {
+    return;
+  }
+
+  setIsSubmitting(true);
+
+  try {
+    console.log("Submitting form data:", formData); // Debug log
     
-    let processedValue = value;
+    const result = await registerStudent(formData);
     
-    // Process specific field types
-    if (name === 'nicNumber') {
-      processedValue = value.replace(/\D/g, '').slice(0, 12);
-    } else if (name === 'mobileNumber') {
-      processedValue = value.replace(/\D/g, '').slice(0, 10);
+    console.log("Registration successful:", result); // Debug log
+    alert('Registration submitted successfully!');
+    
+    // Reset form
+    setFormData({
+      fullName: '',
+      nicNumber: '',
+      email: '',
+      shy: '',
+      gender: '',
+      subjectStream: '',
+      school: '',
+      address: '',
+      mobileNumber: '',
+      examLocation: ''
+    });
+    setNicWarning('');
+    setErrors({});
+  } catch (error) {
+    console.error('Registration error:', error);
+    console.error('Error response:', error.response); // Debug log
+    
+    let errorMessage = 'Registration failed. Please try again.';
+    
+    if (error.response?.data?.error) {
+      errorMessage = error.response.data.error;
+    } else if (error.message) {
+      errorMessage = error.message;
     }
     
-    setFormData(prev => ({ ...prev, [name]: processedValue }));
-
-    // Clear error when user starts typing
-    if (errors[name as keyof FormErrors]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
-
-    // Check NIC for duplicates when 12 digits are entered
-    if (name === 'nicNumber' && processedValue.length === 12) {
-      checkNicExists(processedValue);
-    } else if (name === 'nicNumber') {
-      setNicWarning('');
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
-
-    if (nicWarning) {
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      // TODO: Replace with actual Supabase insertion
-      // const { data, error } = await supabase
-      //   .from('students')
-      //   .insert([formData]);
-      
-      // if (error) throw error;
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      alert('Registration submitted successfully!');
-      
-      // Reset form
-      setFormData({
-        fullName: '',
-        nicNumber: '',
-        email: '',
-        shy: '',
-        gender: '',
-        subjectStream: '',
-        school: '',
-        address: '',
-        mobileNumber: '',
-        examLocation: ''
-      });
-      setNicWarning('');
-      setErrors({});
-    } catch (error) {
-      console.error('Registration error:', error);
-      alert('Registration failed. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
+    alert(errorMessage);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-4 sm:py-8 lg:py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-4xl mx-auto">
