@@ -4,6 +4,7 @@ A modern React web application for managing Advanced Level (A/L) examinations in
 
 ## 🎯 Overview
 
+This frontend application serves three main user types:
 - **Students**: Search and view exam results without authentication
 - **Markers**: Authenticated access to enter marks and manage attendance
 - **Admins**: Full system control including exam management and reporting
