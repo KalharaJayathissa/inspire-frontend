@@ -3,15 +3,15 @@ import { useEffect, useState } from "react";
 // Import all logo images
 // Use images from background-removed folder
 const logoPaths = [
-  '/public/background-removed-logos/2-removebg-preview.webp',
-  '/public/background-removed-logos/3-removebg-preview.webp',
-  '/public/background-removed-logos/4-removebg-preview.webp',
-  '/public/background-removed-logos/5-removebg-preview.webp',
-  '/public/background-removed-logos/6-removebg-preview.webp',
-  '/public/background-removed-logos/7-removebg-preview.webp',
-  '/public/background-removed-logos/8-removebg-preview.webp',
-  '/public/background-removed-logos/9-removebg-preview.webp',
-  '/public/background-removed-logos/10-removebg-preview.webp',
+  '/background-removed-logos/2-removebg-preview.webp',
+  '/background-removed-logos/3-removebg-preview.webp',
+  '/background-removed-logos/4-removebg-preview.webp',
+  '/background-removed-logos/5-removebg-preview.webp',
+  '/background-removed-logos/6-removebg-preview.webp',
+  '/background-removed-logos/7-removebg-preview.webp',
+  '/background-removed-logos/8-removebg-preview.webp',
+  '/background-removed-logos/9-removebg-preview.webp',
+  '/background-removed-logos/10-removebg-preview.webp',
 ];
 
 const LogoCarousel = () => {
