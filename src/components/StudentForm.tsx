@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { AlertCircle, User, CreditCard, BookOpen, MapPin, Phone, School, CheckCircle, Mail } from 'lucide-react';
 import { registerStudent, checkNicExists } from "@/lib/api";
 import { toast } from 'react-hot-toast';
+import { Navigate, useNavigate } from 'react-router-dom';
+
 
 // Custom CSS for green radio buttons only
 const customStyles = `
@@ -71,6 +73,7 @@ const StudentRegistrationForm = () => {
   const [nicWarning, setNicWarning] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCheckingNic, setIsCheckingNic] = useState(false);
+  const navigate = useNavigate();
 
   const schools = [
     'Kegalu Vidyalaya',
@@ -224,8 +227,13 @@ const handleSubmit = async (e: React.FormEvent) => {
     
     console.log("Registration successful:", result); // Debug log
     toast.success('🎉 Registration submitted successfully! Welcome to KESS Inspire 2025!', {
-      duration: 5000,
+      duration: 2000,
     });
+    setTimeout(() => {
+      navigate('/');
+    }, 2000);
+
+
     
     // Reset form
     setFormData({
