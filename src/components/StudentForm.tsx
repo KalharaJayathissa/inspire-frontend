@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AlertCircle, User, CreditCard, BookOpen, MapPin, Phone, School, CheckCircle, Mail } from 'lucide-react';
+import { AlertCircle, User, CreditCard, BookOpen, MapPin, Phone, School, CheckCircle, Mail, SunMediumIcon, Languages } from 'lucide-react';
 import { registerStudent, checkNicExists } from "@/lib/api";
 import { toast } from 'react-hot-toast';
 
@@ -32,6 +32,7 @@ interface FormData {
   nicNumber: string;
   email: string;
   shy: string;
+  medium: string;
   gender: string;
   subjectStream: string;
   school: string;
@@ -45,6 +46,7 @@ interface FormErrors {
   nicNumber?: string;
   email?: string;
   shy?: string;
+  medium?: string;
   gender?: string;
   subjectStream?: string;
   school?: string;
@@ -60,6 +62,7 @@ const StudentRegistrationForm = () => {
     email: '',
     shy: '',
     gender: '',
+    medium: '',
     subjectStream: '',
     school: '',
     address: '',
@@ -233,6 +236,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       nicNumber: '',
       email: '',
       shy: '',
+      medium: '',
       gender: '',
       subjectStream: '',
       school: '',
@@ -406,6 +410,34 @@ const handleSubmit = async (e: React.FormEvent) => {
                 <p className="mt-1 text-xs sm:text-sm text-red-600 flex items-center">
                   <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" />
                   {errors.shy}
+                </p>
+              )}
+            </div>
+
+            {/* medium */}
+            <div>
+              <label className="block text-sm sm:text-base font-semibold text-gray-700 mb-2">
+                <Languages className="w-4 h-4 inline mr-2" />
+                Medium *
+              </label>
+              <select
+                name="medium"
+                value={formData.medium}
+                onChange={handleInputChange}
+                className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 rounded-lg focus:ring-2 focus:ring-[#2D620A] focus:border-[#2D620A] hover:border-[#2D620A] transition-colors text-gray-900 text-sm sm:text-base bg-white ${
+                  errors.medium ? 'border-red-500 bg-red-50' : 'border-gray-300 hover:border-gray-400'
+                }`}
+              >
+                <option value="" disabled className="text-gray-500 bg-white hover:bg-[#c7f7a1] hover:text-[#2D620A]">Select Medium</option>
+                <option value="Sinhala" className="text-gray-900 bg-white hover:bg-[#c7f7a1] hover:text-[#2D620A]">Sinhala</option>
+                <option value="Tamil" className="text-gray-900 bg-white hover:bg-[#c7f7a1] hover:text-[#2D620A]">Tamil</option>
+                <option value="English" className="text-gray-900 bg-white hover:bg-[#c7f7a1] hover:text-[#2D620A]">English</option>
+              </select>
+              
+              {errors.medium && (
+                <p className="mt-1 text-xs sm:text-sm text-red-600 flex items-center">
+                  <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" />
+                  {errors.medium}
                 </p>
               )}
             </div>
