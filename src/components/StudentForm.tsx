@@ -664,9 +664,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                   {errors.examLocation}
                 </p>
               )}
-              <p className="mt-1 text-xs sm:text-sm text-gray-500">
-                Enter your name ex: Kasun Kumara
-              </p>
+              
             </div>
 
             {/* Submit Button */}
