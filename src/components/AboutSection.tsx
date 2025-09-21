@@ -103,6 +103,11 @@ const AboutSection = () => {
       <div className="my-4">
             <LogoCarousel />
       </div>
+      <div className="flex items-center justify-center px-4">
+      <p className="text-sm sm:text-base lg:text-lg text-center font-semibold text-gray-900 mb-4 sm:mb-6">
+        © All right reserved. Kegalle Engineering Students' Society (KESS)
+      </p>
+      </div>
     </section>
   );
 };
