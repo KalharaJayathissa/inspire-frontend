@@ -22,7 +22,7 @@ const events = [
     location: 'Kegalle',
   },
   {
-    title: 'Chemistry',
+    title: 'CHEMISTRY',
     date: 'OCT.02',
     image: ChemistryImg,
     location: 'Kegalle',
