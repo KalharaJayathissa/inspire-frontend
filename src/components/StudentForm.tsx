@@ -227,11 +227,11 @@ const handleSubmit = async (e: React.FormEvent) => {
     
     console.log("Registration successful:", result); // Debug log
     toast.success('🎉 Registration submitted successfully! Welcome to KESS Inspire 2025!', {
-      duration: 2000,
+      duration: 3000,
     });
     setTimeout(() => {
       navigate('/');
-    }, 2000);
+    }, 3000);
 
 
     
