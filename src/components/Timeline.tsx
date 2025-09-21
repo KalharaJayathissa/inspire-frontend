@@ -53,7 +53,7 @@ const Timeline = () => {
   }, []);
 
   return (
-  <div className="relative w-full min-h-screen bg-white py-16 px-4 md:px-8 lg:px-16 overflow-hidden border-2 border-green-600 rounded-xl">
+  <div className="relative w-full min-h-screen bg-lime-30 py-16 px-4 md:px-8 lg:px-16 overflow-hidden border-2 border-green-600 rounded-xl">
     <EducationBackground />
 // ...existing code...
       
@@ -72,7 +72,7 @@ const Timeline = () => {
       </div>
       
       {/* Timeline dots with neon effect */}
-      <div className="absolute top-32 left-1/2 transform -translate-x-1/2 h-[calc(100%-8rem)] flex flex-col justify-around z-20">
+      {/* <div className="absolute top-32 left-1/2 transform -translate-x-1/2 h-[calc(100%-8rem)] flex flex-col justify-around z-20">
         {sortedEvents.map((_, index) => (
           <div 
             key={index}
@@ -91,7 +91,7 @@ const Timeline = () => {
             }}
           />
         ))}
-      </div>
+      </div> */}
 
       {/* Scroll to top button */}
       <button
@@ -104,7 +104,7 @@ const Timeline = () => {
         </svg>
       </button>
 
-  <div className="space-y-[-5rem] z-20 relative max-w-4xl mx-auto">
+  <div className="space-y-0 lg:space-y-[-5rem] z-20 relative max-w-4xl mx-auto">
         {sortedEvents.map((event, index) => {
           const isLeft = index % 2 === 0;
           return (
@@ -116,9 +116,9 @@ const Timeline = () => {
               }`}
               data-aos={isLeft ? 'fade-right' : 'fade-left'}
             >
-              <div className={`w-full md:w-6/12 scale-[0.8] ${isLeft ? 'md:mr-2' : 'md:ml-2'}`} style={{transformOrigin: 'center'}}>
+              <div className={`w-full max-w-sm sm:max-w-md md:w-6/12 lg:w-5/12 scale-100 ${isLeft ? 'md:mr-3' : 'md:ml-3'} px-3 sm:px-4 md:px-0`} style={{transformOrigin: 'center'}}>
                 <div 
-                  className="relative bg-white rounded-xl border-2 border-green-700 overflow-hidden transform transition-all duration-300 hover:-translate-y-1 group"
+                  className="relative bg-green-100 rounded-xl border-2 border-green-700 overflow-hidden transform transition-all duration-300 hover:-translate-y-1 group p-3 sm:p-5 md:p-6 lg:p-8"
                   style={{ boxShadow: '0 4px 16px -8px rgba(0,0,0,0.08)' }}
                 >
                   {/* Removed green card glow effect */}
