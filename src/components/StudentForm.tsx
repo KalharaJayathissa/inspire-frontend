@@ -318,6 +318,9 @@ const handleSubmit = async (e: React.FormEvent) => {
                   {errors.fullName}
                 </p>
               )}
+              <p className="mt-1 text-xs sm:text-sm text-gray-500">
+                Enter your name  ( ex: Kasun Kumara )
+              </p>
             </div>
 
             {/* NIC Number */}
@@ -392,6 +395,9 @@ const handleSubmit = async (e: React.FormEvent) => {
                   {errors.email}
                 </p>
               )}
+              <p className="mt-1 text-xs sm:text-sm text-gray-500">
+                Enter your email address ( ex: kasun555@gmail.com )
+              </p>
             </div>
 
             {/* Year */}
@@ -625,7 +631,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 </p>
               )}
               <p className="mt-1 text-xs sm:text-sm text-gray-500">
-                Enter your 10-digit mobile number (e.g., 0771234567)
+                Enter your 10-digit mobile number (ex: 0771234567)
               </p>
             </div>
 
@@ -666,6 +672,9 @@ const handleSubmit = async (e: React.FormEvent) => {
                   {errors.examLocation}
                 </p>
               )}
+              <p className="mt-1 text-xs sm:text-sm text-gray-500">
+                Enter your name ex: Kasun Kumara
+              </p>
             </div>
 
             {/* Submit Button */}
