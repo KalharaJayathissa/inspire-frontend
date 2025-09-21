@@ -72,7 +72,7 @@ const Timeline = () => {
       </div>
       
       {/* Timeline dots with neon effect */}
-      <div className="absolute top-32 left-1/2 transform -translate-x-1/2 h-[calc(100%-8rem)] flex flex-col justify-around z-20">
+      {/* <div className="absolute top-32 left-1/2 transform -translate-x-1/2 h-[calc(100%-8rem)] flex flex-col justify-around z-20">
         {sortedEvents.map((_, index) => (
           <div 
             key={index}
@@ -91,7 +91,7 @@ const Timeline = () => {
             }}
           />
         ))}
-      </div>
+      </div> */}
 
       {/* Scroll to top button */}
       <button
@@ -104,7 +104,7 @@ const Timeline = () => {
         </svg>
       </button>
 
-  <div className="space-y-[-5rem] z-20 relative max-w-4xl mx-auto">
+  <div className="space-y-0 lg:space-y-[-5rem] z-20 relative max-w-4xl mx-auto">
         {sortedEvents.map((event, index) => {
           const isLeft = index % 2 === 0;
           return (

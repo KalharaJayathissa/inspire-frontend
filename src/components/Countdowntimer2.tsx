@@ -91,6 +91,7 @@ const Countdowntimer2: React.FC = () => {
         to={targetDate}
         className="gap-10"
         labels={["DAYS", "HOURS", "MINUTES", "SECONDS"]}
+        renderMap={[true, true, true, true]}
         labelStyle={{
           fontSize: 28,
           fontWeight: 1000,

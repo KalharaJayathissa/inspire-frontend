@@ -18,8 +18,7 @@ const Index = () => {
             KESS
           </h1> */}
         </div>
-      </div>
-      
+        </div>
       <HeroSection />
       <AboutSection />
     </div>
