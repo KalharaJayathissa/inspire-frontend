@@ -3,7 +3,7 @@ import { supabase } from '../supabaseClient';
 
 // const baseURL = import.meta.env.VITE_BACKEND_URL || 'https://inspirebackend-production.up.railway.app/';
 const baseURL = 'https://inspirebackend-production.up.railway.app';
-console.log('Backend URL:', baseURL);
+
 
 export async function getstudents() {
   // Get the current session token
