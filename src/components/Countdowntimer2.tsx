@@ -75,41 +75,52 @@
 // Countdowntimer2.tsx
 // import React from "react";
 // import FlipClockCountdown from "react-flip-clock-countdown";
-import FlipClockCountdown from '@leenguyen/react-flip-clock-countdown';
-import '@leenguyen/react-flip-clock-countdown/dist/index.css';
-import '@leenguyen/react-flip-clock-countdown/dist/index.css';
-import './flipclock.css';
-
+import { useEffect, useState } from "react";
+import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
+import "@leenguyen/react-flip-clock-countdown/dist/index.css";
+import "./flipclock.css";
 
 const Countdowntimer2: React.FC = () => {
   // Target: 25th Sept 2025, 8:00 AM
   const targetDate = new Date("2025-09-25T08:00:00").getTime();
 
+  // Track screen width for responsiveness
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 640);
+    handleResize(); // check on load
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
-    <div className="flex justify-center items-center py-6">
+    <div className="flex justify-center items-center py-6 px-2">
       <FlipClockCountdown
         to={targetDate}
-        className="gap-10"
+        className="gap-4 sm:gap-6 md:gap-10"
         labels={["DAYS", "HOURS", "MINUTES", "SECONDS"]}
-        renderMap={[true, true, true, true]}
+        renderMap={isMobile ? [true, true, false, false] : [true, true, true, true]}
         labelStyle={{
-          fontSize: 28,
+          fontSize: isMobile ? 16 : 28,
           fontWeight: 1000,
           textTransform: "uppercase",
-          color: "#247739ff", // gray-700
+          color: "#247739ff",
         }}
         digitBlockStyle={{
-          background: "#283f25ff", // gray-100
-          color: "#69a569ff", // gray-800
-          fontSize: 38,
-          width:60,
+          background: "#283f25ff",
+          color: "#69a569ff",
+          fontSize: isMobile ? 40 : 38,
+          width: isMobile ? 65 : 60,
           borderRadius: "12px",
-          boxShadow: "0 18px 10px rgba(247, 30, 30, 0.1)",
+          boxShadow: "0 12px 8px rgba(0, 0, 0, 0.1)",
         }}
-        dividerStyle={{ color: "#6b8074ff" }} // gray-500
+        dividerStyle={{ color: "#6b8074ff" }}
       />
     </div>
   );
 };
+
+// export default Countdowntimer2;
 
 export default Countdowntimer2;
