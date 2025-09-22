@@ -3,32 +3,23 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/Attendent/card';
 import { Button } from '../ui/Attendent/button';
 import { Input } from '../ui/Attendent/input';
 import { Label } from '../ui/Attendent/label';
-import { Textarea } from '../ui/Attendent/textarea';
 import { ArrowLeft, UserPlus, Save } from 'lucide-react';
-
-interface Student {
-  id: string;
-  nic: string;
-  name: string;
-  school: string;
-  contactNumber: string;
-  homeAddress: string;
-  isPresent: boolean;
-}
+import { registerStudent } from '@/lib/api';
+import { toast } from 'sonner';
 
 interface RegisterStudentProps {
-  selectedSchool: string;
+  selectedSchoolId: number;
+  selectedSchoolName: string;
   onBack: () => void;
-  onRegister: (student: Omit<Student, 'id' | 'isPresent'>) => void;
+  onRegistrationSuccess: () => void;
 }
 
-export function RegisterStudent({ selectedSchool, onBack, onRegister }: RegisterStudentProps) {
+export function RegisterStudent({ selectedSchoolId, selectedSchoolName, onBack, onRegistrationSuccess }: RegisterStudentProps) {
   const [formData, setFormData] = useState({
-    nic: '',
     name: '',
-    school: '',
-    contactNumber: '',
-    homeAddress: ''
+    NIC: '',
+    contact_phone: '',
+    contact_email: ''
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -53,20 +44,26 @@ export function RegisterStudent({ selectedSchool, onBack, onRegister }: Register
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.nic.trim()) {
-      newErrors.nic = 'NIC is required';
-    } else if (!validateNIC(formData.nic)) {
-      newErrors.nic = 'Enter valid NIC (9 digits + V/X or 12 digits)';
+    if (!formData.NIC.trim()) {
+      newErrors.NIC = 'NIC is required';
+    } else if (!validateNIC(formData.NIC)) {
+      newErrors.NIC = 'Enter valid NIC (9 digits + V/X or 12 digits)';
     }
 
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required';
     }
 
-    if (!formData.contactNumber.trim()) {
-      newErrors.contactNumber = 'Contact number is required';
-    } else if (!/^\d{10}$/.test(formData.contactNumber.trim())) {
-      newErrors.contactNumber = 'Please enter a valid 10-digit contact number';
+    if (!formData.contact_phone.trim()) {
+      newErrors.contact_phone = 'Contact number is required';
+    } else if (!/^\d{10}$/.test(formData.contact_phone.trim())) {
+      newErrors.contact_phone = 'Please enter a valid 10-digit contact number';
+    }
+
+    if (!formData.contact_email.trim()) {
+      newErrors.contact_email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.contact_email.trim())) {
+      newErrors.contact_email = 'Please enter a valid email address';
     }
 
     setErrors(newErrors);
@@ -82,18 +79,30 @@ export function RegisterStudent({ selectedSchool, onBack, onRegister }: Register
 
     setIsSubmitting(true);
     
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    onRegister({
-      nic: formData.nic.trim().toUpperCase(),
-      name: formData.name.trim(),
-      school: selectedSchool,
-      contactNumber: formData.contactNumber.trim(),
-      homeAddress: formData.homeAddress.trim() || 'Not Provided'
-    });
-    
-    setIsSubmitting(false);
+    try {
+      const registrationData = {
+        name: formData.name.trim(),
+        NIC: formData.NIC.trim().toUpperCase(),
+        contact_phone: formData.contact_phone.trim(),
+        contact_email: formData.contact_email.trim(),
+        school_id: selectedSchoolId
+      };
+
+      await registerStudent(registrationData);
+      toast.success(`🎉 ${formData.name.trim()} has been registered and marked as present!`);
+      onRegistrationSuccess(); // Refresh attendance data
+      onBack(); // Go back to search page
+    } catch (error: any) {
+      if (error.response?.status === 409) {
+        toast.error('A student with this NIC already exists!');
+        setErrors({ NIC: 'Student with this NIC already exists' });
+      } else {
+        toast.error('Failed to register student. Please try again.');
+        console.error('Registration error:', error);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (field: string, value: string) => {
@@ -118,7 +127,7 @@ export function RegisterStudent({ selectedSchool, onBack, onRegister }: Register
                 Register New Student
               </h1>
               <p className="text-sm text-muted-foreground mt-1">
-                Adding student to {selectedSchool}
+                Adding student to {selectedSchoolName}
               </p>
             </div>
           </div>
@@ -135,13 +144,13 @@ export function RegisterStudent({ selectedSchool, onBack, onRegister }: Register
                     id="nic"
                     type="text"
                     placeholder="Enter NIC number (e.g., 123456789V or 123456789012)"
-                    value={formData.nic}
-                    onChange={(e) => handleChange('nic', e.target.value.toUpperCase())}
-                    className={errors.nic ? 'border-destructive' : ''}
+                    value={formData.NIC}
+                    onChange={(e) => handleChange('NIC', e.target.value.toUpperCase())}
+                    className={errors.NIC ? 'border-destructive' : ''}
                     maxLength={12}
                   />
-                  {errors.nic && (
-                    <p className="text-sm text-destructive">{errors.nic}</p>
+                  {errors.NIC && (
+                    <p className="text-sm text-destructive">{errors.NIC}</p>
                   )}
                   <p className="text-xs text-muted-foreground">
                     Old format: 9 digits + V/X (e.g., 123456789V) or New format: 12 digits
@@ -164,30 +173,34 @@ export function RegisterStudent({ selectedSchool, onBack, onRegister }: Register
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="contactNumber">Contact Number *</Label>
+                  <Label htmlFor="contactPhone">Contact Number *</Label>
                   <Input
-                    id="contactNumber"
+                    id="contactPhone"
                     type="tel"
                     placeholder="Enter 10-digit contact number"
-                    value={formData.contactNumber}
-                    onChange={(e) => handleChange('contactNumber', e.target.value.replace(/\D/g, ''))}
-                    className={errors.contactNumber ? 'border-destructive' : ''}
+                    value={formData.contact_phone}
+                    onChange={(e) => handleChange('contact_phone', e.target.value.replace(/\D/g, ''))}
+                    className={errors.contact_phone ? 'border-destructive' : ''}
                     maxLength={10}
                   />
-                  {errors.contactNumber && (
-                    <p className="text-sm text-destructive">{errors.contactNumber}</p>
+                  {errors.contact_phone && (
+                    <p className="text-sm text-destructive">{errors.contact_phone}</p>
                   )}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="homeAddress">Home Address (Optional)</Label>
-                  <Textarea
-                    id="homeAddress"
-                    placeholder="Enter home address (optional)"
-                    value={formData.homeAddress}
-                    onChange={(e) => handleChange('homeAddress', e.target.value)}
-                    rows={3}
+                  <Label htmlFor="contactEmail">Email Address *</Label>
+                  <Input
+                    id="contactEmail"
+                    type="email"
+                    placeholder="Enter email address"
+                    value={formData.contact_email}
+                    onChange={(e) => handleChange('contact_email', e.target.value)}
+                    className={errors.contact_email ? 'border-destructive' : ''}
                   />
+                  {errors.contact_email && (
+                    <p className="text-sm text-destructive">{errors.contact_email}</p>
+                  )}
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3">

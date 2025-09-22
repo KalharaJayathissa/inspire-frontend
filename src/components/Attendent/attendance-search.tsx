@@ -4,41 +4,65 @@ import { Button } from '../ui/Attendent/button';
 import { StudentCard } from './student-card';
 import { Card, CardContent } from '../ui/Attendent/card';
 import { Badge } from '../ui/Attendent/badge';
-import { Search, UserPlus, Users, Calendar, CheckCircle2, ArrowLeft, School } from 'lucide-react';
+import { Search, UserPlus, Users, Calendar, CheckCircle2, ArrowLeft, School, Loader2 } from 'lucide-react';
+import { fetchStudentsBySchool, markAttendance } from '@/lib/api';
+import { toast } from 'sonner';
 
-interface Student {
-  id: string;
-  nic: string;
+interface StudentBasic {
+  id: number;
   name: string;
-  school: string;
-  contactNumber: string;
-  homeAddress: string;
-  isPresent: boolean;
+  nic: string;
+  school_id: number;
+  contact_email: string;
+  contact_phone: string;
+  registered_at: string;
+}
+
+interface PresentStudent {
+  student_school_id: number;
+  student_id: number;
+  student_name: string;
+  student_nic: string;
+  contact_email: string;
+  contact_phone: string;
+  registered_at: string;
+  attendance_status: number;
+  marked_by: string;
+  marked_at: string;
 }
 
 interface AttendanceSearchProps {
-  students: Student[];
-  selectedSchool: string;
-  onMarkPresent: (student: Student) => void;
-  onMarkAbsent: (student: Student) => void;
+  selectedSchoolId: number;
+  selectedSchoolName: string;
   onRegisterClick: () => void;
   onBackToSchools: () => void;
-  presentStudents: Student[];
+  presentStudents: PresentStudent[];
+  refreshAttendance: () => void;
+  loading: boolean;
 }
 
 export function AttendanceSearch({ 
-  students, 
-  selectedSchool,
-  onMarkPresent, 
-  onMarkAbsent,
+  selectedSchoolId,
+  selectedSchoolName,
   onRegisterClick,
   onBackToSchools,
-  presentStudents 
+  presentStudents,
+  refreshAttendance,
+  loading
 }: AttendanceSearchProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [suggestions, setSuggestions] = useState<Student[]>([]);
-  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  const [nicSuggestions, setNicSuggestions] = useState<string[]>([]);
+  const [selectedStudent, setSelectedStudent] = useState<StudentBasic | null>(null);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [schoolStudents, setSchoolStudents] = useState<StudentBasic[]>([]);
+  const [loadingStudent, setLoadingStudent] = useState(false);
+  const [loadingStudents, setLoadingStudents] = useState(true);
+
+  // Debug: Log present students data whenever it changes
+  useEffect(() => {
+    console.log('AttendanceSearch - presentStudents prop changed:', presentStudents);
+    console.log('AttendanceSearch - presentStudents length:', presentStudents.length);
+  }, [presentStudents]);
 
   const currentDate = new Date().toLocaleDateString('en-US', {
     weekday: 'long',
@@ -47,36 +71,80 @@ export function AttendanceSearch({
     day: 'numeric'
   });
 
-  // Filter students by selected school
-  const schoolPresentStudents = presentStudents.filter(student => student.school === selectedSchool);
-
+  // Load students for the selected school when component mounts
   useEffect(() => {
-    if (searchQuery.length > 0) {
-      // Filter students by selected school first, then by search query
-      const schoolStudents = students.filter(student => student.school === selectedSchool);
-      const filtered = schoolStudents.filter(student =>
-        student.nic.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        student.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      setSuggestions(filtered.slice(0, 5)); // Show max 5 suggestions
+    if (selectedSchoolId) {
+      loadSchoolStudents();
+    }
+  }, [selectedSchoolId]);
+
+  const loadSchoolStudents = async () => {
+    try {
+      setLoadingStudents(true);
+      const studentsData = await fetchStudentsBySchool(selectedSchoolId);
+      setSchoolStudents(studentsData);
+    } catch (error: any) {
+      toast.error('Failed to load students');
+      console.error('Failed to load students:', error);
+    } finally {
+      setLoadingStudents(false);
+    }
+  };
+
+  // Handle NIC search - show NIC suggestions
+  useEffect(() => {
+    if (searchQuery.length > 0 && schoolStudents.length > 0) {
+      const filtered = schoolStudents
+        .filter(student => 
+          student.nic.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+        .map(student => student.nic)
+        .slice(0, 5); // Show max 5 NIC suggestions
+      
+      setNicSuggestions(filtered);
       setShowSuggestions(true);
     } else {
-      setSuggestions([]);
+      setNicSuggestions([]);
       setShowSuggestions(false);
       setSelectedStudent(null);
     }
-  }, [searchQuery, students, selectedSchool]);
+  }, [searchQuery, schoolStudents]);
 
-  const handleStudentSelect = (student: Student) => {
-    setSelectedStudent(student);
-    setSearchQuery(student.nic);
-    setShowSuggestions(false);
+  const handleNicSelect = async (nic: string) => {
+    try {
+      setLoadingStudent(true);
+      setSearchQuery(nic);
+      setShowSuggestions(false);
+      
+      // Find the full student details
+      const student = schoolStudents.find(s => s.nic === nic);
+      if (student) {
+        setSelectedStudent(student);
+      }
+    } catch (error: any) {
+      toast.error('Failed to load student details');
+      console.error('Failed to load student details:', error);
+    } finally {
+      setLoadingStudent(false);
+    }
   };
 
-  const handlePresentStudentClick = (student: Student) => {
-    setSelectedStudent(student);
-    setSearchQuery(student.nic);
+  const handlePresentStudentClick = (student: PresentStudent) => {
+    // Convert PresentStudent to StudentBasic for display
+    const basicStudent: StudentBasic = {
+      id: student.student_id,
+      name: student.student_name,
+      nic: student.student_nic,
+      school_id: selectedSchoolId,
+      contact_email: student.contact_email,
+      contact_phone: student.contact_phone,
+      registered_at: student.registered_at
+    };
+    
+    setSelectedStudent(basicStudent);
+    setSearchQuery(student.student_nic);
     setShowSuggestions(false);
+    
     // Scroll to student card
     setTimeout(() => {
       const studentCard = document.getElementById('student-card');
@@ -86,26 +154,64 @@ export function AttendanceSearch({
     }, 100);
   };
 
-  const handleMarkPresent = (student: Student) => {
-    onMarkPresent(student);
-    
-    // Clear search and hide student card
-    setSearchQuery('');
-    setSelectedStudent(null);
-    setShowSuggestions(false);
+  const handleMarkPresent = async (student: StudentBasic) => {
+    try {
+      // Find the student_school_id from the attendance data or use the student id
+      const existingAttendance = presentStudents.find(p => p.student_nic === student.nic);
+      const studentSchoolId = existingAttendance?.student_school_id || student.id;
+      
+      await markAttendance(studentSchoolId, 1); // 1 = Present
+      toast.success(`🎉 ${student.name} marked as present!`);
+      
+      // Clear search and refresh attendance
+      setSearchQuery('');
+      setSelectedStudent(null);
+      setShowSuggestions(false);
+      refreshAttendance();
+    } catch (error: any) {
+      toast.error('Failed to mark attendance');
+      console.error('Failed to mark attendance:', error);
+    }
   };
 
-  const handleMarkAbsent = (student: Student) => {
-    onMarkAbsent(student);
-    
-    // Clear search and hide student card
-    setSearchQuery('');
-    setSelectedStudent(null);
-    setShowSuggestions(false);
+  const handleMarkAbsent = async (student: StudentBasic) => {
+    try {
+      // Find the student_school_id from the attendance data
+      const existingAttendance = presentStudents.find(p => p.student_nic === student.nic);
+      if (existingAttendance) {
+        await markAttendance(existingAttendance.student_school_id, 0); // 0 = Absent
+        toast.info(`${student.name} marked as absent.`);
+        
+        // Clear search and refresh attendance
+        setSearchQuery('');
+        setSelectedStudent(null);
+        setShowSuggestions(false);
+        refreshAttendance();
+      } else {
+        toast.error('Cannot mark absent - student has no attendance record');
+      }
+    } catch (error: any) {
+      toast.error('Failed to mark attendance');
+      console.error('Failed to mark attendance:', error);
+    }
   };
 
   const isStudentAlreadyPresent = selectedStudent ? 
-    schoolPresentStudents.some(s => s.id === selectedStudent.id) : false;
+    presentStudents.some(s => s.student_nic === selectedStudent.nic) : false;
+
+  if (loadingStudents) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-6 max-w-4xl">
+          <div className="flex flex-col items-center justify-center py-12">
+            <Loader2 className="w-8 h-8 animate-spin mb-4" />
+            <h3 className="mb-2">Loading Students...</h3>
+            <p className="text-muted-foreground">Please wait while we fetch the student data.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -119,7 +225,7 @@ export function AttendanceSearch({
             </Button>
             <div className="flex items-center gap-2">
               <School className="w-5 h-5" />
-              <h1>{selectedSchool}</h1>
+              <h1>{selectedSchoolName}</h1>
             </div>
           </div>
           
@@ -131,24 +237,28 @@ export function AttendanceSearch({
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     type="text"
-                    placeholder="Search by NIC or Name..."
+                    placeholder="Search by NIC..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-10"
+                    disabled={loadingStudent}
                   />
+                  {loadingStudent && (
+                    <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 animate-spin" />
+                  )}
                 </div>
                 
-                {showSuggestions && suggestions.length > 0 && (
+                {showSuggestions && nicSuggestions.length > 0 && (
                   <div className="absolute z-10 w-full mt-1 bg-white border border-border rounded-md shadow-lg max-h-48 overflow-y-auto">
-                    {suggestions.map((student) => (
+                    {nicSuggestions.map((nic) => (
                       <div
-                        key={student.id}
+                        key={nic}
                         className="px-4 py-2 hover:bg-muted cursor-pointer border-b border-border last:border-b-0"
-                        onClick={() => handleStudentSelect(student)}
+                        onClick={() => handleNicSelect(nic)}
                       >
-                        <div className="font-medium">{student.name}</div>
+                        <div className="font-medium">NIC: {nic}</div>
                         <div className="text-sm text-muted-foreground">
-                          NIC: {student.nic}
+                          Click to view student details
                         </div>
                       </div>
                     ))}
@@ -167,9 +277,9 @@ export function AttendanceSearch({
               </Button>
             </div>
 
-            {showSuggestions && suggestions.length === 0 && searchQuery.length > 0 && (
+            {showSuggestions && nicSuggestions.length === 0 && searchQuery.length > 0 && !loadingStudent && (
               <div className="text-center py-4 text-muted-foreground">
-                No students found. Click "Register Student" to add a new student.
+                No students found with this NIC. Click "Register Student" to add a new student.
               </div>
             )}
           </div>
@@ -177,12 +287,39 @@ export function AttendanceSearch({
           {/* Student Card */}
           {selectedStudent && (
             <div id="student-card">
-              <StudentCard
-                student={selectedStudent}
-                onMarkPresent={handleMarkPresent}
-                onMarkAbsent={handleMarkAbsent}
-                isAlreadyPresent={isStudentAlreadyPresent}
-              />
+              <Card className="p-6">
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">{selectedStudent.name}</h3>
+                  <div className="grid gap-2 text-sm">
+                    <div><strong>NIC:</strong> {selectedStudent.nic}</div>
+                    <div><strong>Email:</strong> {selectedStudent.contact_email}</div>
+                    <div><strong>Phone:</strong> {selectedStudent.contact_phone}</div>
+                  </div>
+                  <div className="flex gap-3">
+                    {!isStudentAlreadyPresent ? (
+                      <Button 
+                        onClick={() => handleMarkPresent(selectedStudent)}
+                        className="bg-green-600 hover:bg-green-700"
+                      >
+                        <CheckCircle2 className="w-4 h-4 mr-2" />
+                        Mark Present
+                      </Button>
+                    ) : (
+                      <Button 
+                        onClick={() => handleMarkAbsent(selectedStudent)}
+                        variant="destructive"
+                      >
+                        Mark Absent
+                      </Button>
+                    )}
+                  </div>
+                  {isStudentAlreadyPresent && (
+                    <Badge variant="outline" className="text-green-700 border-green-200 w-fit">
+                      Already Present
+                    </Badge>
+                  )}
+                </div>
+              </Card>
             </div>
           )}
 
@@ -200,26 +337,26 @@ export function AttendanceSearch({
                 </div>
               </div>
               <Badge variant="secondary">
-                {schoolPresentStudents.length} Present
+                {presentStudents.length} Present
               </Badge>
             </div>
 
-            {schoolPresentStudents.length === 0 ? (
+            {presentStudents.length === 0 && !loading ? (
               <Card>
                 <CardContent className="flex flex-col items-center justify-center py-12">
                   <Users className="w-12 h-12 text-muted-foreground mb-4" />
                   <h3 className="mb-2">No Students Present</h3>
                   <p className="text-muted-foreground text-center">
-                    No students from {selectedSchool} have been marked as present today. 
+                    No students from {selectedSchoolName} have been marked as present today. 
                     Use the search function to mark attendance.
                   </p>
                 </CardContent>
               </Card>
             ) : (
               <div className="grid gap-3">
-                {schoolPresentStudents.map((student, index) => (
+                {presentStudents.map((student, index) => (
                   <Card 
-                    key={student.id} 
+                    key={student.student_school_id} 
                     className="cursor-pointer hover:bg-muted/50 transition-colors"
                     onClick={() => handlePresentStudentClick(student)}
                   >
@@ -231,11 +368,11 @@ export function AttendanceSearch({
                           </div>
                           <div className="min-w-0 flex-1">
                             <h4 className="flex items-center gap-2">
-                              <span className="truncate">{student.name}</span>
+                              <span className="truncate">{student.student_name}</span>
                               <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0" />
                             </h4>
                             <p className="text-sm text-muted-foreground truncate">
-                              NIC: {student.nic}
+                              NIC: {student.student_nic}
                             </p>
                           </div>
                         </div>

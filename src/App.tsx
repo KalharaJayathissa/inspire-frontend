@@ -8,6 +8,7 @@ import Login from "./pages/login";
 import AdminPage from "./pages/admin";
 import MarkerPage from "./pages/marker";
 import Invigilator from "./pages/Invigilator";
+import { ApiTest } from "./components/ApiTest";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -22,6 +23,7 @@ const App = () => (
           <Route path='/admin/' element={<AdminPage />} />
           <Route path='/marker' element={<MarkerPage />} />
           <Route path='/invigilator' element={<Invigilator />} />
+          <Route path='/api-test' element={<ApiTest />} />
           <Route path="/" element={<ComingSoon />} />
         </Routes>
       </BrowserRouter>

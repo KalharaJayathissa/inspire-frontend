@@ -1,117 +1,72 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SchoolSelection } from '@/components/Attendent/school-selection';
 import { AttendanceSearch } from '@/components/Attendent/attendance-search';
 import { RegisterStudent } from '@/components/Attendent/register-student';
 import { toast, Toaster } from 'sonner';
+import { getTodaysAttendance } from '@/lib/api';
 
 interface Student {
-  id: string;
-  nic: string;
-  name: string;
-  school: string;
-  contactNumber: string;
-  homeAddress: string;
-  isPresent: boolean;
+  student_school_id: number;
+  student_id: number;
+  student_name: string;
+  student_nic: string;
+  contact_email: string;
+  contact_phone: string;
+  registered_at: string;
+  attendance_status: number;
+  marked_by: string;
+  marked_at: string;
 }
 
 type Page = 'schools' | 'search' | 'register';
 
-// Mock data for demonstration
-const initialStudents: Student[] = [
-  {
-    id: '1',
-    nic: '200158794V',
-    name: 'Amara Silva',
-    school: 'Royal College',
-    contactNumber: '0771234567',
-    homeAddress: '123 Main Street, Colombo 07',
-    isPresent: false
-  },
-  {
-    id: '2',
-    nic: '199987654V',
-    name: 'Kavinda Perera',
-    school: 'Trinity College',
-    contactNumber: '0779876543',
-    homeAddress: '456 Lake Road, Kandy',
-    isPresent: false
-  },
-  {
-    id: '3',
-    nic: '200245698V',
-    name: 'Nimali Fernando',
-    school: 'Holy Family Convent',
-    contactNumber: '0763456789',
-    homeAddress: '789 Hill Street, Galle',
-    isPresent: false
-  },
-  {
-    id: '4',
-    nic: '200334567V',
-    name: 'Rashan Mendis',
-    school: 'St. Joseph\'s College',
-    contactNumber: '0712345678',
-    homeAddress: '321 Park Avenue, Negombo',
-    isPresent: false
-  },
-  {
-    id: '5',
-    nic: '199876543V',
-    name: 'Tharushi Jayawardena',
-    school: 'Musaeus College',
-    contactNumber: '0754567890',
-    homeAddress: '654 Beach Road, Mount Lavinia',
-    isPresent: false
-  }
-];
-
 function Invigilator() {
   const [currentPage, setCurrentPage] = useState<Page>('schools');
-  const [selectedSchool, setSelectedSchool] = useState<string>('');
-  const [students, setStudents] = useState<Student[]>(initialStudents);
+  const [selectedSchoolId, setSelectedSchoolId] = useState<number | null>(null);
+  const [selectedSchoolName, setSelectedSchoolName] = useState<string>('');
+  const [presentStudents, setPresentStudents] = useState<Student[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const presentStudents = students.filter(student => student.isPresent);
-
-  const handleSelectSchool = (school: string) => {
-    setSelectedSchool(school);
+  const handleSelectSchool = (schoolId: number, schoolName: string) => {
+    setSelectedSchoolId(schoolId);
+    setSelectedSchoolName(schoolName);
     setCurrentPage('search');
+    // Load today's attendance for this school
+    loadTodaysAttendance(schoolId);
   };
 
-  const handleMarkPresent = (student: Student) => {
-    const updatedStudent = { ...student, isPresent: true };
-    setStudents(prev => prev.map(s => 
-      s.id === updatedStudent.id ? updatedStudent : s
-    ));
-    
-    toast.success(`🎉 ${updatedStudent.name} marked as present!`);
-  };
-
-  const handleMarkAbsent = (student: Student) => {
-    const updatedStudent = { ...student, isPresent: false };
-    setStudents(prev => prev.map(s => 
-      s.id === updatedStudent.id ? updatedStudent : s
-    ));
-    
-    toast.info(`${updatedStudent.name} marked as absent.`);
-  };
-
-  const handleRegisterStudent = (studentData: Omit<Student, 'id' | 'isPresent'>) => {
-    // Check if NIC already exists
-    const existingStudent = students.find(s => s.nic === studentData.nic);
-    if (existingStudent) {
-      toast.error('A student with this NIC already exists!');
-      return;
+  const loadTodaysAttendance = async (schoolId: number) => {
+    try {
+      setLoading(true);
+      console.log('Loading attendance for school ID:', schoolId);
+      const attendanceData = await getTodaysAttendance(schoolId);
+      console.log('Raw attendance data received:', attendanceData);
+      
+      // Check if attendanceData is an array
+      if (!Array.isArray(attendanceData)) {
+        console.error('Attendance data is not an array:', attendanceData);
+        setPresentStudents([]);
+        return;
+      }
+      
+      // Filter only present students (status = 1)
+      const presentStudentsData = attendanceData.filter((student: Student) => student.attendance_status === 1);
+      console.log('Present students filtered:', presentStudentsData);
+      setPresentStudents(presentStudentsData);
+    } catch (error: any) {
+      toast.error('Failed to load attendance data');
+      console.error('Failed to load attendance:', error);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const newStudent: Student = {
-      ...studentData,
-      id: Date.now().toString(),
-      isPresent: true // Automatically mark new student as present
-    };
-
-    setStudents(prev => [...prev, newStudent]);
-    toast.success(`🎉 ${newStudent.name} has been registered and marked as present!`);
-    setCurrentPage('search');
+  // These handlers will be implemented in the child components
+  // since they need to make API calls with the attendance system
+  const refreshAttendance = () => {
+    if (selectedSchoolId) {
+      loadTodaysAttendance(selectedSchoolId);
+    }
   };
 
   const renderPage = () => {
@@ -119,28 +74,28 @@ function Invigilator() {
       case 'schools':
         return (
           <SchoolSelection
-            students={students}
             onSelectSchool={handleSelectSchool}
           />
         );
       case 'search':
         return (
           <AttendanceSearch
-            students={students}
-            selectedSchool={selectedSchool}
-            onMarkPresent={handleMarkPresent}
-            onMarkAbsent={handleMarkAbsent}
+            selectedSchoolId={selectedSchoolId!}
+            selectedSchoolName={selectedSchoolName}
             onRegisterClick={() => setCurrentPage('register')}
             onBackToSchools={() => setCurrentPage('schools')}
             presentStudents={presentStudents}
+            refreshAttendance={refreshAttendance}
+            loading={loading}
           />
         );
       case 'register':
         return (
           <RegisterStudent
-            selectedSchool={selectedSchool}
+            selectedSchoolId={selectedSchoolId!}
+            selectedSchoolName={selectedSchoolName}
             onBack={() => setCurrentPage('search')}
-            onRegister={handleRegisterStudent}
+            onRegistrationSuccess={refreshAttendance}
           />
         );
       default:
