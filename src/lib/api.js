@@ -119,6 +119,8 @@ export async function getTodaysAttendance(schoolId) {
     const response = await axios.get(`${baseURL}/api/invigilator/attendance/today?school_id=${schoolId}`, {
       headers
     });
+    console.log('result!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+    console.log(response);
     
     console.log('getTodaysAttendance response:', response.data);
     
