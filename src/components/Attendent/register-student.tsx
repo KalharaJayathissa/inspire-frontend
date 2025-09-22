@@ -111,104 +111,115 @@ export function RegisterStudent({ selectedSchoolId, selectedSchoolName, onBack, 
       setErrors(prev => ({ ...prev, [field]: '' }));
     }
   };
-
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-6 max-w-2xl">
-        <div className="space-y-6">
-          <div className="flex items-center gap-4">
-            <Button variant="outline" onClick={onBack}>
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 max-w-2xl">
+        <div className="space-y-4 sm:space-y-6">
+          <div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-start sm:gap-4">
+            <Button 
+              variant="outline" 
+              onClick={onBack}
+              className="w-full sm:w-auto"
+            >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back
             </Button>
-            <div>
-              <h1 className="flex items-center gap-2">
-                <UserPlus className="w-6 h-6" />
+            <div className="text-center sm:text-left">
+              <h1 className="flex items-center justify-center sm:justify-start gap-2 text-lg sm:text-xl lg:text-2xl font-semibold">
+                <UserPlus className="w-5 h-5 sm:w-6 sm:h-6" />
                 Register New Student
               </h1>
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                 Adding student to {selectedSchoolName}
               </p>
             </div>
           </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Student Information</CardTitle>
+          <Card className="mx-2 sm:mx-0">
+            <CardHeader className="pb-4 sm:pb-6">
+              <CardTitle className="text-base sm:text-lg">Student Information</CardTitle>
             </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
+            <CardContent className="px-4 sm:px-6">
+              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="nic">NIC Number *</Label>
+                  <Label htmlFor="nic" className="text-sm font-medium">NIC Number *</Label>
                   <Input
                     id="nic"
                     type="text"
                     placeholder="Enter NIC number (e.g., 123456789V or 123456789012)"
                     value={formData.NIC}
                     onChange={(e) => handleChange('NIC', e.target.value.toUpperCase())}
-                    className={errors.NIC ? 'border-destructive' : ''}
+                    className={`h-11 sm:h-10 ${errors.NIC ? 'border-destructive' : ''}`}
                     maxLength={12}
-                  />
-                  {errors.NIC && (
-                    <p className="text-sm text-destructive">{errors.NIC}</p>
+                  />                  {errors.NIC && (
+                    <p className="text-xs sm:text-sm text-destructive">{errors.NIC}</p>
                   )}
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-muted-foreground leading-tight">
                     Old format: 9 digits + V/X (e.g., 123456789V) or New format: 12 digits
                   </p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="name">Full Name *</Label>
+                  <Label htmlFor="name" className="text-sm font-medium">Full Name *</Label>
                   <Input
                     id="name"
                     type="text"
                     placeholder="Enter full name"
                     value={formData.name}
                     onChange={(e) => handleChange('name', e.target.value)}
-                    className={errors.name ? 'border-destructive' : ''}
+                    className={`h-11 sm:h-10 ${errors.name ? 'border-destructive' : ''}`}
                   />
                   {errors.name && (
-                    <p className="text-sm text-destructive">{errors.name}</p>
+                    <p className="text-xs sm:text-sm text-destructive">{errors.name}</p>
                   )}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="contactPhone">Contact Number *</Label>
+                  <Label htmlFor="contactPhone" className="text-sm font-medium">Contact Number *</Label>
                   <Input
                     id="contactPhone"
                     type="tel"
                     placeholder="Enter 10-digit contact number"
                     value={formData.contact_phone}
                     onChange={(e) => handleChange('contact_phone', e.target.value.replace(/\D/g, ''))}
-                    className={errors.contact_phone ? 'border-destructive' : ''}
+                    className={`h-11 sm:h-10 ${errors.contact_phone ? 'border-destructive' : ''}`}
                     maxLength={10}
                   />
                   {errors.contact_phone && (
-                    <p className="text-sm text-destructive">{errors.contact_phone}</p>
+                    <p className="text-xs sm:text-sm text-destructive">{errors.contact_phone}</p>
                   )}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="contactEmail">Email Address *</Label>
+                  <Label htmlFor="contactEmail" className="text-sm font-medium">Email Address *</Label>
                   <Input
                     id="contactEmail"
                     type="email"
                     placeholder="Enter email address"
                     value={formData.contact_email}
                     onChange={(e) => handleChange('contact_email', e.target.value)}
-                    className={errors.contact_email ? 'border-destructive' : ''}
+                    className={`h-11 sm:h-10 ${errors.contact_email ? 'border-destructive' : ''}`}
                   />
                   {errors.contact_email && (
-                    <p className="text-sm text-destructive">{errors.contact_email}</p>
+                    <p className="text-xs sm:text-sm text-destructive">{errors.contact_email}</p>
                   )}
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Button type="submit" disabled={isSubmitting} className="flex-1">
+                <div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:gap-3 pt-2">
+                  <Button 
+                    type="submit" 
+                    disabled={isSubmitting} 
+                    className="w-full sm:flex-1 h-11 sm:h-10"
+                  >
                     <Save className="w-4 h-4 mr-2" />
                     {isSubmitting ? 'Registering...' : 'Register Student'}
                   </Button>
-                  <Button type="button" variant="outline" onClick={onBack} className="sm:w-auto">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={onBack} 
+                    className="w-full sm:w-auto h-11 sm:h-10"
+                  >
                     Cancel
                   </Button>
                 </div>
