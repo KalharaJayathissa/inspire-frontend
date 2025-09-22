@@ -94,12 +94,13 @@ export async function registerStudent(studentData) {
 }
 
 // 5. Mark/Update Attendance
-export async function markAttendance(studentSchoolId, status) {
+export async function markAttendance(studentSchoolId, status, nic) {
   const headers = await getAuthHeaders();
   
   const response = await axios.post(`${baseURL}/api/invigilator/attendance/mark`, {
     student_school_id: studentSchoolId,
-    status: status // 1 = Present, 0 = Absent
+    status: status, // 1 = Present, 0 = Absent
+    nic: nic // Include NIC in the request
   }, {
     headers
   });

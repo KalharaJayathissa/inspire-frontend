@@ -160,7 +160,7 @@ export function AttendanceSearch({
       const existingAttendance = presentStudents.find(p => p.student_nic === student.nic);
       const studentSchoolId = existingAttendance?.student_school_id || student.id;
       
-      await markAttendance(studentSchoolId, 1); // 1 = Present
+      await markAttendance(studentSchoolId, 1, student.nic); // 1 = Present, include NIC
       toast.success(`🎉 ${student.name} marked as present!`);
       
       // Clear search and refresh attendance
@@ -179,7 +179,7 @@ export function AttendanceSearch({
       // Find the student_school_id from the attendance data
       const existingAttendance = presentStudents.find(p => p.student_nic === student.nic);
       if (existingAttendance) {
-        await markAttendance(existingAttendance.student_school_id, 0); // 0 = Absent
+        await markAttendance(existingAttendance.student_school_id, 0, student.nic); // 0 = Absent, include NIC
         toast.info(`${student.name} marked as absent.`);
         
         // Clear search and refresh attendance
