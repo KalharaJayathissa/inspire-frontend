@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { supabase } from '../supabaseClient';
 
-const baseURL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-// const baseURL = 'http://10.10.11.87:3000';
 // const baseURL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
 const baseURL = 'http://10.10.1.210:3000';
 
