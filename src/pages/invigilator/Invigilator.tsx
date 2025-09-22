@@ -4,7 +4,7 @@ import { AttendanceSearch } from '@/components/Attendent/attendance-search';
 import { RegisterStudent } from '@/components/Attendent/register-student';
 import { toast, Toaster } from 'sonner';
 import { getTodaysAttendance } from '@/lib/api';
-import "./invigilator.module.css";
+import "./invigilator.css";
 
 interface Student {
   student_school_id: number;
@@ -27,6 +27,34 @@ function Invigilator() {
   const [selectedSchoolName, setSelectedSchoolName] = useState<string>('');
   const [presentStudents, setPresentStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(false);
+
+  // Force light theme when component mounts
+  useEffect(() => {
+    // Store original styles
+    const originalBodyStyle = document.body.style.cssText;
+    const originalHtmlStyle = document.documentElement.style.cssText;
+    
+    // Apply light theme to document
+    document.body.style.backgroundColor = '#ffffff';
+    document.body.style.color = '#0f172a';
+    document.documentElement.style.colorScheme = 'light';
+    
+    // Apply CSS variables override to root
+    const root = document.documentElement;
+    root.style.setProperty('--background', '0 0% 100%');
+    root.style.setProperty('--foreground', '0 0% 3.9%');
+    root.style.setProperty('--card', '0 0% 100%');
+    root.style.setProperty('--card-foreground', '0 0% 3.9%');
+    root.style.setProperty('--muted', '0 0% 96.1%');
+    root.style.setProperty('--muted-foreground', '0 0% 45.1%');
+    root.style.setProperty('--border', '0 0% 89.8%');
+    
+    // Cleanup function to restore original styles
+    return () => {
+      document.body.style.cssText = originalBodyStyle;
+      document.documentElement.style.cssText = originalHtmlStyle;
+    };
+  }, []);
 
   const handleSelectSchool = (schoolId: number, schoolName: string) => {
     setSelectedSchoolId(schoolId);
@@ -102,10 +130,16 @@ function Invigilator() {
       default:
         return null;
     }
-  };
-
-  return (
-    <div className="min-h-screen bg-background">
+  };  return (
+    <div 
+      className="invigilator-theme min-h-screen"
+      style={{
+        backgroundColor: '#ffffff',
+        color: '#0f172a',
+        minHeight: '100vh',
+        colorScheme: 'light'
+      }}
+    >
       <Toaster position="top-right" />
       {renderPage()}
     </div>
