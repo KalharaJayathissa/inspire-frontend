@@ -4,6 +4,7 @@ import { AttendanceSearch } from '@/components/Attendent/attendance-search';
 import { RegisterStudent } from '@/components/Attendent/register-student';
 import { toast, Toaster } from 'sonner';
 import { getTodaysAttendance } from '@/lib/api';
+import "./invigilator.module.css";
 
 interface Student {
   student_school_id: number;

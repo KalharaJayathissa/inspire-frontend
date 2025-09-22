@@ -7,7 +7,7 @@ import ComingSoon from "./pages/ComingSoon";
 import Login from "./pages/login";
 import AdminPage from "./pages/admin";
 import MarkerPage from "./pages/marker";
-import Invigilator from "./pages/Invigilator";
+import Invigilator from "./pages/invigilator/Invigilator";
 import { ApiTest } from "./components/ApiTest";
 const queryClient = new QueryClient();
 

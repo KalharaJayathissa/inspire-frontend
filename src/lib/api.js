@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { supabase } from '../supabaseClient';
 
-// const baseURL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-const baseURL = 'http://10.10.1.210:3000';
+const baseURL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+// const baseURL = 'http://10.10.1.210:3000';
 
 // Helper function to get authentication headers
 async function getAuthHeaders() {
