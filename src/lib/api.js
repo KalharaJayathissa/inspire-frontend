@@ -3,6 +3,8 @@ import { supabase } from '../supabaseClient';
 
 const baseURL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
 // const baseURL = 'http://10.10.11.87:3000';
+// const baseURL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+const baseURL = 'http://10.10.1.210:3000';
 
 // Helper function to get authentication headers
 async function getAuthHeaders() {
@@ -94,13 +96,14 @@ export async function registerStudent(studentData) {
 }
 
 // 5. Mark/Update Attendance
-export async function markAttendance(studentSchoolId, status, nic) {
+export async function markAttendance(studentSchoolId, status, nic,school_id) {
   const headers = await getAuthHeaders();
   
   const response = await axios.post(`${baseURL}/api/invigilator/attendance/mark`, {
     student_school_id: studentSchoolId,
     status: status, // 1 = Present, 0 = Absent
-    nic: nic // Include NIC in the request
+    nic: nic, // Include NIC in the request
+    school_id: school_id // Include school_id in the request
   }, {
     headers
   });
