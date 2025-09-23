@@ -5,7 +5,7 @@ import { Input } from '../ui/Attendent/input';
 import { Label } from '../ui/Attendent/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { ArrowLeft, UserPlus, Save } from 'lucide-react';
-import { registerStudent } from '@/lib/api';
+import { registerStudentFromInvigilator } from '@/lib/api';
 import { toast } from 'sonner';
 
 interface RegisterStudentProps {
@@ -119,7 +119,7 @@ export function RegisterStudent({ selectedSchoolId, selectedSchoolName, onBack, 
         school_id: selectedSchoolId
       };
 
-      await registerStudent(registrationData);
+      await registerStudentFromInvigilator(registrationData);
       toast.success(`🎉 ${formData.name.trim()} has been registered and marked as present!`);
       onRegistrationSuccess(); // Refresh attendance data
       onBack(); // Go back to search page

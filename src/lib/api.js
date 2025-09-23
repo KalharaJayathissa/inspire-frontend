@@ -82,16 +82,16 @@ export async function fetchStudentsBySchool(schoolId) {
   return response.data.students;
 }
 
-// // 4. Register New Student
-// export async function registerStudent(studentData) {
-//   const headers = await getAuthHeaders();
+// 4. Register New Student
+export async function registerStudentFromInvigilator(studentData) {
+  const headers = await getAuthHeaders();
   
-//   const response = await axios.post(`${baseURL}/api/invigilator/students/register`, studentData, {
-//     headers
-//   });
+  const response = await axios.post(`${baseURL}/api/invigilator/students/register`, studentData, {
+    headers
+  });
   
-//   return response.data;
-// }
+  return response.data;
+}
 
 // 5. Mark/Update Attendance
 export async function markAttendance(studentSchoolId, status, nic,school_id) {
