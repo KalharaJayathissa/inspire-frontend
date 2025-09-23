@@ -1,0 +1,53 @@
+/* Pull to refresh styling for attendance search */
+.ptr {
+  --ptr-background: hsl(var(--background));
+  --ptr-text-color: hsl(var(--foreground));
+  --ptr-border-radius: 0.5rem;
+  --ptr-box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+/* Smooth pull animation */
+.ptr__pull-down-content {
+  background: var(--ptr-background);
+  border-radius: var(--ptr-border-radius);
+  box-shadow: var(--ptr-box-shadow);
+  color: var(--ptr-text-color);
+  transition: all 0.3s ease;
+}
+
+.ptr__refreshing-content {
+  background: var(--ptr-background);
+  border-radius: var(--ptr-border-radius);
+  box-shadow: var(--ptr-box-shadow);
+  color: var(--ptr-text-color);
+  transition: all 0.3s ease;
+}
+
+/* Mobile optimized touch feedback */
+@media (max-width: 768px) {
+  .ptr {
+    touch-action: pan-y;
+  }
+  
+  .ptr__children {
+    min-height: calc(100vh - 120px);
+  }
+}
+
+/* Tablet optimized */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .ptr {
+    touch-action: pan-y;
+  }
+}
+
+/* Disable pull-to-refresh on desktop to avoid accidental triggers */
+@media (min-width: 1025px) {
+  .ptr {
+    pointer-events: none;
+  }
+  
+  .ptr__children {
+    pointer-events: all;
+  }
+}

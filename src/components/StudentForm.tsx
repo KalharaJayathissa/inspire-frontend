@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { AlertCircle, User, CreditCard, BookOpen, MapPin, Phone, School, CheckCircle, Mail } from 'lucide-react';
 import { registerStudent, checkNicExists } from "@/lib/api";
@@ -82,6 +83,7 @@ const StudentRegistrationForm = () => {
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email address';
     }
+
 
     // Shy validation
     if (!formData.shy) {
@@ -230,6 +232,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   }
 };
   return (
+
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-4 sm:py-8 lg:py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-4xl mx-auto">
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
