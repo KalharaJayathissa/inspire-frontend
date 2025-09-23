@@ -461,6 +461,7 @@ export function AttendanceSearch({
           </div>
         </div>
       </div>
+        
     </div>
   );
 }
