@@ -4,7 +4,7 @@ import { Button } from '../ui/Attendent/button';
 import { StudentCard } from './student-card';
 import { Card, CardContent } from '../ui/Attendent/card';
 import { Badge } from '../ui/Attendent/badge';
-import { Search, UserPlus, Users, Calendar, CheckCircle2, ArrowLeft, School, Loader2 } from 'lucide-react';
+import { Search, UserPlus, Users, Calendar, CheckCircle2, ArrowLeft, School, Loader2, RefreshCcw } from 'lucide-react';
 import { fetchStudentsBySchool, markAttendance } from '@/lib/api';
 import { toast } from 'sonner';
 
@@ -234,6 +234,15 @@ export function AttendanceSearch({
               <h1 className="text-lg sm:text-xl lg:text-2xl font-semibold truncate">
                 {selectedSchoolName}
               </h1>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={refreshAttendance}
+                className="ml-2 h-8 w-8"
+                disabled={loading}
+              >
+                <RefreshCcw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+              </Button>
             </div>
           </div>
           

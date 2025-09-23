@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { SchoolSelection } from '@/components/Attendent/school-selection';
-import { AttendanceSearch } from '@/components/Attendent/attendance-search';
-import { RegisterStudent } from '@/components/Attendent/register-student';
-import { toast, Toaster } from 'sonner';
-import { getTodaysAttendance } from '@/lib/api';
+import React, { useState, useEffect } from "react";
+import { SchoolSelection } from "@/components/Attendent/school-selection";
+import { AttendanceSearch } from "@/components/Attendent/attendance-search";
+import { RegisterStudent } from "@/components/Attendent/register-student";
+import { toast } from "sonner";
+import { getTodaysAttendance } from "@/lib/api";
 import "./invigilator.css";
 
 interface Student {
@@ -19,12 +19,12 @@ interface Student {
   marked_at: string;
 }
 
-type Page = 'schools' | 'search' | 'register';
+type Page = "schools" | "search" | "register";
 
 function Invigilator() {
-  const [currentPage, setCurrentPage] = useState<Page>('schools');
+  const [currentPage, setCurrentPage] = useState<Page>("schools");
   const [selectedSchoolId, setSelectedSchoolId] = useState<number | null>(null);
-  const [selectedSchoolName, setSelectedSchoolName] = useState<string>('');
+  const [selectedSchoolName, setSelectedSchoolName] = useState<string>("");
   const [presentStudents, setPresentStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -33,22 +33,22 @@ function Invigilator() {
     // Store original styles
     const originalBodyStyle = document.body.style.cssText;
     const originalHtmlStyle = document.documentElement.style.cssText;
-    
+
     // Apply light theme to document
-    document.body.style.backgroundColor = '#ffffff';
-    document.body.style.color = '#0f172a';
-    document.documentElement.style.colorScheme = 'light';
-    
+    document.body.style.backgroundColor = "#ffffff";
+    document.body.style.color = "#0f172a";
+    document.documentElement.style.colorScheme = "light";
+
     // Apply CSS variables override to root
     const root = document.documentElement;
-    root.style.setProperty('--background', '0 0% 100%');
-    root.style.setProperty('--foreground', '0 0% 3.9%');
-    root.style.setProperty('--card', '0 0% 100%');
-    root.style.setProperty('--card-foreground', '0 0% 3.9%');
-    root.style.setProperty('--muted', '0 0% 96.1%');
-    root.style.setProperty('--muted-foreground', '0 0% 45.1%');
-    root.style.setProperty('--border', '0 0% 89.8%');
-    
+    root.style.setProperty("--background", "0 0% 100%");
+    root.style.setProperty("--foreground", "0 0% 3.9%");
+    root.style.setProperty("--card", "0 0% 100%");
+    root.style.setProperty("--card-foreground", "0 0% 3.9%");
+    root.style.setProperty("--muted", "0 0% 96.1%");
+    root.style.setProperty("--muted-foreground", "0 0% 45.1%");
+    root.style.setProperty("--border", "0 0% 89.8%");
+
     // Cleanup function to restore original styles
     return () => {
       document.body.style.cssText = originalBodyStyle;
@@ -59,7 +59,7 @@ function Invigilator() {
   const handleSelectSchool = (schoolId: number, schoolName: string) => {
     setSelectedSchoolId(schoolId);
     setSelectedSchoolName(schoolName);
-    setCurrentPage('search');
+    setCurrentPage("search");
     // Load today's attendance for this school
     loadTodaysAttendance(schoolId);
   };
@@ -67,24 +67,26 @@ function Invigilator() {
   const loadTodaysAttendance = async (schoolId: number) => {
     try {
       setLoading(true);
-      console.log('Loading attendance for school ID:', schoolId);
+      console.log("Loading attendance for school ID:", schoolId);
       const attendanceData = await getTodaysAttendance(schoolId);
-      console.log('Raw attendance data received:', attendanceData);
-      
+      console.log("Raw attendance data received:", attendanceData);
+
       // Check if attendanceData is an array
       if (!Array.isArray(attendanceData)) {
-        console.error('Attendance data is not an array:', attendanceData);
+        console.error("Attendance data is not an array:", attendanceData);
         setPresentStudents([]);
         return;
       }
-      
+
       // Filter only present students (status = 1)
-      const presentStudentsData = attendanceData.filter((student: Student) => student.attendance_status === 1);
-      console.log('Present students filtered:', presentStudentsData);
+      const presentStudentsData = attendanceData.filter(
+        (student: Student) => student.attendance_status === 1
+      );
+      console.log("Present students filtered:", presentStudentsData);
       setPresentStudents(presentStudentsData);
     } catch (error: any) {
-      toast.error('Failed to load attendance data');
-      console.error('Failed to load attendance:', error);
+      toast.error("Failed to load attendance data");
+      console.error("Failed to load attendance:", error);
     } finally {
       setLoading(false);
     }
@@ -100,50 +102,46 @@ function Invigilator() {
 
   const renderPage = () => {
     switch (currentPage) {
-      case 'schools':
-        return (
-          <SchoolSelection
-            onSelectSchool={handleSelectSchool}
-          />
-        );
-      case 'search':
+      case "schools":
+        return <SchoolSelection onSelectSchool={handleSelectSchool} />;
+      case "search":
         return (
           <AttendanceSearch
             selectedSchoolId={selectedSchoolId!}
             selectedSchoolName={selectedSchoolName}
-            onRegisterClick={() => setCurrentPage('register')}
-            onBackToSchools={() => setCurrentPage('schools')}
+            onRegisterClick={() => setCurrentPage("register")}
+            onBackToSchools={() => setCurrentPage("schools")}
             presentStudents={presentStudents}
             refreshAttendance={refreshAttendance}
             loading={loading}
           />
         );
-      case 'register':
+      case "register":
         return (
           <RegisterStudent
             selectedSchoolId={selectedSchoolId!}
             selectedSchoolName={selectedSchoolName}
-            onBack={() => setCurrentPage('search')}
+            onBack={() => setCurrentPage("search")}
             onRegistrationSuccess={refreshAttendance}
           />
         );
       default:
         return null;
     }
-  };  return (
-    <div 
+  };
+  return (
+    <div
       className="invigilator-theme min-h-screen"
       style={{
-        backgroundColor: '#ffffff',
-        color: '#0f172a',
-        minHeight: '100vh',
-        colorScheme: 'light'
+        backgroundColor: "#ffffff",
+        color: "#0f172a",
+        minHeight: "100vh",
+        colorScheme: "light",
       }}
     >
-      <Toaster position="top-right" />
       {renderPage()}
     </div>
   );
 }
 
-export default  Invigilator;
+export default Invigilator;

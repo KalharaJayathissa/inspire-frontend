@@ -19,7 +19,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { CheckCircle, Users, BookOpen, Target } from "lucide-react";
 
 // Motion variants
@@ -59,10 +59,8 @@ const StudentForm = () => {
     );
 
     if (missingFields.length > 0) {
-      toast({
-        title: "Missing Information",
+      toast.error("Missing Information", {
         description: "Please fill in all required fields.",
-        variant: "destructive",
       });
       setIsSubmitting(false);
       return;
@@ -71,8 +69,7 @@ const StudentForm = () => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      toast({
-        title: "Application Submitted!",
+      toast.success("Application Submitted!", {
         description:
           "We'll review your application and get back to you within 24 hours.",
       });
@@ -87,10 +84,8 @@ const StudentForm = () => {
         challenges: "",
       });
     } catch (error) {
-      toast({
-        title: "Submission Failed",
+      toast.error("Submission Failed", {
         description: "Please try again later or contact support.",
-        variant: "destructive",
       });
     } finally {
       setIsSubmitting(false);
@@ -118,10 +113,7 @@ const StudentForm = () => {
       variants={stagger}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          className="text-center mb-12 sm:mb-16"
-          variants={fadeUp}
-        >
+        <motion.div className="text-center mb-12 sm:mb-16" variants={fadeUp}>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4">
             Register for KESS Inspire
           </h2>
@@ -145,7 +137,9 @@ const StudentForm = () => {
                 desc: "Get matched with experienced mentors in your field of study.",
               },
               {
-                icon: <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />,
+                icon: (
+                  <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+                ),
                 title: "Exclusive Resources",
                 desc: "Access study materials, career guides, and academic tools.",
               },
@@ -155,7 +149,9 @@ const StudentForm = () => {
                 desc: "Track your progress and celebrate your academic milestones.",
               },
               {
-                icon: <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-success" />,
+                icon: (
+                  <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-success" />
+                ),
                 title: "100% Free",
                 desc: "All our services are completely free for students.",
               },
@@ -173,7 +169,9 @@ const StudentForm = () => {
                   <h3 className="text-base sm:text-lg font-semibold text-foreground mb-1 sm:mb-2">
                     {benefit.title}
                   </h3>
-                  <p className="text-sm sm:text-base text-muted-foreground">{benefit.desc}</p>
+                  <p className="text-sm sm:text-base text-muted-foreground">
+                    {benefit.desc}
+                  </p>
                 </div>
               </motion.div>
             ))}
@@ -191,14 +189,19 @@ const StudentForm = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
-                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                <form
+                  onSubmit={handleSubmit}
+                  className="space-y-4 sm:space-y-6"
+                >
                   {/* Inputs */}
                   <motion.div
                     className="grid sm:grid-cols-2 gap-4"
                     variants={stagger}
                   >
                     <motion.div className="space-y-2" variants={fadeUp}>
-                      <Label htmlFor="name" className="text-sm sm:text-base">Full Name *</Label>
+                      <Label htmlFor="name" className="text-sm sm:text-base">
+                        Full Name *
+                      </Label>
                       <Input
                         id="name"
                         type="text"
@@ -212,7 +215,9 @@ const StudentForm = () => {
                       />
                     </motion.div>
                     <motion.div className="space-y-2" variants={fadeUp}>
-                      <Label htmlFor="email" className="text-sm sm:text-base">Email Address *</Label>
+                      <Label htmlFor="email" className="text-sm sm:text-base">
+                        Email Address *
+                      </Label>
                       <Input
                         id="email"
                         type="email"
@@ -228,7 +233,9 @@ const StudentForm = () => {
                   </motion.div>
 
                   <motion.div className="space-y-2" variants={fadeUp}>
-                    <Label htmlFor="phone" className="text-sm sm:text-base">Phone Number</Label>
+                    <Label htmlFor="phone" className="text-sm sm:text-base">
+                      Phone Number
+                    </Label>
                     <Input
                       id="phone"
                       type="tel"
@@ -246,7 +253,9 @@ const StudentForm = () => {
                     variants={stagger}
                   >
                     <motion.div className="space-y-2" variants={fadeUp}>
-                      <Label htmlFor="program" className="text-sm sm:text-base">Program of Study *</Label>
+                      <Label htmlFor="program" className="text-sm sm:text-base">
+                        Program of Study *
+                      </Label>
                       <Select
                         onValueChange={(value) =>
                           handleInputChange("program", value)
@@ -265,7 +274,9 @@ const StudentForm = () => {
                       </Select>
                     </motion.div>
                     <motion.div className="space-y-2" variants={fadeUp}>
-                      <Label htmlFor="year" className="text-sm sm:text-base">Academic Year</Label>
+                      <Label htmlFor="year" className="text-sm sm:text-base">
+                        Academic Year
+                      </Label>
                       <Select
                         onValueChange={(value) =>
                           handleInputChange("year", value)
@@ -286,7 +297,9 @@ const StudentForm = () => {
                   </motion.div>
 
                   <motion.div className="space-y-2" variants={fadeUp}>
-                    <Label htmlFor="goals" className="text-sm sm:text-base">Academic Goals *</Label>
+                    <Label htmlFor="goals" className="text-sm sm:text-base">
+                      Academic Goals *
+                    </Label>
                     <Textarea
                       id="goals"
                       value={formData.goals}
@@ -300,7 +313,12 @@ const StudentForm = () => {
                   </motion.div>
 
                   <motion.div className="space-y-2" variants={fadeUp}>
-                    <Label htmlFor="challenges" className="text-sm sm:text-base">Current Challenges</Label>
+                    <Label
+                      htmlFor="challenges"
+                      className="text-sm sm:text-base"
+                    >
+                      Current Challenges
+                    </Label>
                     <Textarea
                       id="challenges"
                       value={formData.challenges}
