@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/Attendent/card';
 import { Button } from '../ui/Attendent/button';
 import { Input } from '../ui/Attendent/input';
 import { Label } from '../ui/Attendent/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { ArrowLeft, UserPlus, Save } from 'lucide-react';
 import { registerStudent } from '@/lib/api';
 import { toast } from 'sonner';
@@ -19,7 +20,12 @@ export function RegisterStudent({ selectedSchoolId, selectedSchoolName, onBack, 
     name: '',
     NIC: '',
     contact_phone: '',
-    contact_email: ''
+    contact_email: '',
+    shy: '',
+    gender: '',
+    subject_stream: '',
+    exam_location: '',
+    medium: ''
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -66,6 +72,26 @@ export function RegisterStudent({ selectedSchoolId, selectedSchoolName, onBack, 
       newErrors.contact_email = 'Please enter a valid email address';
     }
 
+    if (!formData.shy.trim()) {
+      newErrors.shy = 'Attempt is required';
+    }
+
+    if (!formData.gender.trim()) {
+      newErrors.gender = 'Gender is required';
+    }
+
+    if (!formData.subject_stream.trim()) {
+      newErrors.subject_stream = 'Subject stream is required';
+    }
+
+    if (!formData.exam_location.trim()) {
+      newErrors.exam_location = 'Exam location is required';
+    }
+
+    if (!formData.medium.trim()) {
+      newErrors.medium = 'Medium is required';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -85,6 +111,11 @@ export function RegisterStudent({ selectedSchoolId, selectedSchoolName, onBack, 
         NIC: formData.NIC.trim().toUpperCase(),
         contact_phone: formData.contact_phone.trim(),
         contact_email: formData.contact_email.trim(),
+        shy: formData.shy.trim(),
+        gender: formData.gender.trim(),
+        subject_stream: formData.subject_stream.trim(),
+        exam_location: formData.exam_location.trim(),
+        medium: formData.medium.trim(),
         school_id: selectedSchoolId
       };
 
@@ -202,6 +233,187 @@ export function RegisterStudent({ selectedSchoolId, selectedSchoolName, onBack, 
                   />
                   {errors.contact_email && (
                     <p className="text-xs sm:text-sm text-destructive">{errors.contact_email}</p>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="shy" className="text-sm font-medium">Attempt *</Label>
+                    <Select value={formData.shy} onValueChange={(value) => handleChange('shy', value)}>
+                      <SelectTrigger className={`h-11 sm:h-10 ${errors.shy ? 'border-destructive' : ''}`}>
+                        <SelectValue placeholder="Select attempt" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="1st">1st</SelectItem>
+                        <SelectItem value="2nd">2nd</SelectItem>
+                        <SelectItem value="3rd">3rd</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {errors.shy && (
+                      <p className="text-xs sm:text-sm text-destructive">{errors.shy}</p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">Gender *</Label>
+                    <div className="flex gap-3">
+                      <label className={`flex-1 flex items-center justify-center p-3 rounded-lg border-2 cursor-pointer transition-all ${
+                        formData.gender === 'male' 
+                          ? 'border-primary bg-primary/10 text-primary' 
+                          : 'border-border hover:border-primary/50'
+                      }`}>
+                        <input
+                          type="radio"
+                          name="gender"
+                          value="male"
+                          checked={formData.gender === 'male'}
+                          onChange={(e) => handleChange('gender', e.target.value)}
+                          className="sr-only"
+                        />
+                        <span className="text-sm font-medium">Male</span>
+                      </label>
+                      <label className={`flex-1 flex items-center justify-center p-3 rounded-lg border-2 cursor-pointer transition-all ${
+                        formData.gender === 'female' 
+                          ? 'border-primary bg-primary/10 text-primary' 
+                          : 'border-border hover:border-primary/50'
+                      }`}>
+                        <input
+                          type="radio"
+                          name="gender"
+                          value="female"
+                          checked={formData.gender === 'female'}
+                          onChange={(e) => handleChange('gender', e.target.value)}
+                          className="sr-only"
+                        />
+                        <span className="text-sm font-medium">Female</span>
+                      </label>
+                    </div>
+                    {errors.gender && (
+                      <p className="text-xs sm:text-sm text-destructive">{errors.gender}</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">Subject Stream *</Label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <label className={`flex items-center justify-center p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                      formData.subject_stream === 'physical-science' 
+                        ? 'border-primary bg-primary/10 text-primary' 
+                        : 'border-border hover:border-primary/50'
+                    }`}>
+                      <input
+                        type="radio"
+                        name="subject_stream"
+                        value="physical-science"
+                        checked={formData.subject_stream === 'physical-science'}
+                        onChange={(e) => handleChange('subject_stream', e.target.value)}
+                        className="sr-only"
+                      />
+                      <span className="text-sm font-medium text-center">Physical Science</span>
+                    </label>
+                    <label className={`flex items-center justify-center p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                      formData.subject_stream === 'biological-stream' 
+                        ? 'border-primary bg-primary/10 text-primary' 
+                        : 'border-border hover:border-primary/50'
+                    }`}>
+                      <input
+                        type="radio"
+                        name="subject_stream"
+                        value="biological-stream"
+                        checked={formData.subject_stream === 'biological-stream'}
+                        onChange={(e) => handleChange('subject_stream', e.target.value)}
+                        className="sr-only"
+                      />
+                      <span className="text-sm font-medium text-center">Biological Stream</span>
+                    </label>
+                  </div>
+                  {errors.subject_stream && (
+                    <p className="text-xs sm:text-sm text-destructive">{errors.subject_stream}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">Exam Location *</Label>
+                  <div className="grid grid-cols-1 gap-3">
+                    <label className={`flex items-center p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                      formData.exam_location === 'in-school' 
+                        ? 'border-primary bg-primary/10 text-primary' 
+                        : 'border-border hover:border-primary/50'
+                    }`}>
+                      <input
+                        type="radio"
+                        name="exam_location"
+                        value="in-school"
+                        checked={formData.exam_location === 'in-school'}
+                        onChange={(e) => handleChange('exam_location', e.target.value)}
+                        className="sr-only"
+                      />
+                      <div className="flex items-center gap-3">
+                        <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                          formData.exam_location === 'in-school' 
+                            ? 'border-primary' 
+                            : 'border-border'
+                        }`}>
+                          {formData.exam_location === 'in-school' && (
+                            <div className="w-2 h-2 rounded-full bg-primary"></div>
+                          )}
+                        </div>
+                        <div>
+                          <span className="text-sm font-medium">In My School</span>
+                          <p className="text-xs text-muted-foreground">Take exam at your own school</p>
+                        </div>
+                      </div>
+                    </label>
+                    <label className={`flex items-center p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                      formData.exam_location === 'external-kegalle' 
+                        ? 'border-primary bg-primary/10 text-primary' 
+                        : 'border-border hover:border-primary/50'
+                    }`}>
+                      <input
+                        type="radio"
+                        name="exam_location"
+                        value="external-kegalle"
+                        checked={formData.exam_location === 'external-kegalle'}
+                        onChange={(e) => handleChange('exam_location', e.target.value)}
+                        className="sr-only"
+                      />
+                      <div className="flex items-center gap-3">
+                        <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                          formData.exam_location === 'external-kegalle' 
+                            ? 'border-primary' 
+                            : 'border-border'
+                        }`}>
+                          {formData.exam_location === 'external-kegalle' && (
+                            <div className="w-2 h-2 rounded-full bg-primary"></div>
+                          )}
+                        </div>
+                        <div>
+                          <span className="text-sm font-medium">External Location in Kegalle</span>
+                          <p className="text-xs text-muted-foreground">Take exam at designated center in Kegalle</p>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                  {errors.exam_location && (
+                    <p className="text-xs sm:text-sm text-destructive">{errors.exam_location}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="medium" className="text-sm font-medium">Medium *</Label>
+                  <Select value={formData.medium} onValueChange={(value) => handleChange('medium', value)}>
+                    <SelectTrigger className={`h-11 sm:h-10 ${errors.medium ? 'border-destructive' : ''}`}>
+                      <SelectValue placeholder="Select medium" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="sinhala">Sinhala</SelectItem>
+                      <SelectItem value="tamil">Tamil</SelectItem>
+                      <SelectItem value="english">English</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {errors.medium && (
+                    <p className="text-xs sm:text-sm text-destructive">{errors.medium}</p>
                   )}
                 </div>
 
