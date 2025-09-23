@@ -84,7 +84,8 @@ const StudentRegistrationForm = () => {
     'Pinnawala Central College',
     'Zahira College, Mawanella',
     'Swarna Jayanthi Maha Vidyalaya',
-    'Ruwanwella Rajasinghe Central College'
+    'Ruwanwella Rajasinghe Central College',
+    'Other'
   ];
 
   const validateForm = () => {
@@ -190,7 +191,20 @@ const StudentRegistrationForm = () => {
     processedValue = value.replace(/\D/g, '').slice(0, 10);
   }
   
-  setFormData(prev => ({ ...prev, [name]: processedValue }));
+  setFormData(prev => {
+    const newData = { ...prev, [name]: processedValue };
+    
+    // Auto-select external location if "Other" school is selected
+    if (name === 'school' && processedValue === 'Other') {
+      newData.examLocation = 'external-kegalle';
+    }
+    // Clear exam location if switching away from "Other" school
+    else if (name === 'school' && prev.school === 'Other' && processedValue !== 'Other') {
+      newData.examLocation = '';
+    }
+    
+    return newData;
+  });
 
   // Clear error when user starts typing
   if (errors[name as keyof FormErrors]) {
@@ -632,18 +646,33 @@ const handleSubmit = async (e: React.FormEvent) => {
               <label className="block text-sm sm:text-base font-semibold text-gray-700 mb-3">
                 Where do you prefer to write exam? *
               </label>
+              {formData.school === 'Other' && (
+                <div className="mb-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                  <p className="text-sm text-amber-700 flex items-center">
+                    <AlertCircle className="w-4 h-4 mr-2 flex-shrink-0" />
+                    Since you selected "Other" school, you must write the exam at an external location in Kegalle.
+                  </p>
+                </div>
+              )}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                <label className="flex items-center p-3 sm:p-4 border-2 rounded-lg cursor-pointer hover:bg-[#c7f7a1] hover:border-[#2D620A] transition-colors">
+                <label className={`flex items-center p-3 sm:p-4 border-2 rounded-lg cursor-pointer transition-colors ${
+                  formData.school === 'Other' 
+                    ? 'bg-gray-100 border-gray-200 opacity-50 cursor-not-allowed' 
+                    : 'hover:bg-[#c7f7a1] hover:border-[#2D620A]'
+                }`}>
                   <input
                     type="radio"
                     name="examLocation"
                     value="in-school"
                     checked={formData.examLocation === 'in-school'}
                     onChange={handleInputChange}
-                    className="mr-3 text-[#2D620A] focus:ring-[#2D620A] focus:ring-offset-0 border-gray-300 w-4 h-4"
+                    disabled={formData.school === 'Other'}
+                    className="mr-3 text-[#2D620A] focus:ring-[#2D620A] focus:ring-offset-0 border-gray-300 w-4 h-4 disabled:opacity-50 disabled:cursor-not-allowed"
                     style={{ accentColor: '#2D620A' }}
                   />
-                  <span className="text-gray-700 text-sm sm:text-base">In my school</span>
+                  <span className={`text-sm sm:text-base ${formData.school === 'Other' ? 'text-gray-400' : 'text-gray-700'}`}>
+                    In my school
+                  </span>
                 </label>
                 <label className="flex items-center p-3 sm:p-4 border-2 rounded-lg cursor-pointer hover:bg-[#c7f7a1] hover:border-[#2D620A] transition-colors">
                   <input
