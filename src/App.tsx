@@ -1,5 +1,4 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/sonner";
 import { Toaster as HotToaster } from "react-hot-toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -11,13 +10,14 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/login";
 import AdminPage from "./pages/admin";
 import MarkerPage from "./pages/marker";
+import Invigilator from "./pages/invigilator/Invigilator";
+import { ApiTest } from "./components/ApiTest";
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
+      <Toaster position="top-right" />
       <HotToaster
         position="top-right"
         toastOptions={{
@@ -58,6 +58,10 @@ const App = () => (
       />
       <BrowserRouter>
         <Routes>
+
+          <Route path="/invigilator" element={<Invigilator />} />
+          <Route path="/api-test" element={<ApiTest />} />
+
           {/* Main landing page */}
           <Route path="/" element={<Index />} />
           <Route path="/index" element={<Index />} />

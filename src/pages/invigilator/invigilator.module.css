@@ -1,0 +1,90 @@
+/* Light Theme Override for Invigilator Components */
+.invigilator-theme {
+  /* Force light theme CSS variables */
+  --background: 0 0% 100% !important;
+  --foreground: 0 0% 3.9% !important;
+  --card: 0 0% 100% !important;
+  --card-foreground: 0 0% 3.9% !important;
+  --popover: 0 0% 100% !important;
+  --popover-foreground: 0 0% 3.9% !important;
+  --primary: 0 0% 9% !important;
+  --primary-foreground: 0 0% 98% !important;
+  --secondary: 0 0% 96.1% !important;
+  --secondary-foreground: 0 0% 9% !important;
+  --muted: 0 0% 96.1% !important;
+  --muted-foreground: 0 0% 45.1% !important;
+  --accent: 0 0% 96.1% !important;
+  --accent-foreground: 0 0% 9% !important;
+  --destructive: 0 84.2% 60.2% !important;
+  --destructive-foreground: 0 0% 98% !important;
+  --border: 0 0% 89.8% !important;
+  --input: 0 0% 89.8% !important;
+  --ring: 0 0% 3.9% !important;
+  
+  /* Apply light theme styling */
+  background-color: white !important;
+  color: #0f172a !important;
+  min-height: 100vh !important;
+  color-scheme: light !important;
+}
+
+/* Override all child elements */
+.invigilator-theme * {
+  color: #0f172a !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+/* Override specific Tailwind classes */
+.invigilator-theme .bg-background,
+.invigilator-theme .bg-card {
+  background-color: white !important;
+}
+
+.invigilator-theme .text-foreground,
+.invigilator-theme .text-card-foreground {
+  color: #0f172a !important;
+}
+
+.invigilator-theme .bg-primary {
+  background-color: #0f172a !important;
+}
+
+.invigilator-theme .text-primary-foreground {
+  color: white !important;
+}
+
+.invigilator-theme .bg-muted {
+  background-color: #f8fafc !important;
+}
+
+.invigilator-theme .text-muted-foreground {
+  color: #64748b !important;
+}
+
+.invigilator-theme .border {
+  border-color: #e2e8f0 !important;
+}
+
+/* Button styling */
+.invigilator-theme button {
+  background-color: #0f172a !important;
+  color: white !important;
+  border-color: #e2e8f0 !important;
+}
+
+.invigilator-theme button:hover {
+  background-color: #1e293b !important;
+}
+
+/* Input styling */
+.invigilator-theme input {
+  background-color: white !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Card styling */
+.invigilator-theme .shadow-md,
+.invigilator-theme .shadow-lg {
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+}
