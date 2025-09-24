@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Input } from "../ui/Attendent/input";
 import { Button } from "../ui/Attendent/button";
 import { StudentCard } from "./student-card";
@@ -21,6 +22,7 @@ import { toast } from "sonner";
 import PullToRefresh from "react-simple-pull-to-refresh";
 import "./pull-to-refresh.css";
 import { supabase } from "@/supabaseClient";
+import { handleApiError } from "@/lib/auth-utils";
 
 interface StudentBasic {
   id: number;
@@ -64,6 +66,7 @@ export function AttendanceSearch({
   refreshAttendance,
   loading,
 }: AttendanceSearchProps) {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [nicSuggestions, setNicSuggestions] = useState<string[]>([]);
   const [selectedStudent, setSelectedStudent] = useState<StudentBasic | null>(
@@ -146,8 +149,15 @@ export function AttendanceSearch({
       const studentsData = await fetchStudentsBySchool(selectedSchoolId);
       setSchoolStudents(studentsData);
     } catch (error: any) {
-      toast.error("Failed to load students");
-      console.error("Failed to load students:", error);
+      // Handle authentication/authorization errors
+      const wasAuthError = await handleApiError(
+        error,
+        navigate,
+        "Failed to load students"
+      );
+      if (!wasAuthError) {
+        console.error("Failed to load students:", error);
+      }
     } finally {
       setLoadingStudents(false);
     }
@@ -236,8 +246,15 @@ export function AttendanceSearch({
       setShowSuggestions(false);
       refreshAttendance();
     } catch (error: any) {
-      toast.error("Failed to mark attendance");
-      console.error("Failed to mark attendance:", error);
+      // Handle authentication/authorization errors
+      const wasAuthError = await handleApiError(
+        error,
+        navigate,
+        "Failed to mark attendance"
+      );
+      if (!wasAuthError) {
+        console.error("Failed to mark attendance:", error);
+      }
     }
   };
 
@@ -266,8 +283,15 @@ export function AttendanceSearch({
         toast.error("Cannot mark absent - student has no attendance record");
       }
     } catch (error: any) {
-      toast.error("Failed to mark attendance");
-      console.error("Failed to mark attendance:", error);
+      // Handle authentication/authorization errors
+      const wasAuthError = await handleApiError(
+        error,
+        navigate,
+        "Failed to mark attendance"
+      );
+      if (!wasAuthError) {
+        console.error("Failed to mark attendance:", error);
+      }
     }
   };
 

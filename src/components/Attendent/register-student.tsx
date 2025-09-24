@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/Attendent/card";
 import { Button } from "../ui/Attendent/button";
 import { Input } from "../ui/Attendent/input";
@@ -13,6 +14,11 @@ import {
 import { ArrowLeft, UserPlus, Save } from "lucide-react";
 import { registerStudentFromInvigilator } from "@/lib/api";
 import { toast } from "sonner";
+import {
+  handleApiError,
+  isAuthError,
+  handleAuthFailure,
+} from "@/lib/auth-utils";
 
 interface Student {
   student_school_id: number;
@@ -42,6 +48,7 @@ export function RegisterStudent({
   onRegistrationSuccess,
   presentStudents,
 }: RegisterStudentProps) {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     NIC: "",
@@ -153,6 +160,12 @@ export function RegisterStudent({
       onRegistrationSuccess(); // Refresh attendance data
       onBack(); // Go back to search page
     } catch (error: any) {
+      // Check for authentication/authorization failures
+      if (isAuthError(error)) {
+        await handleAuthFailure(navigate, error);
+        return;
+      }
+
       if (error.response?.status === 409) {
         toast.error("A student with this NIC already exists!");
         setErrors({ NIC: "Student with this NIC already exists" });

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { SchoolSelection } from "@/components/Attendent/school-selection";
 import { AttendanceSearch } from "@/components/Attendent/attendance-search";
 import { RegisterStudent } from "@/components/Attendent/register-student";
 import { toast } from "sonner";
 import { getTodaysAttendance } from "@/lib/api";
+import { handleApiError } from "@/lib/auth-utils";
 import "./invigilator.css";
 
 interface Student {
@@ -22,6 +24,7 @@ interface Student {
 type Page = "schools" | "search" | "register";
 
 function Invigilator() {
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState<Page>("schools");
   const [selectedSchoolId, setSelectedSchoolId] = useState<number | null>(null);
   const [selectedSchoolName, setSelectedSchoolName] = useState<string>("");
@@ -85,8 +88,16 @@ function Invigilator() {
       console.log("Present students filtered:", presentStudentsData);
       setPresentStudents(presentStudentsData);
     } catch (error: any) {
-      toast.error("Failed to load attendance data");
-      console.error("Failed to load attendance:", error);
+      // Handle authentication/authorization errors
+      const wasAuthError = await handleApiError(
+        error,
+        navigate,
+        "Failed to load attendance data"
+      );
+      if (!wasAuthError) {
+        // Only log if it wasn't an auth error (auth errors are already handled)
+        console.error("Failed to load attendance:", error);
+      }
     } finally {
       setLoading(false);
     }

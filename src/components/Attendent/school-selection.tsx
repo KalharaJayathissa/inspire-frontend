@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/Attendent/card";
 import { Button } from "../ui/Attendent/button";
 import { School, Users, ChevronRight, Loader2, User2 } from "lucide-react";
 import { fetchSchools } from "@/lib/api";
 import { toast } from "sonner";
 import { supabase } from "@/supabaseClient";
+import { handleApiError } from "@/lib/auth-utils";
 
 interface School {
   id: number;
@@ -18,6 +20,7 @@ interface SchoolSelectionProps {
 }
 
 export function SchoolSelection({ onSelectSchool }: SchoolSelectionProps) {
+  const navigate = useNavigate();
   const [schools, setSchools] = useState<School[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -52,8 +55,15 @@ export function SchoolSelection({ onSelectSchool }: SchoolSelectionProps) {
       const schoolsData = await fetchSchools();
       setSchools(schoolsData);
     } catch (err: any) {
-      setError(err.message || "Failed to load schools");
-      toast.error("Failed to load schools. Please try again.");
+      // Handle authentication/authorization errors
+      const wasAuthError = await handleApiError(
+        err,
+        navigate,
+        "Failed to load schools. Please try again."
+      );
+      if (!wasAuthError) {
+        setError(err.message || "Failed to load schools");
+      }
     } finally {
       setLoading(false);
     }
