@@ -14,11 +14,25 @@ import { ArrowLeft, UserPlus, Save } from "lucide-react";
 import { registerStudentFromInvigilator } from "@/lib/api";
 import { toast } from "sonner";
 
+interface Student {
+  student_school_id: number;
+  student_id: number;
+  student_name: string;
+  student_nic: string;
+  contact_email: string;
+  contact_phone: string;
+  registered_at: string;
+  attendance_status: number;
+  marked_by: string;
+  marked_at: string;
+}
+
 interface RegisterStudentProps {
   selectedSchoolId: number;
   selectedSchoolName: string;
   onBack: () => void;
   onRegistrationSuccess: () => void;
+  presentStudents: Student[];
 }
 
 export function RegisterStudent({
@@ -26,6 +40,7 @@ export function RegisterStudent({
   selectedSchoolName,
   onBack,
   onRegistrationSuccess,
+  presentStudents,
 }: RegisterStudentProps) {
   const [formData, setFormData] = useState({
     name: "",
@@ -60,6 +75,14 @@ export function RegisterStudent({
       newErrors.NIC = "NIC is required";
     } else if (!validateNIC(formData.NIC)) {
       newErrors.NIC = "Enter valid NIC!";
+    } else {
+      // Check if NIC already exists in this school
+      const existingStudent = presentStudents.find(
+        (student) => student.student_nic === formData.NIC.trim()
+      );
+      if (existingStudent) {
+        newErrors.NIC = `Student with this NIC already exists in ${selectedSchoolName}: ${existingStudent.student_name}`;
+      }
     }
 
     if (!formData.name.trim()) {
