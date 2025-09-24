@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/Attendent/card';
-import { Button } from '../ui/Attendent/button';
-import { School, Users, ChevronRight, Loader2 } from 'lucide-react';
-import { fetchSchools } from '@/lib/api';
-import { toast } from 'sonner';
+import React, { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/Attendent/card";
+import { Button } from "../ui/Attendent/button";
+import { School, Users, ChevronRight, Loader2, User2 } from "lucide-react";
+import { fetchSchools } from "@/lib/api";
+import { toast } from "sonner";
+import { supabase } from "@/supabaseClient";
 
 interface School {
   id: number;
@@ -20,10 +21,29 @@ export function SchoolSelection({ onSelectSchool }: SchoolSelectionProps) {
   const [schools, setSchools] = useState<School[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string>("");
 
   useEffect(() => {
     loadSchools();
+    loadUserName();
   }, []);
+
+  const loadUserName = async () => {
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session?.user?.email) {
+        // Extract name from email (everything before @)
+        const name = session.user.email.split("@")[0];
+        // Capitalize first letter and format nicely
+        const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
+        setUserName(formattedName);
+      }
+    } catch (error) {
+      console.error("Error loading user name:", error);
+    }
+  };
 
   const loadSchools = async () => {
     try {
@@ -32,8 +52,8 @@ export function SchoolSelection({ onSelectSchool }: SchoolSelectionProps) {
       const schoolsData = await fetchSchools();
       setSchools(schoolsData);
     } catch (err: any) {
-      setError(err.message || 'Failed to load schools');
-      toast.error('Failed to load schools. Please try again.');
+      setError(err.message || "Failed to load schools");
+      toast.error("Failed to load schools. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -60,11 +80,13 @@ export function SchoolSelection({ onSelectSchool }: SchoolSelectionProps) {
           <Card className="mx-2 sm:mx-0">
             <CardContent className="flex flex-col items-center justify-center py-8 sm:py-12 px-4 sm:px-6">
               <School className="w-10 h-10 sm:w-12 sm:h-12 text-red-500 mb-3 sm:mb-4" />
-              <h3 className="text-lg sm:text-xl mb-2 text-red-600">Error Loading Schools</h3>
+              <h3 className="text-lg sm:text-xl mb-2 text-red-600">
+                Error Loading Schools
+              </h3>
               <p className="text-muted-foreground text-center text-sm sm:text-base mb-4 px-2">
                 {error}
               </p>
-              <Button 
+              <Button
                 onClick={loadSchools}
                 className="w-full sm:w-auto px-6 py-2"
               >
@@ -79,6 +101,21 @@ export function SchoolSelection({ onSelectSchool }: SchoolSelectionProps) {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 max-w-4xl">
+        {/* User Name Box - Top Right */}
+        {userName && (
+          <div className="mb-4 sm:mb-6 flex justify-end">
+            <div className="bg-white text-black px-2 sm:px-3 py-1.5 sm:py-2 rounded-md sm:rounded-lg shadow-md border border-gray-200 w-fit">
+              <div className="flex items-center gap-1 sm:gap-2">
+                <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gray-100 rounded-full flex items-center justify-center">
+                  <User2 className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />
+                </div>
+                <div className="text-xs sm:text-sm font-medium text-gray-900">
+                  Logged in as {userName}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         <div className="space-y-4 sm:space-y-6">
           {/* Header Section */}
           <div className="text-center space-y-2 px-4 sm:px-0">
@@ -94,8 +131,8 @@ export function SchoolSelection({ onSelectSchool }: SchoolSelectionProps) {
           {/* Schools Grid */}
           <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 px-2 sm:px-0">
             {schools.map((school) => (
-              <Card 
-                key={school.id} 
+              <Card
+                key={school.id}
                 className="cursor-pointer hover:bg-muted/50 active:bg-muted/70 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] touch-manipulation"
                 onClick={() => onSelectSchool(school.id, school.name)}
               >
@@ -114,7 +151,9 @@ export function SchoolSelection({ onSelectSchool }: SchoolSelectionProps) {
                   <div className="text-xs sm:text-sm text-muted-foreground">
                     <div className="flex items-start gap-1">
                       <Users className="w-3 h-3 sm:w-4 sm:h-4 mt-0.5 shrink-0" />
-                      <span className="break-words leading-tight">{school.address}</span>
+                      <span className="break-words leading-tight">
+                        {school.address}
+                      </span>
                     </div>
                   </div>
                 </CardContent>
