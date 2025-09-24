@@ -7,6 +7,8 @@ function AdminPage() {
   const [error, setError] = useState("");
   const [selectedSchool, setSelectedSchool] = useState("all");
   const [activeTab, setActiveTab] = useState("students");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
 
   // School mapping (1-indexed to match the data)
   const schools = [
@@ -51,21 +53,40 @@ function AdminPage() {
     return schools[schoolId] || schools[0]; // fallback to 'Unknown'
   };
 
-  // Filter and sort students based on selected school (newest first)
+  // Filter and sort students based on selected school and search term (newest first)
   const filteredStudents = useMemo(() => {
     let filtered = students;
+
+    // Filter by school
     if (selectedSchool !== "all") {
-      filtered = students.filter(
+      filtered = filtered.filter(
         (student) => student.school_id.toString() === selectedSchool
       );
     }
+
+    // Filter by search term
+    if (searchTerm.trim()) {
+      const term = searchTerm.toLowerCase();
+      filtered = filtered.filter(
+        (student) =>
+          student.name?.toLowerCase().includes(term) ||
+          student.contact_email?.toLowerCase().includes(term) ||
+          student.NIC?.toLowerCase().includes(term) ||
+          student.contact_phone?.includes(term) ||
+          student.subject_stream?.toLowerCase().includes(term) ||
+          student.exam_location?.toLowerCase().includes(term) ||
+          student.medium?.toLowerCase().includes(term) ||
+          getSchoolName(student.school_id)?.toLowerCase().includes(term)
+      );
+    }
+
     // Sort by registration date (newest first)
     return filtered.sort(
       (a, b) =>
         new Date(b.registered_at).getTime() -
         new Date(a.registered_at).getTime()
     );
-  }, [students, selectedSchool]);
+  }, [students, selectedSchool, searchTerm]);
 
   const handleGetStudents = async () => {
     setLoading(true);
@@ -80,6 +101,26 @@ function AdminPage() {
       setError("Failed to fetch students: " + err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Handle search functionality
+  const handleSearch = () => {
+    setIsSearching(true);
+    // Simulate search delay for better UX
+    setTimeout(() => {
+      setIsSearching(false);
+    }, 300);
+  };
+
+  const handleClearSearch = () => {
+    setSearchTerm("");
+    setIsSearching(false);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
     }
   };
 
@@ -133,40 +174,136 @@ function AdminPage() {
         {/* Tab Content */}
         {activeTab === "students" && (
           <div>
-            {/* School Filter */}
+            {/* School Filter and Search */}
             {students.length > 0 && (
-              <div className="flex items-center gap-3 mb-6">
-                <label
-                  htmlFor="school-filter"
-                  className="text-gray-900 font-semibold text-sm"
-                >
-                  Filter by School:
-                </label>
-                <select
-                  id="school-filter"
-                  value={selectedSchool}
-                  onChange={(e) => setSelectedSchool(e.target.value)}
-                  className="px-4 py-2 bg-white border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 font-medium hover:border-gray-400 transition-colors min-w-60"
-                >
-                  <option value="all" className="font-medium text-gray-900">
-                    All Schools ({students.length})
-                  </option>
-                  {schools.slice(1).map((school, index) => {
-                    const schoolId = index + 1;
-                    const count = students.filter(
-                      (s) => s.school_id === schoolId
-                    ).length;
-                    return (
-                      <option
-                        key={schoolId}
-                        value={schoolId.toString()}
-                        className="font-medium text-gray-900 py-1"
+              <div className="space-y-4 mb-6">
+                {/* School Filter */}
+                <div className="flex items-center gap-3">
+                  <label
+                    htmlFor="school-filter"
+                    className="text-gray-900 font-semibold text-sm"
+                  >
+                    Filter by School:
+                  </label>
+                  <select
+                    id="school-filter"
+                    value={selectedSchool}
+                    onChange={(e) => setSelectedSchool(e.target.value)}
+                    className="px-4 py-2 bg-white border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 font-medium hover:border-gray-400 transition-colors min-w-60"
+                  >
+                    <option value="all" className="font-medium text-gray-900">
+                      All Schools ({students.length})
+                    </option>
+                    {schools.slice(1).map((school, index) => {
+                      const schoolId = index + 1;
+                      const count = students.filter(
+                        (s) => s.school_id === schoolId
+                      ).length;
+                      return (
+                        <option
+                          key={schoolId}
+                          value={schoolId.toString()}
+                          className="font-medium text-gray-900 py-1"
+                        >
+                          {school} ({count})
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+
+                {/* Search Bar */}
+                <div className="flex items-center gap-3">
+                  <label
+                    htmlFor="search-input"
+                    className="text-gray-900 font-semibold text-sm"
+                  >
+                    Search Students:
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      id="search-input"
+                      type="text"
+                      placeholder="Search by name, email, NIC, phone, school, stream, location..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      className="px-4 py-2 bg-white border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500 transition-colors min-w-80"
+                    />
+                    <button
+                      onClick={handleSearch}
+                      disabled={isSearching}
+                      className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isSearching ? (
+                        <span className="flex items-center gap-2">
+                          <svg
+                            className="animate-spin h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                          </svg>
+                          Searching...
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-2">
+                          <svg
+                            className="h-4 w-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                            ></path>
+                          </svg>
+                          Search
+                        </span>
+                      )}
+                    </button>
+                    {searchTerm && (
+                      <button
+                        onClick={handleClearSearch}
+                        className="px-3 py-2 bg-gray-500 text-white font-medium rounded-lg shadow-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
                       >
-                        {school} ({count})
-                      </option>
-                    );
-                  })}
-                </select>
+                        Clear
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Search Results Info */}
+                {searchTerm && (
+                  <div className="text-sm text-gray-600">
+                    {filteredStudents.length > 0 ? (
+                      <span>
+                        Found <strong>{filteredStudents.length}</strong> student
+                        {filteredStudents.length !== 1 ? "s" : ""} matching "
+                        {searchTerm}"
+                      </span>
+                    ) : (
+                      <span className="text-red-600">
+                        No students found matching "{searchTerm}"
+                      </span>
+                    )}
+                  </div>
+                )}
               </div>
             )}
 
@@ -305,11 +442,23 @@ function AdminPage() {
                   </table>
                 </div>
 
-                {filteredStudents.length === 0 && selectedSchool !== "all" && (
-                  <div className="text-center py-8 text-gray-500">
-                    No students found for the selected school.
-                  </div>
-                )}
+                {filteredStudents.length === 0 &&
+                  (selectedSchool !== "all" || searchTerm) && (
+                    <div className="text-center py-8 text-gray-500">
+                      {searchTerm ? (
+                        <div>
+                          <p>
+                            No students found matching your search criteria.
+                          </p>
+                          <p className="text-sm mt-2">
+                            Try adjusting your search term or filters.
+                          </p>
+                        </div>
+                      ) : (
+                        "No students found for the selected school."
+                      )}
+                    </div>
+                  )}
               </div>
             )}
 
