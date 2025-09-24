@@ -105,7 +105,7 @@ function Login() {
         {/* Logo Section */}
         <div className="logo-section">
           <img
-            src="/src/assets/kess-logo-removebg-preview.png"
+            src="/kess-logo-removebg-preview.png"
             alt="KESS Logo"
             className="logo-image"
           />
