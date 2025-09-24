@@ -123,6 +123,7 @@ function Invigilator() {
             selectedSchoolName={selectedSchoolName}
             onBack={() => setCurrentPage("search")}
             onRegistrationSuccess={refreshAttendance}
+            presentStudents={presentStudents}
           />
         );
       default:
