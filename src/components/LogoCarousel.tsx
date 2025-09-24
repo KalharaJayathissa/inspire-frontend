@@ -3,15 +3,15 @@ import { useEffect, useState } from "react";
 // Import all logo images
 // Use images from background-removed folder
 const logoPaths = [
-  '/src/assets/background-removed-logos/2-removebg-preview.png',
-  '/src/assets/background-removed-logos/3-removebg-preview.png',
-  '/src/assets/background-removed-logos/4-removebg-preview.png',
-  '/src/assets/background-removed-logos/5-removebg-preview.png',
-  '/src/assets/background-removed-logos/6-removebg-preview.png',
-  '/src/assets/background-removed-logos/7-removebg-preview.png',
-  '/src/assets/background-removed-logos/8-removebg-preview.png',
-  '/src/assets/background-removed-logos/9-removebg-preview.png',
-  '/src/assets/background-removed-logos/10-removebg-preview.png',
+  '/background-removed-logos/2-removebg-preview.webp',
+  '/background-removed-logos/3-removebg-preview.webp',
+  '/background-removed-logos/4-removebg-preview.webp',
+  '/background-removed-logos/5-removebg-preview.webp',
+  '/background-removed-logos/6-removebg-preview.webp',
+  '/background-removed-logos/7-removebg-preview.webp',
+  '/background-removed-logos/8-removebg-preview.webp',
+  '/background-removed-logos/9-removebg-preview.webp',
+  '/background-removed-logos/10-removebg-preview.webp',
 ];
 
 const LogoCarousel = () => {
@@ -31,8 +31,9 @@ const LogoCarousel = () => {
       <img
         src={logoSrc}
         alt={`Partner logo ${index + 1}`}
-        className="w-full h-full object-contain p-2 rounded-lg"
+        className="w-20 h-auto sm:w-28 md:w-36 lg:w-44 object-contain p-2 rounded-lg mx-auto"
       />
+
     </div>
   );
 
