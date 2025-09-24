@@ -43,14 +43,9 @@ export function RegisterStudent({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validateNIC = (nic: string) => {
-    const cleanNIC = nic.trim().toUpperCase();
+    const cleanNIC = nic.trim();
 
-    // Old NIC format: 9 digits + V/X (e.g., 123456789V)
-    if (/^\d{9}[VX]$/.test(cleanNIC)) {
-      return cleanNIC.length === 10;
-    }
-
-    // New NIC format: 12 digits (e.g., 123456789012)
+    // New NIC format: 12 digits only (e.g., 123456789012)
     if (/^\d{12}$/.test(cleanNIC)) {
       return cleanNIC.length === 12;
     }
@@ -64,7 +59,7 @@ export function RegisterStudent({
     if (!formData.NIC.trim()) {
       newErrors.NIC = "NIC is required";
     } else if (!validateNIC(formData.NIC)) {
-      newErrors.NIC = "Enter valid NIC (9 digits + V/X or 12 digits)";
+      newErrors.NIC = "Enter valid NIC!";
     }
 
     if (!formData.name.trim()) {
@@ -192,24 +187,27 @@ export function RegisterStudent({
                   <Input
                     id="nic"
                     type="text"
-                    placeholder="Enter NIC number (e.g., 123456789V or 123456789012)"
+                    inputMode="numeric"
+                    placeholder="Enter 12-digit NIC number (e.g.: 123456789012)"
                     value={formData.NIC}
-                    onChange={(e) =>
-                      handleChange("NIC", e.target.value.toUpperCase())
-                    }
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      // Only allow digits for new format
+                      const filteredValue = value.replace(/[^0-9]/g, "");
+                      handleChange("NIC", filteredValue);
+                    }}
                     className={`h-11 sm:h-10 ${
                       errors.NIC ? "border-destructive" : ""
                     }`}
                     maxLength={12}
-                  />{" "}
+                  />
                   {errors.NIC && (
                     <p className="text-xs sm:text-sm text-destructive">
                       {errors.NIC}
                     </p>
                   )}
                   <p className="text-xs text-muted-foreground leading-tight">
-                    Old format: 9 digits + V/X (e.g., 123456789V) or New format:
-                    12 digits
+                    Enter 12-digit NIC number
                   </p>
                 </div>
 
@@ -241,7 +239,8 @@ export function RegisterStudent({
                   <Input
                     id="contactPhone"
                     type="tel"
-                    placeholder="Enter 10-digit contact number"
+                    inputMode="numeric"
+                    placeholder="07XXXXXXXX"
                     value={formData.contact_phone}
                     onChange={(e) =>
                       handleChange(
@@ -268,7 +267,7 @@ export function RegisterStudent({
                   <Input
                     id="contactEmail"
                     type="email"
-                    placeholder="Enter email address"
+                    placeholder="example@gmail.com"
                     value={formData.contact_email}
                     onChange={(e) =>
                       handleChange("contact_email", e.target.value)
@@ -301,9 +300,9 @@ export function RegisterStudent({
                         <SelectValue placeholder="Select attempt" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="1st">1st</SelectItem>
-                        <SelectItem value="2nd">2nd</SelectItem>
-                        <SelectItem value="3rd">3rd</SelectItem>
+                        <SelectItem value="1st">1st shy</SelectItem>
+                        <SelectItem value="2nd">2nd shy</SelectItem>
+                        <SelectItem value="3rd">3rd shy</SelectItem>
                       </SelectContent>
                     </Select>
                     {errors.shy && (
