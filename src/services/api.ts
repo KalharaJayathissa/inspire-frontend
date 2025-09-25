@@ -1,23 +1,6 @@
 import { get } from "http";
-import { supabase } from "../supabaseClient";
 
-// Helper function to get authentication headers
-async function getAuthHeaders() {
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  if (!session) {
-    throw new Error("No authentication token found");
-  }
-
-  return {
-    Authorization: `Bearer ${session.access_token}`,
-    "Content-Type": "application/json",
-  };
-}
-
-const s_key = await getAuthHeaders(); // Function to get auth headers
+// Authentication is handled through localStorage tokens
 
 export interface LoginResponse {
   access_token: string;
@@ -284,10 +267,8 @@ export const checkCurrentToken = () => {
 
 // Helper function to validate token before API calls
 const validateTokenBeforeRequest = (): string | null => {
-  // const token = localStorage.getItem("access_token");
+  const token = localStorage.getItem("access_token");
   // console.log("token from local storage", token);
-  // console.log("s_key from local storage", s_key);   // for debugging
-  const token = s_key.Authorization?.split(" ")[1] || null; // Extract token from from supabase auth headers function
 
   if (!token) {
     //console.log('❌ No access token found - redirecting to login');
