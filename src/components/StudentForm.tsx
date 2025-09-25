@@ -353,6 +353,8 @@ const handleSubmit = async (e: React.FormEvent) => {
                   value={formData.nicNumber}
                   onChange={handleInputChange}
                   maxLength={12}
+
+
                   className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 rounded-lg focus:ring-2 focus:ring-[#2D620A] focus:border-[#2D620A] hover:border-[#2D620A] transition-colors text-gray-900 placeholder-gray-400 text-sm sm:text-base ${
                     errors.nicNumber || nicWarning 
                       ? 'border-red-500 bg-red-50 focus:border-red-500' 
@@ -360,7 +362,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                         ? 'border-green-500 bg-green-50 focus:border-green-500'
                         : 'border-gray-300 hover:border-gray-400'
                   }`}
-                  placeholder="Enter 12-digit NIC number"
+                  placeholder="Enter 12-digit NIC number (numbers only)"
                 />
                 {isCheckingNic && (
                   <div className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2">

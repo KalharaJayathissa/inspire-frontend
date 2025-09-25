@@ -1,5 +1,8 @@
 import { Toaster } from "@/components/ui/sonner";
 import { Toaster as HotToaster } from "react-hot-toast";
+
+import { Toaster as ShadcnToaster } from "@/components/ui/toaster";
+
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -10,6 +13,8 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/login";
 import AdminPage from "./pages/admin";
 import MarkerPage from "./pages/marker";
+import SubjectPage from "./pages/subjectPage";
+
 import Invigilator from "./pages/invigilator/Invigilator";
 import { ApiTest } from "./components/ApiTest";
 const queryClient = new QueryClient();
@@ -18,6 +23,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster position="top-right" />
+
       <HotToaster
         position="top-right"
         toastOptions={{
@@ -70,6 +76,7 @@ const App = () => (
           <Route path='/login' element={<Login />} />
           <Route path='/admin/' element={<AdminPage />} />
           <Route path='/marker' element={<MarkerPage />} />
+          <Route path='/subject/:subject' element={<SubjectPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
