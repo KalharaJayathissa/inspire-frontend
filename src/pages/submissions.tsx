@@ -31,9 +31,14 @@ export default function SubmissionsPage(): JSX.Element {
   const [selectedPart, setSelectedPart] = useState<string>("");
   const [showNicNotFoundModal, setShowNicNotFoundModal] = useState(false);
 
+  // Handle NIC not found
+  const handleNicNotFound = () => {
+    setShowNicNotFoundModal(true);
+  };
+
   // Custom hooks
   const { toasts, addToast, removeToast } = useToasts();
-  const nicValidation = useNicValidation(addToast);
+  const nicValidation = useNicValidation(addToast, handleNicNotFound);
   const fileUpload = useFileUpload(addToast);
 
   // Additional refs not provided by hooks
@@ -144,11 +149,6 @@ export default function SubmissionsPage(): JSX.Element {
       fileUpload.setIsUploading(false);
       fileUpload.setUploadProgress(0);
     }
-  };
-
-  // Handle NIC not found
-  const handleNicNotFound = () => {
-    setShowNicNotFoundModal(true);
   };
 
   const handleTryAgain = () => {
