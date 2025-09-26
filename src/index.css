@@ -41,9 +41,17 @@
     --glass-shadow: 45 100% 50% / 0.3;
 
     /* Gradients */
-    --gradient-gold: linear-gradient(135deg, hsl(45 100% 50%), hsl(38 100% 45%));
+    --gradient-gold: linear-gradient(
+      135deg,
+      hsl(45 100% 50%),
+      hsl(38 100% 45%)
+    );
     --gradient-dark: linear-gradient(180deg, hsl(0 0% 8%), hsl(0 0% 4%));
-    --gradient-glass: linear-gradient(135deg, hsl(0 0% 10% / 0.1), hsl(45 100% 50% / 0.05));
+    --gradient-glass: linear-gradient(
+      135deg,
+      hsl(0 0% 10% / 0.1),
+      hsl(45 100% 50% / 0.05)
+    );
 
     /* Shadows */
     --shadow-glow: 0 0 50px hsl(45 100% 50% / 0.3);
@@ -113,18 +121,31 @@
 
   /* Custom Animation Classes */
   @keyframes glow-pulse {
-    0%, 100% { box-shadow: var(--shadow-glow); }
-    50% { box-shadow: 0 0 80px hsl(45 100% 50% / 0.5); }
+    0%,
+    100% {
+      box-shadow: var(--shadow-glow);
+    }
+    50% {
+      box-shadow: 0 0 80px hsl(45 100% 50% / 0.5);
+    }
   }
 
   @keyframes scroll-left {
-    from { transform: translate3d(0, 0, 0); }
-    to { transform: translate3d(-20%, 0, 0); }
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-20%, 0, 0);
+    }
   }
 
   @keyframes circular-flow {
-    from { transform: translate3d(0, 0, 0); }
-    to { transform: translate3d(-16.666%, 0, 0); }
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-16.666%, 0, 0);
+    }
   }
 
   @keyframes scroll {
@@ -148,8 +169,12 @@
   }
 
   @keyframes glass-shine {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
   }
 }
 
@@ -192,5 +217,18 @@
 
   .animate-fade-in-up {
     animation: fade-in-up 0.8s ease-out forwards;
+  }
+
+  .animate-shine {
+    animation: shine 2s ease-in-out infinite;
+  }
+
+  @keyframes shine {
+    0% {
+      transform: translateX(-100%) skewX(-12deg);
+    }
+    100% {
+      transform: translateX(300%) skewX(-12deg);
+    }
   }
 }

@@ -14,6 +14,7 @@ import Login from "./pages/login";
 import AdminPage from "./pages/admin";
 import MarkerPage from "./pages/marker";
 import SubjectPage from "./pages/subjectPage";
+import SubmissionsPage from "./pages/submissions";
 
 import Invigilator from "./pages/invigilator/Invigilator";
 import { ApiTest } from "./components/ApiTest";
@@ -29,42 +30,42 @@ const App = () => (
         toastOptions={{
           duration: 4000,
           style: {
-            background: '#fff',
-            color: '#333',
-            border: '1px solid #e5e7eb',
-            borderRadius: '12px',
-            padding: '16px',
-            fontSize: '14px',
-            fontWeight: '500',
-            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+            background: "#fff",
+            color: "#333",
+            border: "1px solid #e5e7eb",
+            borderRadius: "12px",
+            padding: "16px",
+            fontSize: "14px",
+            fontWeight: "500",
+            boxShadow:
+              "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
           },
           success: {
             style: {
-              background: '#f0fdf4',
-              color: '#15803d',
-              border: '1px solid #bbf7d0',
+              background: "#f0fdf4",
+              color: "#15803d",
+              border: "1px solid #bbf7d0",
             },
             iconTheme: {
-              primary: '#15803d',
-              secondary: '#f0fdf4',
+              primary: "#15803d",
+              secondary: "#f0fdf4",
             },
           },
           error: {
             style: {
-              background: '#fef2f2',
-              color: '#dc2626',
-              border: '1px solid #fecaca',
+              background: "#fef2f2",
+              color: "#dc2626",
+              border: "1px solid #fecaca",
             },
             iconTheme: {
-              primary: '#dc2626',
-              secondary: '#fef2f2',
+              primary: "#dc2626",
+              secondary: "#fef2f2",
             },
           },
         }}
       />
       <BrowserRouter>
         <Routes>
-
           <Route path="/invigilator" element={<Invigilator />} />
           <Route path="/api-test" element={<ApiTest />} />
 
@@ -73,10 +74,11 @@ const App = () => (
           <Route path="/index" element={<Index />} />
           <Route path="/register" element={<Register />} />
           <Route path="/coming-soon" element={<ComingSoon />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='/admin/' element={<AdminPage />} />
-          <Route path='/marker' element={<MarkerPage />} />
-          <Route path='/subject/:subject' element={<SubjectPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/admin/" element={<AdminPage />} />
+          <Route path="/marker" element={<MarkerPage />} />
+          <Route path="/subject/:subject" element={<SubjectPage />} />
+          <Route path="/submissions" element={<SubmissionsPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
