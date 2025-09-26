@@ -148,8 +148,7 @@ const parseErrorMessage = (responseText: string, fallbackMessage: string): strin
   }
 };
 
-const API_BASE =
-  ("http://localhost:3000") + "/api";
+const API_BASE = import.meta.env.VITE_BACKEND_URL + "/api";
 // Utility function to decode JWT token and check expiration
 export const getTokenInfo = (token: string) => {
   try {
@@ -653,18 +652,21 @@ export const getAllStudents = async (): Promise<GetAllStudentsResponse> => {
   if (!token) {
     console.error("🎓 No Supabase session found - redirecting to login");
     handleTokenExpiration();
-    throw new Error("No authentication token found");
+    const errorMsg = "No authentication token found";
+    showErrorToast("Authentication Error", errorMsg);
+    throw new Error(errorMsg);
   }
 
   //console.log('🎓 Making API request to:', `${API_BASE}/marker/getAllStudents`);
   
-  const res = await fetch(`${API_BASE}/marker/getAllStudents`, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-  });
+  try {
+    const res = await fetch(`${API_BASE}/marker/getAllStudents`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
 
   // console.log('🎓 Response status:', res.status);
   // console.log('🎓 Response ok:', res.ok);
@@ -676,10 +678,13 @@ export const getAllStudents = async (): Promise<GetAllStudentsResponse> => {
     if (res.status === 401) {
       console.error('🎓 Unauthorized - handling token expiration');
       handleTokenExpiration();
-      throw new Error('Unauthorized access');
+      const errorMsg = 'Unauthorized access';
+      showErrorToast("Authentication Error", errorMsg);
+      throw new Error(errorMsg);
     }
 
     const errorMessage = parseErrorMessage(responseText, "Failed to get students");
+    showErrorToast("Error Loading Student Data", errorMessage);
     throw new Error(errorMessage);
   }
 
@@ -695,7 +700,15 @@ export const getAllStudents = async (): Promise<GetAllStudentsResponse> => {
   } catch (parseError) {
     console.error('getAllStudents - JSON parse error:', parseError);
     console.error('getAllStudents - Raw response:', responseText);
-    throw new Error('Invalid JSON response from server');
+    const errorMsg = 'Invalid JSON response from server';
+    showErrorToast("Error Loading Student Data", errorMsg);
+    throw new Error(errorMsg);
+  }
+  } catch (networkError) {
+    console.error('🎓 Network error in getAllStudents:', networkError);
+    const errorMsg = 'Could not connect to the server. Please check your connection and try again.';
+    showErrorToast("Connection Error", errorMsg);
+    throw new Error(errorMsg);
   }
 };
 
