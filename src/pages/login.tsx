@@ -41,9 +41,6 @@ function Login() {
       return;
     }
 
-    //printing the access token to console
-    console.log("Access Token:", data.session?.access_token);
-
     // Get user id from token
     const userId = data.user.id;
     // Fetch role from user_role table

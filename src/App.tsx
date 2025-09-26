@@ -62,6 +62,7 @@ const App = () => (
           },
         }}
       />
+      <ShadcnToaster />
       <BrowserRouter>
         <Routes>
 
