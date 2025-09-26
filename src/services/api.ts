@@ -653,7 +653,7 @@ export const getAllStudents = async (): Promise<GetAllStudentsResponse> => {
   if (!token) {
     console.error("🎓 No Supabase session found - redirecting to login");
     handleTokenExpiration();
-    throw new Error('No authentication token found');
+    throw new Error("No authentication token found");
   }
 
   //console.log('🎓 Making API request to:', `${API_BASE}/marker/getAllStudents`);
@@ -712,7 +712,7 @@ export const searchStudents = async (query: string): Promise<SearchStudentsRespo
   if (!token) {
     console.error("🔍 No Supabase session found - redirecting to login");
     handleTokenExpiration();
-    throw new Error('No authentication token found');
+    throw new Error("No authentication token found");
   }
 
   //console.log('🔍 Making API request to:', `${API_BASE}/marker/searchStudents`);
