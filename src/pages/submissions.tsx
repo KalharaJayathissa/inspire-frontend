@@ -483,7 +483,7 @@ export default function SubmissionsPage(): JSX.Element {
                   <span>Instant Processing</span>
                 </div>
               </div>
-              <p className="text-sm text-gray-600/80 dark:text-gray-400/80 font-medium">
+              <p className="text-sm text-white font-medium">
                 © All right reserved. Kegalle Engineering Students' Society
                 (KESS)
               </p>
