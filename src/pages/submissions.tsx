@@ -190,7 +190,12 @@ export default function SubmissionsPage(): JSX.Element {
             setIsFetchingStudent(true);
             try {
               const studentData = await getStudentByNic(nicValue);
-              setStudentInfo(studentData);
+              // Extract the student object from the API response
+              if (studentData.success && studentData.student) {
+                setStudentInfo(studentData.student);
+              } else {
+                setStudentInfo(null);
+              }
             } catch (studentError) {
               console.error("Error fetching student info:", studentError);
               setStudentInfo(null);
@@ -482,10 +487,18 @@ export default function SubmissionsPage(): JSX.Element {
                 </div>
               ) : studentInfo ? (
                 <div className="space-y-2">
+                  {studentInfo.fullName && (
+                    <div className="flex items-center space-x-2">
+                      <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
+                      <span className="text-xs text-gray-600 dark:text-gray-400">
+                        Name: {studentInfo.fullName}
+                      </span>
+                    </div>
+                  )}
                   <div className="flex items-center space-x-2">
                     <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
                     <span className="text-xs text-gray-600 dark:text-gray-400">
-                      NIC: {studentInfo.nic}
+                      NIC: {studentInfo.nicNumber}
                     </span>
                   </div>
                   <div className="flex items-center space-x-2">
@@ -494,7 +507,7 @@ export default function SubmissionsPage(): JSX.Element {
                       style={{ animationDelay: "0.5s" }}
                     ></div>
                     <span className="text-xs text-gray-600 dark:text-gray-400">
-                      Phone: {studentInfo.phone}
+                      Phone: {studentInfo.mobileNumber}
                     </span>
                   </div>
                   <div className="flex items-center space-x-2">
@@ -988,10 +1001,18 @@ export default function SubmissionsPage(): JSX.Element {
                   </div>
                 ) : studentInfo ? (
                   <div className="space-y-2">
+                    {studentInfo.fullName && (
+                      <div className="flex items-center space-x-2">
+                        <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
+                        <span className="text-xs text-gray-600 dark:text-gray-400">
+                          Name: {studentInfo.fullName}
+                        </span>
+                      </div>
+                    )}
                     <div className="flex items-center space-x-2">
                       <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
                       <span className="text-xs text-gray-600 dark:text-gray-400">
-                        NIC: {studentInfo.nic}
+                        NIC: {studentInfo.nicNumber}
                       </span>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -1000,7 +1021,7 @@ export default function SubmissionsPage(): JSX.Element {
                         style={{ animationDelay: "0.5s" }}
                       ></div>
                       <span className="text-xs text-gray-600 dark:text-gray-400">
-                        Phone: {studentInfo.phone}
+                        Phone: {studentInfo.mobileNumber}
                       </span>
                     </div>
                     <div className="flex items-center space-x-2">
