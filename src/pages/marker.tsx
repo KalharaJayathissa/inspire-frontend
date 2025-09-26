@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { LogOut, BookOpen, Atom, Calculator, Info, User, Zap, Rocket } from 'lucide-react';
-import { checkTokenExpiration, setupTokenMonitoring } from '../services/api';
+import { supabase } from '../supabaseClient';
 import logo from '@/assets/kess-logo-removebg-preview.png';
 
 const Dashboard = () => {
@@ -12,40 +12,21 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkAuthAndLoadUser = async () => {
-      //console.log('🔍 Marker Dashboard: Checking authentication...');
+    const checkAuth = async () => {
+      const { data } = await supabase.auth.getSession();
+      console.log('🔍 Dashboard: Session data:', data);
       
-      // Development mode: Skip authentication for testing
-      if (import.meta.env.MODE === 'development') {
-        //console.log('🚧 Development mode: Skipping token validation');
-        // Get real user email from localStorage or use default
-        const email = localStorage.getItem('user_email') || 'marker@kess.com';
-        setUserEmail(email);
-        //console.log('✅ Development mode: User email set to', email);
+      if (!data.session) {
+        console.log('❌ Dashboard: No session found, redirecting to login');
+        navigate('/login');
         return;
       }
-
-      // Simple token presence check - don't validate expiration on page load
-      const token = localStorage.getItem('access_token');
-      const email = localStorage.getItem('user_email');
       
-      // console.log('🔑 Checking stored credentials:');
-      // console.log('  - Token exists:', !!token);
-      // console.log('  - Email exists:', !!email);
-      // console.log('  - Email value:', email);
-      
-      if (!token || !email) {
-        //console.log('❌ Missing credentials, redirecting to home page');
-        navigate('/');
-        return;
-      }
-
-      // Token exists, load user info (validation will happen when making API calls)
-      //console.log('✅ Credentials found, setting user email');
-      setUserEmail(email);
+      // Set user email from Supabase session
+      setUserEmail(data.session.user.email || 'marker@kess.com');
     };
 
-    checkAuthAndLoadUser();
+    checkAuth();
 
     // Clear any existing selection/focus when component mounts
     if (window.getSelection) {
@@ -54,25 +35,10 @@ const Dashboard = () => {
     if (document.activeElement && document.activeElement !== document.body) {
       (document.activeElement as HTMLElement).blur();
     }
-
-    // Setup token monitoring only in production mode
-    if (import.meta.env.MODE !== 'development') {
-      //console.log('🔄 Setting up token monitoring (checks every 2 minutes)');
-      const stopMonitoring = setupTokenMonitoring(2); // Check every 2 minutes
-      
-      // Cleanup monitoring when component unmounts
-      return () => {
-        //console.log('🛑 Stopping token monitoring');
-        stopMonitoring();
-      };
-    } else {
-      //console.log('🚧 Development mode: Skipping token monitoring setup');
-    }
   }, [navigate]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('user_email');
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
     navigate('/login');
   };
 

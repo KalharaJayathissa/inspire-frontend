@@ -1,15 +1,60 @@
-import { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, BookOpen, Atom, Calculator, User, Award, Edit2, Check, X, Trash2, UserCircle, ChevronUp } from 'lucide-react';
-import { addMarks, updateMarks, getMarks, deleteMarks, getAllStudents, SUBJECT_CODES, setupTokenMonitoring, type MarkRecord } from '@/services/api';
+import { useState, useEffect, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useToast } from "@/hooks/use-toast";
+import {
+  ArrowLeft,
+  BookOpen,
+  Atom,
+  Calculator,
+  User,
+  Award,
+  Edit2,
+  Check,
+  X,
+  Trash2,
+  UserCircle,
+  ChevronUp,
+} from "lucide-react";
+import {
+  addMarks,
+  updateMarks,
+  getMarks,
+  deleteMarks,
+  getAllStudents,
+  SUBJECT_CODES,
+  type MarkRecord,
+} from "@/services/api";
+import { supabase } from "../supabaseClient";
 
 const SubjectPage = () => {
   const { subject } = useParams<{ subject: string }>();
@@ -45,73 +90,46 @@ const SubjectPage = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
 
   // Debug effect to track marksList changes
-  useEffect(() => {
-    // console.log('📊 marksList changed:', marksList);
-    // console.log('📊 marksList length:', marksList.length);
-    // console.log('📊 marksList items:', marksList.map(m => `${m.student_id}: ${m.marks}`));
-  }, [marksList]);
-
-
+  // useEffect(() => {
+  //   // console.log('📊 marksList changed:', marksList);
+  //   // console.log('📊 marksList length:', marksList.length);
+  //   // console.log('📊 marksList items:', marksList.map(m => `${m.student_id}: ${m.marks}`));
+  // }, [marksList]);
 
   useEffect(() => {
     const checkAuthAndLoadMarks = async () => {
-      // console.log('useEffect triggered - checking auth and fetching marks');
-      
-      // console.log('🔍 SubjectPage: Checking authentication for subject:', subject);
-      
-      // Development mode: Skip authentication for testing
-      if (import.meta.env.MODE === 'development') {
-        //console.log('🚧 DEVELOPMENT MODE: Bypassing authentication check in SubjectPage');
-        const email = localStorage.getItem('user_email') || 'marker@kess.com';
-        setUserEmail(email);
-        await Promise.all([loadInitialMarks(), loadAllNICs()]);
-        return;
-      }
+      console.log('🔍 SubjectPage: Checking authentication for subject:', subject);
 
-      const token = localStorage.getItem('access_token');
-      const email = localStorage.getItem('user_email');
+      const { data, error } = await supabase.auth.getSession();
+      console.log('🔍 SubjectPage: Session data:', data);
+      console.log('🔍 SubjectPage: Session error:', error);
       
-      // console.log('🔑 SubjectPage - Checking stored credentials:');
-      // console.log('  - Token exists:', !!token);
-      // console.log('  - Email exists:', !!email);
-      
-      if (!token || !email) {
-        //console.log('❌ SubjectPage: Missing credentials, redirecting to login');
-        navigate('/login');
+      if (!data.session) {
+        console.log('❌ SubjectPage: No session found, redirecting to login');
+        navigate("/login");
         return;
       }
 
       try {
-        //console.log('✅ SubjectPage: Credentials found, loading initial marks for subject:', subject);
-        // Get user email from localStorage
-        const email = localStorage.getItem('user_email') || 'marker@kess.com';
-        setUserEmail(email);
-        // Load initial marks and all NICs - this will also validate the token
+        console.log('✅ SubjectPage: Session found, loading initial marks for subject:', subject);
+        console.log('✅ SubjectPage: User email:', data.session.user.email);
+        // Set user email from Supabase session
+        setUserEmail(data.session.user.email || "marker@kess.com");
+        // Load initial marks and all NICs
         await Promise.all([loadInitialMarks(), loadAllNICs()]);
-        //console.log('✅ SubjectPage: Successfully loaded marks and NICs');
+        console.log('✅ SubjectPage: Successfully loaded marks and NICs');
       } catch (error: any) {
-        // If token validation fails during API call, redirect to login
-        //console.log('❌ SubjectPage: Error during API calls:', error);
-        if (error.message?.includes('401') || error.message?.includes('Unauthorized')) {
-          //console.log('❌ SubjectPage: Token validation failed (401/Unauthorized), redirecting to login');
-          localStorage.removeItem('access_token');
-          localStorage.removeItem('user_email');
-          navigate('/login');
-        }// else {
-          //console.log('⚠️ SubjectPage: Non-auth error, continuing but data may be incomplete');
-        //}
+        console.log('❌ SubjectPage: Error during API calls:', error);
+        // If there's an auth error, redirect to login
+        if (error.message?.includes("401") || error.message?.includes("Unauthorized")) {
+          console.log('❌ SubjectPage: Authentication failed, redirecting to login');
+          await supabase.auth.signOut();
+          navigate("/login");
+        }
       }
     };
 
     checkAuthAndLoadMarks();
-
-    // Setup token monitoring for automatic expiration handling
-    const stopMonitoring = setupTokenMonitoring(2); // Check every 2 minutes
-    
-    // Cleanup monitoring when component unmounts
-    return () => {
-      stopMonitoring();
-    };
   }, [navigate, subject]);
 
   // Scroll to top functionality
@@ -722,7 +740,7 @@ const SubjectPage = () => {
               <div className="flex items-center space-x-2 bg-gray-800 px-3 py-2 rounded-lg border border-gray-700">
                 <UserCircle className="w-5 h-5 text-white" />
                 <span className="text-sm font-medium text-white select-none">
-                  {localStorage.getItem('user_email') || 'marker@example.com'}
+                  {userEmail || "marker@example.com"}
                 </span>
               </div>
             </div>
