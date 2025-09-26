@@ -1,6 +1,10 @@
 import { get } from "http";
 
-// Authentication is handled through localStorage tokens
+import { supabase } from '../supabaseClient.js';
+import { toast } from '../hooks/use-toast';
+
+// Authentication is handled through Supabase sessions
+
 
 export interface LoginResponse {
   access_token: string;
@@ -90,6 +94,46 @@ export const SUBJECT_CODES = {
   chemistry: 3,
 } as const;
 
+// Helper function to get Supabase session token
+const getSupabaseToken = async (): Promise<string | null> => {
+  try {
+    const { data: { session }, error } = await supabase.auth.getSession();
+    
+    if (error) {
+      console.error('Error getting Supabase session:', error);
+      return null;
+    }
+    
+    if (!session?.access_token) {
+      console.log('No active Supabase session found');
+      return null;
+    }
+    
+    return session.access_token;
+  } catch (error) {
+    console.error('Failed to get Supabase token:', error);
+    return null;
+  }
+};
+
+// Helper function to show success notifications
+const showSuccessToast = (title: string, message: string) => {
+  toast({
+    title,
+    description: message,
+    variant: "default",
+  });
+};
+
+// Helper function to show error notifications
+const showErrorToast = (title: string, message: string) => {
+  toast({
+    title,
+    description: message,
+    variant: "destructive",
+  });
+};
+
 // Helper function to extract clean error messages
 const parseErrorMessage = (
   responseText: string,
@@ -116,6 +160,7 @@ const parseErrorMessage = (
 
 const API_BASE =
   (import.meta.env.VITE_BACKEND_URL || "http://localhost:3000") + "/api";
+
 // Utility function to decode JWT token and check expiration
 export const getTokenInfo = (token: string) => {
   try {
@@ -213,81 +258,73 @@ export const handleTokenExpiration = (redirectToLogin = true) => {
   if (redirectToLogin) {
     // Redirect to login page
     //console.log('🔄 Redirecting to login page...');
-    window.location.href = "/login";
+    //window.location.href = "/login";
+    console.log("🔄token expired");
+
   }
 
   return { success: true, message: "Token expired, redirected to login" };
 };
 
-// Function to check if token is expired and handle accordingly
-export const checkTokenExpiration = (token?: string, autoRedirect = true) => {
-  const tokenToCheck = token || localStorage.getItem("access_token");
 
-  if (!tokenToCheck) {
-    //console.log('❌ No token found');
+// Function to check if Supabase session is valid
+export const checkTokenExpiration = async (token?: string, autoRedirect = true) => {
+  try {
+    const { data: { session }, error } = await supabase.auth.getSession();
+
+    if (error || !session) {
+      //console.log('❌ No valid Supabase session found');
+      if (autoRedirect) {
+        handleTokenExpiration();
+      }
+      return { expired: true, valid: false };
+    }
+
+    // Supabase handles token refresh automatically
+    return { expired: false, valid: true };
+  } catch (error) {
+    console.error('Error checking Supabase session:', error);
+
     if (autoRedirect) {
       handleTokenExpiration();
     }
     return { expired: true, valid: false };
   }
 
-  const tokenInfo = getTokenInfo(tokenToCheck);
-
-  if (tokenInfo.expired || !tokenInfo.valid) {
-    //console.log('⚠️ Token is expired or invalid');
-    if (autoRedirect) {
-      handleTokenExpiration();
-    }
-    return { expired: true, valid: false, tokenInfo };
-  }
-
-  //console.log('✅ Token is valid');
-  return { expired: false, valid: true, tokenInfo };
 };
 
-// Function to check current stored token
-export const checkCurrentToken = () => {
-  const token = localStorage.getItem("access_token");
-  if (!token) {
-    //console.log('❌ No token found in localStorage');
+// Function to check current Supabase session
+export const checkCurrentToken = async () => {
+  try {
+    const { data: { session }, error } = await supabase.auth.getSession();
+    
+    if (error || !session) {
+      //console.log('❌ No Supabase session found');
+      return null;
+    }
+
+    return {
+      valid: true,
+      expired: false,
+      session: session
+    };
+  } catch (error) {
+    console.error('Error checking current Supabase session:', error);
     return null;
   }
-
-  const tokenInfo = getTokenInfo(token);
-  // console.log('🔍 === TOKEN INFO ===');
-  // console.log('Valid:', tokenInfo.valid);
-  // console.log('Expired:', tokenInfo.expired);
-  // console.log('Issued At:', tokenInfo.issuedAt);
-  // console.log('Expires At:', tokenInfo.expiresAt);
-  // console.log('Time Remaining:', tokenInfo.timeRemainingFormatted);
-  // console.log('=====================');
-
-  return tokenInfo;
 };
 
 // Helper function to validate token before API calls
-const validateTokenBeforeRequest = (): string | null => {
-  const token = localStorage.getItem("access_token");
-  // console.log("token from local storage", token);
+const validateTokenBeforeRequest = async (): Promise<string | null> => {
+  const token = await getSupabaseToken();
 
   if (!token) {
-    //console.log('❌ No access token found - redirecting to login');
+    console.log('❌ No Supabase session found - redirecting to login');
+
     handleTokenExpiration();
     return null;
   }
 
-  const tokenCheck = checkTokenExpiration(token, false); // Don't auto-redirect here
-
-  if (tokenCheck.expired || !tokenCheck.valid) {
-    //console.log('❌ Token expired during API call - redirecting to login');
-    handleTokenExpiration();
-    return null;
-  }
-
-  // Log time remaining for debugging
-  // if (tokenCheck.tokenInfo?.timeRemaining && tokenCheck.tokenInfo.timeRemaining < 300) { // Less than 5 minutes
-  //   //console.log(`⚠️ Token expires soon: ${tokenCheck.tokenInfo.timeRemainingFormatted}`);
-  // }
 
   return token;
 };
@@ -296,20 +333,15 @@ const validateTokenBeforeRequest = (): string | null => {
 export const setupTokenMonitoring = (intervalMinutes = 5) => {
   const checkInterval = intervalMinutes * 60 * 1000; // Convert to milliseconds
 
-  const monitorToken = () => {
-    const token = localStorage.getItem("access_token");
+  const monitorToken = async () => {
+    const token = await getSupabaseToken();
+
     if (!token) {
-      //console.log('🔍 Token monitor: No token found');
+      //console.log('🔍 Token monitor: No Supabase session found');
       return;
     }
 
-    const tokenInfo = getTokenInfo(token);
 
-    if (tokenInfo.expired || !tokenInfo.valid) {
-      //console.log('🚨 Token monitor: Token expired, redirecting to login');
-      handleTokenExpiration();
-      return;
-    }
 
     // Warn if token expires in less than 10 minutes
     //if (tokenInfo.timeRemaining && tokenInfo.timeRemaining < 600) {
@@ -338,7 +370,7 @@ export const addMarks = async (
   subject_id: number
 ): Promise<AddMarksResponse> => {
   // Validate token before making the request
-  const token = validateTokenBeforeRequest();
+  const token = await validateTokenBeforeRequest();
   if (!token) {
     throw new Error("Authentication failed - redirecting to login");
   }
@@ -369,10 +401,23 @@ export const addMarks = async (
     if (res.status === 401 || res.status === 403) {
       //console.log('🚨 Authentication error - token may be expired');
       handleTokenExpiration();
-      throw new Error("Authentication failed - please login again");
+      const errorMsg = "Authentication failed - please login again";
+      showErrorToast("Authentication Error", errorMsg);
+      throw new Error(errorMsg);
+
     }
 
     const errorMessage = parseErrorMessage(responseText, "Failed to add marks");
+    
+    // Handle specific error cases
+    if (errorMessage.toLowerCase().includes("already exist") || 
+        errorMessage.toLowerCase().includes("duplicate") ||
+        errorMessage.toLowerCase().includes("already added")) {
+      showErrorToast("Marks Already Added", `Marks already exist for student ${student_id}. Please update instead of adding new marks.`);
+    } else {
+      showErrorToast("Error Adding Marks", errorMessage);
+    }
+    
     throw new Error(errorMessage);
   }
 
@@ -385,11 +430,22 @@ export const addMarks = async (
     // console.log('📥 All marks in response:', result.allMarks);
     // console.log('📥 Subject IDs in allMarks:', result.allMarks?.map((r: any) => r.subject_id) || []);
     // console.log('📥 === END ADD MARKS RESPONSE ===');
+    
+    // Show success message
+    showSuccessToast("Marks Added Successfully!", result.message || `${marks} marks added for student ${student_id}`);
+    
     return result;
   } catch (parseError) {
     console.error("addMarks - JSON parse error:", parseError);
     console.error("addMarks - Raw response:", responseText);
-    throw new Error("Invalid JSON response from server");
+    const errorMsg = "Invalid JSON response from server";
+    toast({
+      title: "Error",
+      description: errorMsg,
+      variant: "destructive",
+    });
+    throw new Error(errorMsg);
+
   }
 };
 
@@ -397,7 +453,7 @@ export const getMarks = async (
   subject_id: number
 ): Promise<GetMarksResponse> => {
   // Validate token before making the request
-  const token = validateTokenBeforeRequest();
+  const token = await validateTokenBeforeRequest();
   if (!token) {
     throw new Error("Authentication failed - redirecting to login");
   }
@@ -425,7 +481,14 @@ export const getMarks = async (
     if (res.status === 401 || res.status === 403) {
       //console.log('🚨 Authentication error in getMarks - token may be expired');
       handleTokenExpiration();
-      throw new Error("Authentication failed - please login again");
+      const errorMsg = "Authentication failed - please login again";
+      toast({
+        title: "Authentication Error",
+        description: errorMsg,
+        variant: "destructive",
+      });
+      throw new Error(errorMsg);
+
     }
 
     const responseText = await res.text();
@@ -434,6 +497,12 @@ export const getMarks = async (
       responseText,
       "Failed to fetch marks"
     );
+    toast({
+      title: "Error Loading Marks",
+      description: errorMessage,
+      variant: "destructive",
+    });
+
     throw new Error(errorMessage);
   }
 
@@ -454,7 +523,7 @@ export const updateMarks = async (
   subject_id: number
 ): Promise<UpdateMarksResponse> => {
   // Validate token before making the request
-  const token = validateTokenBeforeRequest();
+  const token = await validateTokenBeforeRequest();
   if (!token) {
     throw new Error("Authentication failed - redirecting to login");
   }
@@ -482,13 +551,26 @@ export const updateMarks = async (
     if (res.status === 401 || res.status === 403) {
       //console.log('🚨 Authentication error in updateMarks - token may be expired');
       handleTokenExpiration();
-      throw new Error("Authentication failed - please login again");
+      const errorMsg = "Authentication failed - please login again";
+      toast({
+        title: "Authentication Error",
+        description: errorMsg,
+        variant: "destructive",
+      });
+      throw new Error(errorMsg);
+
     }
 
     const errorMessage = parseErrorMessage(
       responseText,
       "Failed to update marks"
     );
+    toast({
+      title: "Error Updating Marks",
+      description: errorMessage,
+      variant: "destructive",
+    });
+
     throw new Error(errorMessage);
   }
 
@@ -496,11 +578,23 @@ export const updateMarks = async (
   //console.log('updateMarks - Success response text:', responseText);
 
   try {
-    return JSON.parse(responseText);
+    const result = JSON.parse(responseText);
+    
+    // Show success message
+    showSuccessToast("Marks Updated Successfully!", result.message || `Marks changed to ${marks} for student ${student_id}`);
+    
+    return result;
   } catch (parseError) {
     console.error("updateMarks - JSON parse error:", parseError);
     console.error("updateMarks - Raw response:", responseText);
-    throw new Error("Invalid JSON response from server");
+    const errorMsg = "Invalid JSON response from server";
+    toast({
+      title: "Error",
+      description: errorMsg,
+      variant: "destructive",
+    });
+    throw new Error(errorMsg);
+
   }
 };
 
@@ -509,7 +603,7 @@ export const deleteMarks = async (
   subject_id: number
 ): Promise<DeleteMarksResponse> => {
   // Validate token before making the request
-  const token = validateTokenBeforeRequest();
+  const token = await validateTokenBeforeRequest();
   if (!token) {
     throw new Error("Authentication failed - redirecting to login");
   }
@@ -539,13 +633,26 @@ export const deleteMarks = async (
     if (res.status === 401 || res.status === 403) {
       //console.log('🚨 Authentication error in deleteMarks - token may be expired');
       handleTokenExpiration();
-      throw new Error("Authentication failed - please login again");
+      const errorMsg = "Authentication failed - please login again";
+      toast({
+        title: "Authentication Error",
+        description: errorMsg,
+        variant: "destructive",
+      });
+      throw new Error(errorMsg);
+
     }
 
     const errorMessage = parseErrorMessage(
       responseText,
       "Failed to delete marks"
     );
+    toast({
+      title: "Error Deleting Marks",
+      description: errorMessage,
+      variant: "destructive",
+    });
+
     throw new Error(errorMessage);
   }
 
@@ -557,11 +664,22 @@ export const deleteMarks = async (
     // console.log('📥 Deleted marks:', result.deletedMarks);
     // console.log('📥 All marks in response:', result.allMarks);
     // console.log('📥 === END DELETE MARKS RESPONSE ===');
+    
+    // Show success message
+    showSuccessToast("Marks Deleted Successfully!", result.message || `Marks removed for student ${student_id}`);
+    
     return result;
   } catch (parseError) {
     console.error("deleteMarks - JSON parse error:", parseError);
     console.error("deleteMarks - Raw response:", responseText);
-    throw new Error("Invalid JSON response from server");
+    const errorMsg = "Invalid JSON response from server";
+    toast({
+      title: "Error",
+      description: errorMsg,
+      variant: "destructive",
+    });
+    throw new Error(errorMsg);
+
   }
 };
 
@@ -571,32 +689,28 @@ export const deleteMarks = async (
 export const getAllStudents = async (): Promise<GetAllStudentsResponse> => {
   //console.log('🎓 === CALLING GET ALL STUDENTS API ===');
 
-  const token = localStorage.getItem("access_token");
+  const token = await getSupabaseToken();
+
   //console.log('🎓 Token found:', !!token);
 
   if (!token) {
-    console.error("🎓 No token found - redirecting to login");
+    console.error("🎓 No Supabase session found - redirecting to login");
     handleTokenExpiration();
-    throw new Error("No authentication token found");
-  }
-
-  // Check token expiration before making request
-  const tokenCheck = checkTokenExpiration(token, false);
-  if (tokenCheck.expired) {
-    //console.log('🎓 Token expired - handling expiration');
-    handleTokenExpiration();
-    throw new Error("Token expired");
+    const errorMsg = "No authentication token found";
+    showErrorToast("Authentication Error", errorMsg);
+    throw new Error(errorMsg);
   }
 
   //console.log('🎓 Making API request to:', `${API_BASE}/marker/getAllStudents`);
-
-  const res = await fetch(`${API_BASE}/marker/getAllStudents`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  });
+  
+  try {
+    const res = await fetch(`${API_BASE}/marker/getAllStudents`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
 
   // console.log('🎓 Response status:', res.status);
   // console.log('🎓 Response ok:', res.ok);
@@ -608,13 +722,14 @@ export const getAllStudents = async (): Promise<GetAllStudentsResponse> => {
     if (res.status === 401) {
       console.error("🎓 Unauthorized - handling token expiration");
       handleTokenExpiration();
-      throw new Error("Unauthorized access");
+      const errorMsg = 'Unauthorized access';
+      showErrorToast("Authentication Error", errorMsg);
+      throw new Error(errorMsg);
     }
 
-    const errorMessage = parseErrorMessage(
-      responseText,
-      "Failed to get students"
-    );
+    const errorMessage = parseErrorMessage(responseText, "Failed to get students");
+    showErrorToast("Error Loading Student Data", errorMessage);
+
     throw new Error(errorMessage);
   }
 
@@ -628,9 +743,18 @@ export const getAllStudents = async (): Promise<GetAllStudentsResponse> => {
     // console.log('📥 === END GET ALL STUDENTS RESPONSE ===');
     return result;
   } catch (parseError) {
-    console.error("getAllStudents - JSON parse error:", parseError);
-    console.error("getAllStudents - Raw response:", responseText);
-    throw new Error("Invalid JSON response from server");
+    console.error('getAllStudents - JSON parse error:', parseError);
+    console.error('getAllStudents - Raw response:', responseText);
+    const errorMsg = 'Invalid JSON response from server';
+    showErrorToast("Error Loading Student Data", errorMsg);
+    throw new Error(errorMsg);
+  }
+  } catch (networkError) {
+    console.error('🎓 Network error in getAllStudents:', networkError);
+    const errorMsg = 'Could not connect to the server. Please check your connection and try again.';
+    showErrorToast("Connection Error", errorMsg);
+    throw new Error(errorMsg);
+
   }
 };
 
@@ -643,19 +767,15 @@ export const searchStudents = async (
   // console.log('🔍 === CALLING SEARCH STUDENTS API ===');
   // console.log('🔍 Search query:', query);
 
-  const token = localStorage.getItem("access_token");
+  const token = await getSupabaseToken();
+
   //console.log('🔍 Token found:', !!token);
 
   if (!token) {
-    console.error("🔍 No token found - redirecting to login");
+    console.error("🔍 No Supabase session found - redirecting to login");
     handleTokenExpiration();
     throw new Error("No authentication token found");
-  }
 
-  // Check token expiration before making request
-  if (checkTokenExpiration(token)) {
-    //console.log('🔍 Token expired - handling expiration');
-    throw new Error("Token expired");
   }
 
   //console.log('🔍 Making API request to:', `${API_BASE}/marker/searchStudents`);
