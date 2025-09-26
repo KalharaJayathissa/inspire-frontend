@@ -1,11 +1,11 @@
-import React from 'react';
-import { NicInputProps } from './types';
+import React from "react";
+import { NicInputProps } from "./types";
 
 const NicInput: React.FC<NicInputProps> = ({
   nic,
   onNicChange,
   isNicValid,
-  isValidatingNic
+  isValidatingNic,
 }) => {
   return (
     <div className="group/input space-y-6">

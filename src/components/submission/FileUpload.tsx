@@ -1,5 +1,5 @@
-import React from 'react';
-import { FileUploadProps } from './types';
+import React from "react";
+import { FileUploadProps } from "./types";
 
 const FileUpload: React.FC<FileUploadProps> = ({
   file,
@@ -8,7 +8,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
   onFileChange,
   onDragOver,
   onDragLeave,
-  onDrop
+  onDrop,
 }) => {
   return (
     <div className="space-y-4">
@@ -72,17 +72,13 @@ const FileUpload: React.FC<FileUploadProps> = ({
                   <span className="mx-2 text-gray-500 dark:text-gray-400">
                     or
                   </span>
-                  <span className="font-semibold">
-                    drag and drop
-                  </span>
+                  <span className="font-semibold">drag and drop</span>
                 </>
               )}
             </p>
             <p className="text-sm text-gray-500 dark:text-gray-400 px-4 py-2 rounded-full bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm border border-gray-200/30 dark:border-gray-600/30">
-              <span className="font-medium">
-                Accepted formats:
-              </span>{" "}
-              PDF files only
+              <span className="font-medium">Accepted formats:</span> PDF files
+              only
             </p>
           </div>
         </div>
@@ -108,9 +104,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
           ) : (
             <span className="flex items-center justify-center gap-2">
               <span>💡</span>
-              <span>
-                Select a PDF file to upload your document
-              </span>
+              <span>Select a PDF file to upload your document</span>
             </span>
           )}
         </p>

@@ -1,19 +1,17 @@
-import React from 'react';
-import { SubjectSelectionProps } from './types';
+import React from "react";
+import { SubjectSelectionProps } from "./types";
 
 const SubjectSelection: React.FC<SubjectSelectionProps> = ({
   isNicValid,
   selectedSubject,
   selectedPart,
   onSubjectChange,
-  onPartChange
+  onPartChange,
 }) => {
   return (
     <div
       className={`transition-all duration-500 ease-out ${
-        isNicValid
-          ? "min-h-[400px] opacity-100"
-          : "min-h-[50px] opacity-30"
+        isNicValid ? "min-h-[400px] opacity-100" : "min-h-[50px] opacity-30"
       }`}
     >
       {isNicValid ? (
@@ -272,14 +270,10 @@ const SubjectSelection: React.FC<SubjectSelectionProps> = ({
                   Selected: {selectedSubject} -{" "}
                   {selectedSubject === "Mathematics"
                     ? `Part ${
-                        selectedPart === "Pure"
-                          ? "I (Pure)"
-                          : "II (Applied)"
+                        selectedPart === "Pure" ? "I (Pure)" : "II (Applied)"
                       }`
                     : `Part ${
-                        selectedPart === "MCQ"
-                          ? "I (MCQ)"
-                          : "II (Essay)"
+                        selectedPart === "MCQ" ? "I (MCQ)" : "II (Essay)"
                       }`}
                 </span>
               </div>

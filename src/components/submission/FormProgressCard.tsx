@@ -1,14 +1,15 @@
-import React from 'react';
-import { FormProgressCardProps } from './types';
+import React from "react";
+import { FormProgressCardProps } from "./types";
 
 const FormProgressCard: React.FC<FormProgressCardProps> = ({
   isNicValid,
   selectedSubject,
   selectedPart,
   file,
-  isValidatingNic
+  isValidatingNic,
 }) => {
-  const isSubmitDisabled = !file || isNicValid !== true || !selectedSubject || !selectedPart;
+  const isSubmitDisabled =
+    !file || isNicValid !== true || !selectedSubject || !selectedPart;
 
   return (
     <div className="hidden lg:block relative bg-white/20 dark:bg-white/5 backdrop-blur-xl rounded-2xl p-4 border border-white/20 dark:border-white/10 shadow-xl">

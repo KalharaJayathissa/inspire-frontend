@@ -71,6 +71,7 @@ export interface StudentInfoCardProps {
   studentInfo: StudentInfo | null;
   isFetchingStudent: boolean;
   isNicValid: boolean | null;
+  className?: string;
 }
 
 export interface NicNotFoundModalProps {

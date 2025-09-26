@@ -1,12 +1,12 @@
-import React from 'react';
-import { SubmitButtonProps } from './types';
+import React from "react";
+import { SubmitButtonProps } from "./types";
 
 const SubmitButton: React.FC<SubmitButtonProps> = ({
   isSubmitDisabled,
   isUploading,
   file,
   isNicValid,
-  isValidatingNic
+  isValidatingNic,
 }) => {
   return (
     <>
@@ -47,16 +47,12 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
             ) : isSubmitDisabled ? (
               <>
                 <span className="text-2xl">⏳</span>
-                <span className="font-medium">
-                  Complete Required Fields
-                </span>
+                <span className="font-medium">Complete Required Fields</span>
               </>
             ) : (
               <>
                 <span className="text-2xl">🚀</span>
-                <span className="font-bold tracking-wide">
-                  Submit Document
-                </span>
+                <span className="font-bold tracking-wide">Submit Document</span>
                 <span className="text-2xl">✨</span>
               </>
             )}
@@ -66,17 +62,12 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
 
       {/* Enhanced Status Information */}
       <div className="p-4 rounded-xl bg-gradient-to-r from-gray-50/80 to-gray-100/80 dark:from-gray-800/50 dark:to-gray-700/50 backdrop-blur-sm border border-gray-200/40 dark:border-gray-600/40">
-        <p
-          id="submit-help"
-          className="text-sm font-medium text-center"
-        >
+        <p id="submit-help" className="text-sm font-medium text-center">
           {isSubmitDisabled && !isUploading && (
             <span className="space-y-2 block">
               <span className="flex items-center justify-center gap-2 text-amber-600 dark:text-amber-400">
                 <span className="text-lg">⚠️</span>
-                <span className="font-semibold">
-                  Action Required
-                </span>
+                <span className="font-semibold">Action Required</span>
               </span>
               <span className="flex flex-wrap items-center justify-center gap-1 text-gray-600 dark:text-gray-400">
                 {!file && (

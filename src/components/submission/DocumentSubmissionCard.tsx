@@ -1,5 +1,5 @@
-import React from 'react';
-import { DocumentSubmissionCardProps } from './types';
+import React from "react";
+import { DocumentSubmissionCardProps } from "./types";
 
 const DocumentSubmissionCard: React.FC<DocumentSubmissionCardProps> = () => {
   return (

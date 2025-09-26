@@ -4,7 +4,7 @@ import BackgroundImg from "@/assets/Background.jpg";
 import {
   ToastSystem,
   NicInput,
-  SubjectSelection,  
+  SubjectSelection,
   FileUpload,
   SubmitButton,
   StudentInfoCard,
@@ -15,7 +15,7 @@ import {
   useNicValidation,
   useFileUpload,
   StudentInfo,
-  Toast
+  Toast,
 } from "@/components/submission";
 
 // ============================================================================
@@ -35,15 +35,15 @@ export default function SubmissionsPage(): JSX.Element {
   const { toasts, addToast, removeToast } = useToasts();
   const nicValidation = useNicValidation(addToast);
   const fileUpload = useFileUpload(addToast);
-  
+
   // Additional refs not provided by hooks
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Calculate if submit is disabled
-  const isSubmitDisabled = 
-    !fileUpload.file || 
-    nicValidation.isNicValid !== true || 
-    !selectedSubject || 
+  const isSubmitDisabled =
+    !fileUpload.file ||
+    nicValidation.isNicValid !== true ||
+    !selectedSubject ||
     !selectedPart ||
     nicValidation.isValidatingNic;
 
@@ -86,7 +86,7 @@ export default function SubmissionsPage(): JSX.Element {
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (isSubmitDisabled) {
       addToast("error", "Please complete all required fields");
       return;
@@ -118,15 +118,18 @@ export default function SubmissionsPage(): JSX.Element {
       const result = await response.json();
 
       if (response.ok) {
-        addToast("success", result.message || "Document submitted successfully!");
-        
+        addToast(
+          "success",
+          result.message || "Document submitted successfully!"
+        );
+
         // Reset form
         setNic("");
         nicValidation.clearNicValidation();
         setSelectedSubject("");
         setSelectedPart("");
         fileUpload.handleFileChange(null);
-        
+
         // Navigate to success page or reset form
         setTimeout(() => {
           navigate("/submissions/success");
@@ -181,7 +184,6 @@ export default function SubmissionsPage(): JSX.Element {
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
           {/* Grid Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 max-w-7xl mx-auto">
-            
             {/* Left Column: Information & Status (Desktop) */}
             <div className="lg:col-span-3 space-y-6">
               {/* Document Submission Card */}
@@ -214,7 +216,6 @@ export default function SubmissionsPage(): JSX.Element {
                 {/* Main Form Card */}
                 <div className="relative bg-white/30 dark:bg-white/5 backdrop-blur-2xl rounded-3xl p-8 md:p-12 border border-white/20 dark:border-white/10 shadow-2xl shadow-black/5 dark:shadow-black/20">
                   <form onSubmit={handleSubmit} className="space-y-8">
-                    
                     {/* NIC Input Component */}
                     <NicInput
                       nic={nic}
@@ -232,6 +233,15 @@ export default function SubmissionsPage(): JSX.Element {
                       onPartChange={handlePartChange}
                     />
 
+                    {/* Student Information Card - Mobile Only (above PDF upload) */}
+                    <div className="lg:hidden">
+                      <StudentInfoCard
+                        studentInfo={nicValidation.studentInfo}
+                        isFetchingStudent={nicValidation.isFetchingStudent}
+                        isNicValid={nicValidation.isNicValid}
+                      />
+                    </div>
+
                     {/* File Upload Component */}
                     <FileUpload
                       file={fileUpload.file}
@@ -243,6 +253,17 @@ export default function SubmissionsPage(): JSX.Element {
                       onDrop={fileUpload.handleDrop}
                     />
 
+                    {/* Upload Progress Card - Mobile Only (below PDF upload) */}
+                    <div className="lg:hidden">
+                      <FormProgressCard
+                        isNicValid={nicValidation.isNicValid}
+                        selectedSubject={selectedSubject}
+                        selectedPart={selectedPart}
+                        file={fileUpload.file}
+                        isValidatingNic={nicValidation.isValidatingNic}
+                      />
+                    </div>
+
                     {/* Submit Button Component */}
                     <SubmitButton
                       isSubmitDisabled={isSubmitDisabled}
@@ -251,29 +272,95 @@ export default function SubmissionsPage(): JSX.Element {
                       isNicValid={nicValidation.isNicValid}
                       isValidatingNic={nicValidation.isValidatingNic}
                     />
-
                   </form>
                 </div>
               </div>
 
-              {/* Mobile-only Progress and Security sections */}
-              <div className="lg:hidden mt-8 space-y-6">
-                {/* Progress Indicators - Mobile */}
-                <FormProgressCard
+              {/* Mobile-only Student Information Card */}
+              <div className="lg:hidden mt-8">
+                <StudentInfoCard
+                  studentInfo={nicValidation.studentInfo}
+                  isFetchingStudent={nicValidation.isFetchingStudent}
                   isNicValid={nicValidation.isNicValid}
-                  selectedSubject={selectedSubject}
-                  selectedPart={selectedPart}
-                  file={fileUpload.file}
-                  isValidatingNic={nicValidation.isValidatingNic}
+                  className="block"
                 />
+              </div>
 
-                {/* Student Information - Mobile */}
-                <div className="lg:hidden">
-                  <StudentInfoCard
-                    studentInfo={nicValidation.studentInfo}
-                    isFetchingStudent={nicValidation.isFetchingStudent}
-                    isNicValid={nicValidation.isNicValid}
-                  />
+              {/* Mobile-only Register Now Card */}
+              <div className="lg:hidden mt-8">
+                <div className="relative group">
+                  {/* Outer Glow Effect */}
+                  <div className="absolute -inset-1 bg-gradient-to-r from-green-400/20 via-emerald-400/20 to-teal-400/20 rounded-2xl blur opacity-60 group-hover:opacity-80 transition duration-500"></div>
+
+                  {/* Main Registration Card */}
+                  <div className="relative bg-white/20 dark:bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/20 dark:border-white/10 shadow-xl">
+                    <div className="text-center space-y-4">
+                      {/* Icon */}
+                      <div className="flex justify-center">
+                        <div className="relative">
+                          <div className="absolute -inset-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full blur opacity-30 animate-pulse"></div>
+                          <div className="relative bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-full p-3 border border-white/20">
+                            <svg
+                              className="w-8 h-8 text-green-600 dark:text-green-400"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                              />
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Content */}
+                      <div className="space-y-3">
+                        <h3 className="text-lg font-bold bg-gradient-to-r from-gray-900 via-green-900 to-emerald-900 dark:from-white dark:via-green-100 dark:to-emerald-100 bg-clip-text text-transparent">
+                          Not Registered Yet?
+                        </h3>
+                        <p className="text-sm text-gray-700/80 dark:text-gray-300/80 font-medium leading-relaxed">
+                          Join KESS INSPIRE 2025 and participate in the
+                          competition!
+                        </p>
+                      </div>
+
+                      {/* Register Button */}
+                      <button
+                        onClick={() => navigate("/register")}
+                        className="
+                          relative w-full py-3 px-4 rounded-xl font-bold text-sm transition-all duration-300 overflow-hidden
+                          bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 text-white
+                          hover:from-green-700 hover:via-emerald-700 hover:to-teal-700
+                          hover:shadow-[0_15px_35px_rgba(34,197,94,0.4)] 
+                          hover:scale-105 hover:-translate-y-1
+                          focus:ring-4 focus:ring-green-500/50 focus:ring-offset-2 dark:focus:ring-offset-gray-900
+                          shadow-[0_6px_24px_rgba(31,38,135,0.25)] dark:shadow-[0_6px_24px_rgba(0,0,0,0.4)]
+                          border border-white/20 dark:border-gray-700/50
+                        "
+                      >
+                        {/* Button content */}
+                        <span className="relative z-10 flex items-center justify-center gap-2">
+                          <span className="font-bold tracking-wide">
+                            Register Now
+                          </span>
+                        </span>
+                      </button>
+
+                      {/* Additional Info */}
+                      <div className="pt-2 space-y-1">
+                        <div className="text-xs text-gray-600 dark:text-gray-400">
+                          ✨ Quick & Easy Registration
+                        </div>
+                        <div className="text-xs text-gray-600 dark:text-gray-400">
+                          🎯 Join 500+ Students
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -316,7 +403,8 @@ export default function SubmissionsPage(): JSX.Element {
                         Not Registered Yet?
                       </h3>
                       <p className="text-sm text-gray-700/80 dark:text-gray-300/80 font-medium leading-relaxed">
-                        Join KESS INSPIRE 2025 and participate in the competition!
+                        Join KESS INSPIRE 2025 and participate in the
+                        competition!
                       </p>
                     </div>
 
@@ -396,7 +484,8 @@ export default function SubmissionsPage(): JSX.Element {
                 </div>
               </div>
               <p className="text-sm text-gray-600/80 dark:text-gray-400/80 font-medium">
-                © All right reserved. Kegalle Engineering Students' Society (KESS)
+                © All right reserved. Kegalle Engineering Students' Society
+                (KESS)
               </p>
             </div>
           </div>

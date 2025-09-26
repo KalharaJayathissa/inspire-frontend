@@ -1,13 +1,16 @@
-import React from 'react';
-import { StudentInfoCardProps } from './types';
+import React from "react";
+import { StudentInfoCardProps } from "./types";
 
 const StudentInfoCard: React.FC<StudentInfoCardProps> = ({
   studentInfo,
   isFetchingStudent,
-  isNicValid
+  isNicValid,
+  className = "hidden lg:block",
 }) => {
   return (
-    <div className="hidden lg:block relative bg-white/20 dark:bg-white/5 backdrop-blur-xl rounded-2xl p-4 border border-white/20 dark:border-white/10 shadow-xl">
+    <div
+      className={`${className} relative bg-white/20 dark:bg-white/5 backdrop-blur-xl rounded-2xl p-4 border border-white/20 dark:border-white/10 shadow-xl`}
+    >
       <h3 className="text-base font-semibold text-gray-800 dark:text-gray-200 mb-3">
         Student Information
       </h3>
