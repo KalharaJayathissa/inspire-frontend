@@ -50,7 +50,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
         <div className="space-y-4">
           <div className="relative">
             <div className="text-6xl mb-4 transform transition-transform duration-300 hover:scale-110">
-              {file ? "✅" : "📄"}
+              {file ? "📋" : "📄"}
             </div>
             {!file && (
               <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-teal-400/20 rounded-full blur-xl"></div>

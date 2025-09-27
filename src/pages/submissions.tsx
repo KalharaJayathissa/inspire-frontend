@@ -20,6 +20,10 @@ import {
   StudentInfo,
   Toast,
 } from "@/components/submission";
+import { submitDocument, submitDocumentMock } from "@/lib/api";
+
+// Toggle this to use mock function when backend is not ready
+const USE_MOCK_SUBMISSION = false;
 
 // ============================================================================
 // MAIN COMPONENT
@@ -104,28 +108,47 @@ export default function SubmissionsPage(): JSX.Element {
       fileUpload.setIsUploading(true);
       fileUpload.setUploadProgress(0);
 
+      // Create FormData for file upload
       const formData = new FormData();
       formData.append("file", fileUpload.file!);
       formData.append("nic", nic);
-      formData.append("subject", selectedSubject);
-      formData.append("part", selectedPart);
+      formData.append("subject", selectedSubject.toLowerCase());
+      // Convert "Part I" to "parti" and "Part II" to "partii"
+      const partForBackend = selectedPart.replace(/\s+/g, "").toLowerCase();
+      formData.append("part", partForBackend);
 
-      // Simulate upload progress
-      const progressInterval = setInterval(() => {
-        fileUpload.setUploadProgress((prev) => Math.min(prev + 10, 90));
-      }, 200);
+      // Add student info if available
+      if (nicValidation.studentInfo) {
+        formData.append(
+          "studentName",
+          nicValidation.studentInfo.fullName || ""
+        );
+        formData.append(
+          "mobileNumber",
+          nicValidation.studentInfo.mobileNumber || ""
+        );
+        formData.append("school", nicValidation.studentInfo.school || "");
+      }
 
-      const response = await fetch("/api/submissions", {
-        method: "POST",
-        body: formData,
+      addToast("info", "Uploading document...");
+
+      // Choose submission function based on mock setting
+      const submissionFunction = USE_MOCK_SUBMISSION
+        ? submitDocumentMock
+        : submitDocument;
+
+      if (USE_MOCK_SUBMISSION) {
+        addToast("info", "Running in demo mode - no actual backend submission");
+      }
+
+      // Submit using the chosen API service with progress callback
+      const result = await submissionFunction(formData, (progress: number) => {
+        fileUpload.setUploadProgress(progress);
       });
 
-      clearInterval(progressInterval);
       fileUpload.setUploadProgress(100);
 
-      const result = await response.json();
-
-      if (response.ok) {
+      if (result.success) {
         addToast(
           "success",
           result.message || "Document submitted successfully!"
@@ -138,16 +161,46 @@ export default function SubmissionsPage(): JSX.Element {
         setSelectedPart("");
         fileUpload.handleFileChange(null);
 
-        // Navigate to success page or reset form
+        // Navigate to success page
         setTimeout(() => {
           navigate("/submissions/success");
         }, 2000);
       } else {
         addToast("error", result.message || "Failed to submit document");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Upload error:", error);
-      addToast("error", "Network error. Please try again.");
+
+      // Enhanced error handling
+      if (error.status === 0) {
+        addToast(
+          "error",
+          "Backend server is not running. Using demo mode instead."
+        );
+        addToast("info", "Switch to demo mode by enabling USE_MOCK_SUBMISSION");
+      } else if (error.status === 400) {
+        addToast(
+          "error",
+          "Invalid request format: " + (error.message || "Bad Request")
+        );
+      } else if (error.status === 404) {
+        addToast(
+          "error",
+          "Submission endpoint not found. Backend may not be properly configured."
+        );
+      } else if (error.status === 500) {
+        addToast(
+          "error",
+          "Server error: " + (error.message || "Internal Server Error")
+        );
+      } else if (error.message) {
+        addToast("error", error.message);
+      } else {
+        addToast(
+          "error",
+          "Network error. Please try again or contact support."
+        );
+      }
     } finally {
       fileUpload.setIsUploading(false);
       fileUpload.setUploadProgress(0);

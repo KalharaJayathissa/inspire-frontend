@@ -86,12 +86,12 @@ const SubjectSelection: React.FC<SubjectSelectionProps> = ({
                   <>
                     <button
                       type="button"
-                      onClick={() => onPartChange("Pure")}
+                      onClick={() => onPartChange("Part I")}
                       className={`
                         relative p-4 rounded-xl border-2 transition-all duration-300 backdrop-blur-md
                         hover:scale-[1.02] hover:-translate-y-1 hover:shadow-lg
                         ${
-                          selectedPart === "Pure"
+                          selectedPart === "Part I"
                             ? "border-teal-500/60 bg-gradient-to-br from-teal-50/50 via-cyan-50/30 to-blue-50/50 dark:from-teal-900/30 dark:via-cyan-900/20 dark:to-blue-900/30 shadow-[0_8px_32px_rgba(20,184,166,0.25)]"
                             : "border-gray-200/40 dark:border-gray-600/40 bg-white/10 dark:bg-gray-800/10 hover:border-teal-300/50"
                         }
@@ -100,14 +100,14 @@ const SubjectSelection: React.FC<SubjectSelectionProps> = ({
                       <div className="text-center">
                         <div
                           className={`text-lg font-semibold mb-1 ${
-                            selectedPart === "Pure"
+                            selectedPart === "Part I"
                               ? "text-teal-700 dark:text-teal-300"
                               : "text-gray-700 dark:text-gray-300"
                           }`}
                         >
                           Part I (Pure)
                         </div>
-                        {selectedPart === "Pure" && (
+                        {selectedPart === "Part I" && (
                           <div className="absolute -top-1 -right-1 w-6 h-6 bg-teal-500 rounded-full flex items-center justify-center">
                             <svg
                               className="w-4 h-4 text-white"
@@ -128,12 +128,12 @@ const SubjectSelection: React.FC<SubjectSelectionProps> = ({
                     </button>
                     <button
                       type="button"
-                      onClick={() => onPartChange("Applied")}
+                      onClick={() => onPartChange("Part II")}
                       className={`
                         relative p-4 rounded-xl border-2 transition-all duration-300 backdrop-blur-md
                         hover:scale-[1.02] hover:-translate-y-1 hover:shadow-lg
                         ${
-                          selectedPart === "Applied"
+                          selectedPart === "Part II"
                             ? "border-cyan-500/60 bg-gradient-to-br from-cyan-50/50 via-blue-50/30 to-indigo-50/50 dark:from-cyan-900/30 dark:via-blue-900/20 dark:to-indigo-900/30 shadow-[0_8px_32px_rgba(6,182,212,0.25)]"
                             : "border-gray-200/40 dark:border-gray-600/40 bg-white/10 dark:bg-gray-800/10 hover:border-cyan-300/50"
                         }
@@ -142,14 +142,14 @@ const SubjectSelection: React.FC<SubjectSelectionProps> = ({
                       <div className="text-center">
                         <div
                           className={`text-lg font-semibold mb-1 ${
-                            selectedPart === "Applied"
+                            selectedPart === "Part II"
                               ? "text-cyan-700 dark:text-cyan-300"
                               : "text-gray-700 dark:text-gray-300"
                           }`}
                         >
                           Part II (Applied)
                         </div>
-                        {selectedPart === "Applied" && (
+                        {selectedPart === "Part II" && (
                           <div className="absolute -top-1 -right-1 w-6 h-6 bg-cyan-500 rounded-full flex items-center justify-center">
                             <svg
                               className="w-4 h-4 text-white"
@@ -173,12 +173,12 @@ const SubjectSelection: React.FC<SubjectSelectionProps> = ({
                   <>
                     <button
                       type="button"
-                      onClick={() => onPartChange("MCQ")}
+                      onClick={() => onPartChange("Part I")}
                       className={`
                         relative p-4 rounded-xl border-2 transition-all duration-300 backdrop-blur-md
                         hover:scale-[1.02] hover:-translate-y-1 hover:shadow-lg
                         ${
-                          selectedPart === "MCQ"
+                          selectedPart === "Part I"
                             ? "border-green-500/60 bg-gradient-to-br from-green-50/50 via-emerald-50/30 to-teal-50/50 dark:from-green-900/30 dark:via-emerald-900/20 dark:to-teal-900/30 shadow-[0_8px_32px_rgba(34,197,94,0.25)]"
                             : "border-gray-200/40 dark:border-gray-600/40 bg-white/10 dark:bg-gray-800/10 hover:border-green-300/50"
                         }
@@ -187,14 +187,14 @@ const SubjectSelection: React.FC<SubjectSelectionProps> = ({
                       <div className="text-center">
                         <div
                           className={`text-lg font-semibold mb-1 ${
-                            selectedPart === "MCQ"
+                            selectedPart === "Part I"
                               ? "text-green-700 dark:text-green-300"
                               : "text-gray-700 dark:text-gray-300"
                           }`}
                         >
                           Part I (MCQ)
                         </div>
-                        {selectedPart === "MCQ" && (
+                        {selectedPart === "Part I" && (
                           <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
                             <svg
                               className="w-4 h-4 text-white"
@@ -215,12 +215,12 @@ const SubjectSelection: React.FC<SubjectSelectionProps> = ({
                     </button>
                     <button
                       type="button"
-                      onClick={() => onPartChange("Essay")}
+                      onClick={() => onPartChange("Part II")}
                       className={`
                         relative p-4 rounded-xl border-2 transition-all duration-300 backdrop-blur-md
                         hover:scale-[1.02] hover:-translate-y-1 hover:shadow-lg
                         ${
-                          selectedPart === "Essay"
+                          selectedPart === "Part II"
                             ? "border-orange-500/60 bg-gradient-to-br from-orange-50/50 via-amber-50/30 to-yellow-50/50 dark:from-orange-900/30 dark:via-amber-900/20 dark:to-yellow-900/30 shadow-[0_8px_32px_rgba(249,115,22,0.25)]"
                             : "border-gray-200/40 dark:border-gray-600/40 bg-white/10 dark:bg-gray-800/10 hover:border-orange-300/50"
                         }
@@ -229,14 +229,14 @@ const SubjectSelection: React.FC<SubjectSelectionProps> = ({
                       <div className="text-center">
                         <div
                           className={`text-lg font-semibold mb-1 ${
-                            selectedPart === "Essay"
+                            selectedPart === "Part II"
                               ? "text-orange-700 dark:text-orange-300"
                               : "text-gray-700 dark:text-gray-300"
                           }`}
                         >
                           Part II (Essay)
                         </div>
-                        {selectedPart === "Essay" && (
+                        {selectedPart === "Part II" && (
                           <div className="absolute -top-1 -right-1 w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center">
                             <svg
                               className="w-4 h-4 text-white"
@@ -269,12 +269,12 @@ const SubjectSelection: React.FC<SubjectSelectionProps> = ({
                 <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
                   Selected: {selectedSubject} -{" "}
                   {selectedSubject === "Mathematics"
-                    ? `Part ${
-                        selectedPart === "Pure" ? "I (Pure)" : "II (Applied)"
-                      }`
-                    : `Part ${
-                        selectedPart === "MCQ" ? "I (MCQ)" : "II (Essay)"
-                      }`}
+                    ? `${selectedPart} (${
+                        selectedPart === "Part I" ? "Pure" : "Applied"
+                      })`
+                    : `${selectedPart} (${
+                        selectedPart === "Part I" ? "MCQ" : "Essay"
+                      })`}
                 </span>
               </div>
             </div>
