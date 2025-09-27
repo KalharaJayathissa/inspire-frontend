@@ -15,6 +15,7 @@ import AdminPage from "./pages/admin";
 import MarkerPage from "./pages/marker";
 import SubjectPage from "./pages/subjectPage";
 import SubmissionsPage from "./pages/submissions";
+import SubmissionSuccess from "./pages/SubmissionSuccess";
 
 import Invigilator from "./pages/invigilator/Invigilator";
 import { ApiTest } from "./components/ApiTest";
@@ -79,6 +80,7 @@ const App = () => (
           <Route path="/marker" element={<MarkerPage />} />
           <Route path="/subject/:subject" element={<SubjectPage />} />
           <Route path="/submissions" element={<SubmissionsPage />} />
+          <Route path="/submissions/success" element={<SubmissionSuccess />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

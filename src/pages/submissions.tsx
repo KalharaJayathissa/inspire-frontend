@@ -161,9 +161,25 @@ export default function SubmissionsPage(): JSX.Element {
         setSelectedPart("");
         fileUpload.handleFileChange(null);
 
-        // Navigate to success page
+        // Navigate to success page with submission data
         setTimeout(() => {
-          navigate("/submissions/success");
+          navigate("/submissions/success", {
+            state: {
+              submissionData: {
+                nic: nic,
+                subject: selectedSubject,
+                part: selectedPart,
+                fileName:
+                  result.data?.generatedFileName ||
+                  `${nic}_${selectedSubject.toLowerCase()}_${selectedPart
+                    .replace(/\s+/g, "")
+                    .toLowerCase()}_${
+                    new Date().toISOString().split("T")[0]
+                  }.pdf`,
+                timestamp: new Date().toISOString(),
+              },
+            },
+          });
         }, 2000);
       } else {
         addToast("error", result.message || "Failed to submit document");
@@ -328,7 +344,9 @@ export default function SubmissionsPage(): JSX.Element {
 
               {/* Mobile-only Submission Status Card */}
               <div className="lg:hidden mt-8">
-                <SubmissionStatusCard />
+                <SubmissionStatusCard
+                  nicNumber={nicValidation.isNicValid ? nic : undefined}
+                />
               </div>
 
               {/* Mobile-only Register Now Card */}
@@ -413,7 +431,9 @@ export default function SubmissionsPage(): JSX.Element {
             {/* Right Column: Registration (Desktop Only) */}
             <div className="hidden lg:block lg:col-span-3 space-y-4">
               {/* Submission Status */}
-              <SubmissionStatusCard />
+              <SubmissionStatusCard
+                nicNumber={nicValidation.isNicValid ? nic : undefined}
+              />
 
               {/* Registration Call-to-Action */}
               <div className="relative group">
