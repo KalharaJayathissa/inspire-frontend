@@ -13,6 +13,7 @@ import {
   FormProgressCard,
   SubmissionStatusCard,
   StudentInfoDisplay,
+  SubmissionInstructionsCard,
   useToasts,
   useNicValidation,
   useFileUpload,
@@ -200,8 +201,8 @@ export default function SubmissionsPage(): JSX.Element {
                 isValidatingNic={nicValidation.isValidatingNic}
               />
 
-              {/* Submission Status */}
-              <SubmissionStatusCard />
+              {/* Submission Instructions */}
+              <SubmissionInstructionsCard />
             </div>
 
             {/* Center Column: Form (Desktop) / Full Width (Mobile) */}
@@ -358,6 +359,9 @@ export default function SubmissionsPage(): JSX.Element {
 
             {/* Right Column: Registration (Desktop Only) */}
             <div className="hidden lg:block lg:col-span-3 space-y-4">
+              {/* Submission Status */}
+              <SubmissionStatusCard />
+
               {/* Registration Call-to-Action */}
               <div className="relative group">
                 {/* Outer Glow Effect */}

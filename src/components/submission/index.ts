@@ -10,6 +10,7 @@ export { default as DocumentSubmissionCard } from "./DocumentSubmissionCard";
 export { default as FormProgressCard } from "./FormProgressCard";
 export { default as SubmissionStatusCard } from "./SubmissionStatusCard";
 export { default as StudentInfoDisplay } from "./StudentInfoDisplay";
+export { default as SubmissionInstructionsCard } from "./SubmissionInstructionsCard";
 
 // Export types
 export * from "./types";
