@@ -11,6 +11,8 @@ import {
   NicNotFoundModal,
   DocumentSubmissionCard,
   FormProgressCard,
+  SubmissionStatusCard,
+  StudentInfoDisplay,
   useToasts,
   useNicValidation,
   useFileUpload,
@@ -184,8 +186,8 @@ export default function SubmissionsPage(): JSX.Element {
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
           {/* Grid Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 max-w-7xl mx-auto">
-            {/* Left Column: Information & Status (Desktop) */}
-            <div className="lg:col-span-3 space-y-6">
+            {/* Left Column: Information & Status (Desktop Only) */}
+            <div className="hidden lg:block lg:col-span-3 space-y-6">
               {/* Document Submission Card */}
               <DocumentSubmissionCard />
 
@@ -198,12 +200,8 @@ export default function SubmissionsPage(): JSX.Element {
                 isValidatingNic={nicValidation.isValidatingNic}
               />
 
-              {/* Student Information */}
-              <StudentInfoCard
-                studentInfo={nicValidation.studentInfo}
-                isFetchingStudent={nicValidation.isFetchingStudent}
-                isNicValid={nicValidation.isNicValid}
-              />
+              {/* Submission Status */}
+              <SubmissionStatusCard />
             </div>
 
             {/* Center Column: Form (Desktop) / Full Width (Mobile) */}
@@ -224,6 +222,13 @@ export default function SubmissionsPage(): JSX.Element {
                       isValidatingNic={nicValidation.isValidatingNic}
                     />
 
+                    {/* Student Information Display - Below NIC Input */}
+                    <StudentInfoDisplay
+                      studentInfo={nicValidation.studentInfo}
+                      isFetchingStudent={nicValidation.isFetchingStudent}
+                      isNicValid={nicValidation.isNicValid}
+                    />
+
                     {/* Subject Selection Component */}
                     <SubjectSelection
                       isNicValid={nicValidation.isNicValid}
@@ -232,15 +237,6 @@ export default function SubmissionsPage(): JSX.Element {
                       onSubjectChange={handleSubjectChange}
                       onPartChange={handlePartChange}
                     />
-
-                    {/* Student Information Card - Mobile Only (above PDF upload) */}
-                    <div className="lg:hidden">
-                      <StudentInfoCard
-                        studentInfo={nicValidation.studentInfo}
-                        isFetchingStudent={nicValidation.isFetchingStudent}
-                        isNicValid={nicValidation.isNicValid}
-                      />
-                    </div>
 
                     {/* File Upload Component */}
                     <FileUpload
@@ -276,14 +272,9 @@ export default function SubmissionsPage(): JSX.Element {
                 </div>
               </div>
 
-              {/* Mobile-only Student Information Card */}
+              {/* Mobile-only Submission Status Card */}
               <div className="lg:hidden mt-8">
-                <StudentInfoCard
-                  studentInfo={nicValidation.studentInfo}
-                  isFetchingStudent={nicValidation.isFetchingStudent}
-                  isNicValid={nicValidation.isNicValid}
-                  className="block"
-                />
+                <SubmissionStatusCard />
               </div>
 
               {/* Mobile-only Register Now Card */}

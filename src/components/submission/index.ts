@@ -8,6 +8,8 @@ export { default as StudentInfoCard } from "./StudentInfoCard";
 export { default as NicNotFoundModal } from "./NicNotFoundModal";
 export { default as DocumentSubmissionCard } from "./DocumentSubmissionCard";
 export { default as FormProgressCard } from "./FormProgressCard";
+export { default as SubmissionStatusCard } from "./SubmissionStatusCard";
+export { default as StudentInfoDisplay } from "./StudentInfoDisplay";
 
 // Export types
 export * from "./types";
