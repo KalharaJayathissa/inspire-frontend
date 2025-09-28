@@ -36,7 +36,6 @@ const FileUpload: React.FC<FileUploadProps> = ({
         onDragOver={onDragOver}
         onDragLeave={onDragLeave}
         onDrop={onDrop}
-        onClick={() => fileInputRef.current?.click()}
       >
         <input
           ref={fileInputRef}
