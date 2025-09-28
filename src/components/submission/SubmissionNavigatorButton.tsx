@@ -59,7 +59,7 @@ function SubmissionNavigatorButton() {
                   />
                 </svg>
                 <span className="text-lg sm:text-xl mr-3">
-                  📄 Document Submissions
+                  📄 Submit your answer sheet
                 </span>
                 <svg
                   className="w-5 h-5 group-hover/button:translate-x-2 group-hover/button:scale-110 transition-all duration-300"

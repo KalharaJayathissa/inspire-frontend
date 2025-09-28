@@ -32,8 +32,9 @@ const SubjectSelection: React.FC<SubjectSelectionProps> = ({
                     onPartChange(""); // Reset part selection when subject changes
                   }}
                   className={`
-                    relative p-4 rounded-xl border-2 transition-all duration-300 backdrop-blur-md
-                    hover:scale-[1.02] hover:-translate-y-1 hover:shadow-lg min-h-[80px] flex items-center
+                    relative px-2 py-4 sm:px-4 rounded-xl border-2 transition-all duration-300 backdrop-blur-md
+                    hover:scale-[1.02] hover:-translate-y-1 hover:shadow-lg min-h-[80px] flex items-center justify-center
+                    w-full min-w-0
                     ${
                       selectedSubject === subject
                         ? "border-blue-500/60 bg-gradient-to-br from-blue-50/50 via-purple-50/30 to-teal-50/50 dark:from-blue-900/30 dark:via-purple-900/20 dark:to-teal-900/30 shadow-[0_8px_32px_rgba(59,130,246,0.25)]"
@@ -41,16 +42,16 @@ const SubjectSelection: React.FC<SubjectSelectionProps> = ({
                     }
                   `}
                 >
-                  <div className="flex-1 flex items-center justify-center">
-                    <div
-                      className={`text-lg font-semibold leading-tight text-center px-2 ${
+                  <div className="w-full flex items-center justify-center">
+                    <span
+                      className={`text-base sm:text-lg font-semibold leading-tight text-center ${
                         selectedSubject === subject
                           ? "text-blue-700 dark:text-blue-300"
                           : "text-gray-700 dark:text-gray-300"
                       }`}
                     >
                       {subject}
-                    </div>
+                    </span>
                     {selectedSubject === subject && (
                       <div className="absolute -top-1 -right-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
                         <svg
