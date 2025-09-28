@@ -249,7 +249,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       duration: 3000,
     });
     setTimeout(() => {
-      navigate('/');
+      navigate('/submissions');
     }, 3000);
 
 
