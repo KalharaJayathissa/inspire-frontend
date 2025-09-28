@@ -3,8 +3,8 @@ import { supabase } from "../supabaseClient";
 
 // const baseURL = import.meta.env.VITE_BACKEND_URL || 'https://inspirebackend-production.up.railway.app/';
 
-// const baseURL = 'https://inspirebackend-production.up.railway.app';
-const baseURL = "http://192.168.8.129:3000"; // Local backend for development
+const baseURL = 'https://inspirebackend-production.up.railway.app';
+// const baseURL = "http://192.168.8.129:3000"; // Local backend for development
 
 // Helper function to get authentication headers
 async function getAuthHeaders() {
