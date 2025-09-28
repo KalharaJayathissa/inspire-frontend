@@ -4,11 +4,12 @@ import { Button } from "@/components/ui/button";
 import CountdownTimer from "@/components/CountdownTimer";
 import { useNavigate } from "react-router-dom";
 import Countdowntimer2 from "./Countdowntimer2";
-import BackgroundImg from '@/assets/Background.jpg';
+import BackgroundImg from "@/assets/Background.jpg";
+import SubmissionNavigatorButton from "./submission/SubmissionNavigatorButton";
 
 const HeroSection = () => {
   const navigate = useNavigate();
-  
+
   const scrollToForm = () => {
     const element = document.querySelector("#student-form");
     if (element) {
@@ -16,7 +17,7 @@ const HeroSection = () => {
       const elementPosition = (element as HTMLElement).offsetTop - navHeight;
       window.scrollTo({
         top: elementPosition,
-        behavior: "smooth"
+        behavior: "smooth",
       });
     } else {
       // If form not found, navigate to register page
@@ -35,10 +36,10 @@ const HeroSection = () => {
           src={BackgroundImg}
           alt="Background"
           className="w-full h-full object-cover pointer-events-none opacity-40"
-          style={{mixBlendMode: 'multiply'}}
+          style={{ mixBlendMode: "multiply" }}
         />
       </div>
-      
+
       {/* Background decoration - Light gradient */}
       {/* <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-50 to-gray-100"></div>
       <div className="absolute inset-0 bg-gradient-to-t from-orange-400/10 via-transparent to-purple-500/10"></div> */}
@@ -62,7 +63,6 @@ const HeroSection = () => {
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-5xl mx-auto space-y-6 sm:space-y-8 lg:space-y-10">
-          
           {/* Main Title - Reduced font sizes */}
           <div className="space-y-6">
             <div className="space-y-4">
@@ -72,7 +72,9 @@ const HeroSection = () => {
               <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 tracking-tight leading-none">
                 KESS <span className="text-[#2D620A]">INSPIRE</span>
               </h1>
-              <div className="text-xl sm:text-2xl lg:text-3xl font-semibold text-orange-500">2025</div>
+              <div className="text-xl sm:text-2xl lg:text-3xl font-semibold text-orange-500">
+                2025
+              </div>
             </div>
             <p className="text-sm sm:text-base lg:text-lg text-orange-600 tracking-widest font-semibold bg-orange-100 rounded px-3 py-1 inline-block border border-orange-300">
               One last Mock shy
@@ -84,10 +86,12 @@ const HeroSection = () => {
             {/* A leading academic competition designed for A/L Physical Stream
             students in Kegalle District. Organized by the Kegalle Engineering
             Students' Society (KESS). */}
-            KESS Inspire is a leading academic competition designed for 500+
-              A/L Physical Stream students in the Kegalle District. The program
-              is conducted as a 3-day exam session consisting of 3 subject papers. After evaluation, students are ranked using a Z-score
-              system, and gifts are awarded to the top performers to recognize their achievements and inspire excellence.
+            KESS Inspire is a leading academic competition designed for 500+ A/L
+            Physical Stream students in the Kegalle District. The program is
+            conducted as a 3-day exam session consisting of 3 subject papers.
+            After evaluation, students are ranked using a Z-score system, and
+            gifts are awarded to the top performers to recognize their
+            achievements and inspire excellence.
           </p>
 
           {/* Single Register Now Button */}
@@ -115,11 +119,13 @@ const HeroSection = () => {
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1">
                 Get Ready!
               </h2>
-              <div className="bg-green/90 backdrop-blur-sm border border-gray-200 rounded-2xl p-4 sm:p-6 shadow-xl max-w-4xl mx-auto">
+              {/* <div className="bg-green/90 backdrop-blur-sm border border-gray-200 rounded-2xl p-4 sm:p-6 shadow-xl max-w-4xl mx-auto">
                 <Countdowntimer2 />
-              </div>
+              </div> */}
             </div>
           </div>
+
+          <SubmissionNavigatorButton />
         </div>
       </div>
     </section>
