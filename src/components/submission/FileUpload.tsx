@@ -26,7 +26,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
           backdrop-blur-md bg-white/10 dark:bg-gray-800/10
           shadow-[0_8px_32px_rgba(31,38,135,0.15)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)]
           hover:shadow-[0_12px_40px_rgba(31,38,135,0.25)] dark:hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)]
-          hover:scale-[1.02] hover:-translate-y-1
+          hover:scale-[1.02] hover:-translate-y-1 cursor-pointer
           ${
             isDragOver
               ? "border-blue-400/60 bg-gradient-to-br from-blue-50/50 via-purple-50/30 to-teal-50/50 dark:from-blue-900/30 dark:via-purple-900/20 dark:to-teal-900/30 scale-105 shadow-[0_16px_50px_rgba(59,130,246,0.35)]"
@@ -36,6 +36,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
         onDragOver={onDragOver}
         onDragLeave={onDragLeave}
         onDrop={onDrop}
+        onClick={() => fileInputRef.current?.click()}
       >
         <input
           ref={fileInputRef}
@@ -43,11 +44,11 @@ const FileUpload: React.FC<FileUploadProps> = ({
           type="file"
           accept=".pdf"
           onChange={onFileChange}
-          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
           aria-describedby="file-help"
         />
 
-        <div className="space-y-4">
+        <div className="space-y-4 pointer-events-none relative z-0">
           <div className="relative">
             <div className="text-6xl mb-4 transform transition-transform duration-300 hover:scale-110">
               {file ? "📋" : "📄"}
@@ -67,7 +68,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
               ) : (
                 <>
                   <span className="font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent">
-                    Click to upload
+                    Click anywhere to upload
                   </span>
                   <span className="mx-2 text-gray-500 dark:text-gray-400">
                     or
