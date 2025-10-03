@@ -3,10 +3,17 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate, useLocation } from "react-router-dom";
 
-const navItems = [
+interface NavItem {
+  label: string;
+  href: string;
+  isRoute?: boolean;
+}
+
+const navItems: NavItem[] = [
   { label: "Home", href: "#home" },
   { label: "About", href: "#about" },
   { label: "Resources", href: "#resources" },
+  { label: "Exam Papers", href: "/exam-papers", isRoute: true },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -34,7 +41,7 @@ const Navigation = () => {
         const elementPosition = (element as HTMLElement).offsetTop - navHeight;
         window.scrollTo({
           top: elementPosition,
-          behavior: "smooth"
+          behavior: "smooth",
         });
       }
       // Clear the state after scrolling
@@ -42,8 +49,11 @@ const Navigation = () => {
     }
   }, [location.state, isRegisterPage, navigate]);
 
-  const handleNavClick = (href: string) => {
-    if (isRegisterPage) {
+  const handleNavClick = (href: string, isRoute?: boolean) => {
+    if (isRoute) {
+      // Navigate to route
+      navigate(href);
+    } else if (isRegisterPage) {
       // If on register page, navigate to home first with scroll target
       navigate("/", { state: { scrollTo: href } });
     } else {
@@ -54,7 +64,7 @@ const Navigation = () => {
         const elementPosition = (element as HTMLElement).offsetTop - navHeight;
         window.scrollTo({
           top: elementPosition,
-          behavior: "smooth"
+          behavior: "smooth",
         });
       }
     }
@@ -99,7 +109,7 @@ const Navigation = () => {
               {navItems.map((item) => (
                 <button
                   key={item.label}
-                  onClick={() => handleNavClick(item.href)}
+                  onClick={() => handleNavClick(item.href, item.isRoute)}
                   className={`${
                     isRegisterPage
                       ? "text-foreground"
@@ -114,12 +124,26 @@ const Navigation = () => {
             </div>
           </div>
 
-          {/* CTA Button - Desktop */}
+          {/* CTA Buttons - Desktop */}
           {!isRegisterPage && (
-            <div className="hidden md:block">
+            <div className="hidden md:flex items-center gap-3">
+              <Button
+                onClick={() => navigate("/exam-papers")}
+                variant="outline"
+                className="text-xs lg:text-sm px-3 lg:px-4 py-2 hover:bg-purple-50 hover:border-purple-300 hover:text-purple-700 transition-all duration-300"
+              >
+                📚 Exam Papers
+              </Button>
+              <Button
+                onClick={() => navigate("/submissions")}
+                variant="outline"
+                className="text-xs lg:text-sm px-3 lg:px-4 py-2 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-all duration-300"
+              >
+                📄 Submit
+              </Button>
               <Button
                 onClick={() => navigate("/register")}
-                className="bg-gradient-hero text-primary-foreground hover:shadow-glow transition-all duration-300 text-sm lg:text-base px-4 lg:px-6 py-2 lg:py-3"
+                className="bg-gradient-hero text-primary-foreground hover:shadow-glow transition-all duration-300 text-xs lg:text-sm px-3 lg:px-4 py-2"
               >
                 Register Now
               </Button>
@@ -154,7 +178,7 @@ const Navigation = () => {
               {navItems.map((item) => (
                 <button
                   key={item.label}
-                  onClick={() => handleNavClick(item.href)}
+                  onClick={() => handleNavClick(item.href, item.isRoute)}
                   className={`block px-3 py-3 text-base font-medium ${
                     isRegisterPage
                       ? "text-foreground"
@@ -167,7 +191,27 @@ const Navigation = () => {
                 </button>
               ))}
               {!isRegisterPage && (
-                <div className="px-3 pt-2 pb-1">
+                <div className="px-3 pt-2 pb-1 space-y-2">
+                  <Button
+                    onClick={() => {
+                      setIsOpen(false);
+                      navigate("/exam-papers");
+                    }}
+                    variant="outline"
+                    className="w-full hover:bg-purple-50 hover:border-purple-300 hover:text-purple-700 transition-all duration-300 py-3"
+                  >
+                    📚 Exam Papers
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setIsOpen(false);
+                      navigate("/submissions");
+                    }}
+                    variant="outline"
+                    className="w-full hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-all duration-300 py-3"
+                  >
+                    📄 Submit Answers
+                  </Button>
                   <Button
                     onClick={() => {
                       setIsOpen(false);

@@ -15,10 +15,13 @@ import {
   BookOpen,
   Download,
   Clock,
+  GraduationCap,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const ResourcesSection = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const navigate = useNavigate();
 
   const resources = [
     {
@@ -168,6 +171,54 @@ const ResourcesSection = () => {
 
         {/* Resources Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+          {/* Featured Exam Papers Card */}
+          {(selectedCategory === "all" ||
+            ["mathematics", "physics", "chemistry"].includes(
+              selectedCategory
+            )) && (
+            <Card className="card-gradient border-0 shadow-soft hover:shadow-glow transition-all duration-300 group bg-gradient-to-br from-blue-50 to-purple-50 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full -translate-y-10 translate-x-10"></div>
+              <CardHeader className="pb-3 sm:pb-4">
+                <div className="flex items-start justify-between mb-2">
+                  <div className="p-2 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-lg">
+                    <GraduationCap className="h-5 w-5" />
+                  </div>
+                  <Badge className="bg-gradient-to-r from-orange-400 to-pink-500 text-white border-0 text-xs sm:text-sm">
+                    ⭐ Featured
+                  </Badge>
+                </div>
+                <CardTitle className="text-base sm:text-lg font-semibold group-hover:text-blue-600 transition-colors">
+                  Official Exam Papers
+                </CardTitle>
+                <CardDescription className="text-xs sm:text-sm">
+                  Download comprehensive exam papers for Mathematics, Physics,
+                  and Chemistry with modern interface and instant access.
+                </CardDescription>
+              </CardHeader>
+
+              <CardContent className="pt-0">
+                <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
+                  <div className="flex items-center gap-1">
+                    <FileText className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <span>6 Papers</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Download className="h-3 w-3 sm:h-4 sm:w-4" />
+                    Latest 2025
+                  </div>
+                </div>
+
+                <Button
+                  className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 transition-all duration-300 text-sm sm:text-base h-8 sm:h-10 shadow-lg hover:shadow-xl"
+                  onClick={() => navigate("/exam-papers")}
+                >
+                  <GraduationCap className="w-4 h-4 mr-2" />
+                  View All Papers
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
           {filteredResources.map((resource) => (
             <Card
               key={resource.id}
@@ -180,7 +231,9 @@ const ResourcesSection = () => {
                   </div>
                   <Badge
                     variant="outline"
-                    className={`${getDifficultyColor(resource.difficulty)} text-xs sm:text-sm`}
+                    className={`${getDifficultyColor(
+                      resource.difficulty
+                    )} text-xs sm:text-sm`}
                   >
                     {resource.difficulty}
                   </Badge>
@@ -197,8 +250,12 @@ const ResourcesSection = () => {
                 <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
                   <div className="flex items-center gap-1">
                     <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
-                    <span className="hidden sm:inline">{resource.duration}</span>
-                    <span className="sm:hidden">{resource.duration.split(' ')[0]}</span>
+                    <span className="hidden sm:inline">
+                      {resource.duration}
+                    </span>
+                    <span className="sm:hidden">
+                      {resource.duration.split(" ")[0]}
+                    </span>
                   </div>
                   <div className="flex items-center gap-1">
                     <Download className="h-3 w-3 sm:h-4 sm:w-4" />
