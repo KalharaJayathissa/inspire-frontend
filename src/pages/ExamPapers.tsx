@@ -153,14 +153,17 @@ const ExamPapers = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-green-25 to-lime-50 relative">
+    <div
+      className="min-h-screen bg-gradient-to-r from-lime-100 to-teal-100
+ from-green-50 via-green-25 to-lime-50 relative"
+    >
       {/* Background similar to Timeline component */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute top-0 left-0 w-2/3 h-2/3 bg-gradient-to-br from-green-100 via-green-50 to-green-200 opacity-60 rounded-3xl blur-2xl"></div>
         <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-gradient-to-tr from-green-200 via-green-100 to-green-50 opacity-40 rounded-full blur-3xl"></div>
         <div className="absolute top-1/3 left-1/2 w-40 h-40 bg-green-100 opacity-30 rounded-full blur-2xl"></div>
       </div>
-      <Navigation />
+      {/* <Navigation /> */}
 
       {/* Hero Section */}
       <section className="relative pt-24 pb-16 px-4 sm:px-6 lg:px-8 z-10">
@@ -175,15 +178,17 @@ const ExamPapers = () => {
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent mb-6">
               Exam Papers Library
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Access comprehensive exam papers for Chemistry, Mathematics, and
-              Physics. Download high-quality PDFs to enhance your preparation
-              and academic success.
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed text-center">
+              {" "}
+              Explore a curated collection of comprehensive exam papers in
+              Chemistry, Mathematics, and Physics, thoughtfully prepared by the
+              Kegalle Engineering Students' Society (KESS) to support your
+              academic journey. <br />© All rights reserved.{" "}
             </p>
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+          {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
             <div className="text-center">
               <div className="text-3xl font-bold text-green-600">
                 {examPapers.length}
@@ -202,12 +207,12 @@ const ExamPapers = () => {
                 </div>
               </div>
             ))}
-          </div>
+          </div> */}
         </div>
       </section>
 
       {/* Search and Filter Section */}
-      <section className="px-4 sm:px-6 lg:px-8 pb-8 relative z-10">
+      {/* <section className="px-4 sm:px-6 lg:px-8 pb-8 relative z-10">
         <div className="max-w-7xl mx-auto">
           <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-green-200/50">
             <div className="flex flex-col lg:flex-row gap-4 items-center">
@@ -250,7 +255,7 @@ const ExamPapers = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Papers Grid */}
       <section className="px-4 sm:px-6 lg:px-8 pb-16">
@@ -292,18 +297,18 @@ const ExamPapers = () => {
                     <CardTitle className="text-xl font-bold text-gray-800 group-hover:text-green-600 transition-colors">
                       {paper.title}
                     </CardTitle>
-                    <CardDescription className="text-gray-600 leading-relaxed">
+                    {/* <CardDescription className="text-gray-600 leading-relaxed">
                       {paper.description}
-                    </CardDescription>
+                    </CardDescription> */}
                   </CardHeader>
 
                   <CardContent className="pb-4">
                     <div className="space-y-3">
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-500">Subject:</span>
-                        <Badge variant="outline" className="font-medium">
+                        {/* <span className="text-gray-500">Subject:</span> */}
+                        {/* <Badge variant="outline" className="font-medium">
                           {paper.subject} {paper.part && `- ${paper.part}`}
-                        </Badge>
+                        </Badge> */}
                       </div>
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-gray-500">File Size:</span>
@@ -390,6 +395,14 @@ const ExamPapers = () => {
       </section>
 
       {/* <Footer /> */}
+
+      {/* Copyright Footer */}
+      <div className="text-center py-8 border-t border-green-200/50 bg-white/30 backdrop-blur-sm">
+        <p className="text-sm text-gray-700 font-medium tracking-wide">
+          © 2025 All rights reserved. Kegalle Engineering Students' Society
+          (KESS)
+        </p>
+      </div>
     </div>
   );
 };
