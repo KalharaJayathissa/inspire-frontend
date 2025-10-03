@@ -178,13 +178,48 @@ const ExamPapers = () => {
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent mb-6">
               Exam Papers Library
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed text-center">
-              {" "}
+            {/* <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed text-center mb-8">
               Explore a curated collection of comprehensive exam papers in
               Chemistry, Mathematics, and Physics, thoughtfully prepared by the
               Kegalle Engineering Students' Society (KESS) to support your
-              academic journey. <br />© All rights reserved.{" "}
+              academic journey. <br/>© All rights reserved.
+            </p> */}
+            
+            <p className="text-sm text-gray-500 text-center mt-4">
+              © All exam papers and related materials are the intellectual
+              property of the Kegalle Engineering Students' Society (KESS).
+              Unauthorized copying, distribution, or reproduction of these
+              resources is strictly prohibited. All rights reserved.
             </p>
+            `
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-2xl mx-auto">
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                <span className="text-gray-600 font-medium">
+                  Not registered yet?
+                </span>
+                <Button
+                  onClick={() => (window.location.href = "/register")}
+                  className="bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 hover:from-green-700 hover:via-emerald-700 hover:to-teal-700 text-white font-bold px-6 py-3 rounded-lg shadow-lg hover:shadow-[0_10px_25px_rgba(34,197,94,0.3)] hover:scale-105 transition-all duration-300"
+                >
+                  Register Now
+                </Button>
+              </div>
+
+              <div className="w-px h-8 bg-gray-300 hidden sm:block"></div>
+
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                <span className="text-gray-600 font-medium">
+                  Submit your answers:
+                </span>
+                <Button
+                  onClick={() => (window.location.href = "/submissions")}
+                  className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 text-white font-bold px-6 py-3 rounded-lg shadow-lg hover:shadow-[0_10px_25px_rgba(99,102,241,0.3)] hover:scale-105 transition-all duration-300"
+                >
+                  Submissions
+                </Button>
+              </div>
+            </div>
           </div>
 
           {/* Stats */}
@@ -347,7 +382,7 @@ const ExamPapers = () => {
           <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-8 border border-green-200">
             <div className="text-center">
               <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                Need Help with Your Studies?
+                A social service by KESS
               </h2>
               <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
                 These exam papers are designed to help you prepare effectively.
