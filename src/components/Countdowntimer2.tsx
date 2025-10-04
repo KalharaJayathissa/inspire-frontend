@@ -82,7 +82,7 @@ import "./flipclock.css";
 
 const Countdowntimer2: React.FC = () => {
   // Target: 25th Sept 2025, 8:00 AM
-  const targetDate = new Date("2025-09-25T08:00:00").getTime();
+  const targetDate = new Date("2025-10-10T08:00:00").getTime();
 
   // Track screen width for responsiveness
   const [isMobile, setIsMobile] = useState(false);
