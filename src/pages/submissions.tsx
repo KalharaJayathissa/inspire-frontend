@@ -21,6 +21,7 @@ import {
   Toast,
 } from "@/components/submission";
 import { submitDocument, submitDocumentMock } from "@/lib/api";
+import ExamPapersAccessCard from "@/components/ExamPapersAccessCard";
 
 // Toggle this to use mock function when backend is not ready
 const USE_MOCK_SUBMISSION = false;
@@ -276,6 +277,11 @@ export default function SubmissionsPage(): JSX.Element {
 
             {/* Center Column: Form (Desktop) / Full Width (Mobile) */}
             <div className="lg:col-span-6 lg:col-start-4">
+              {/* Document Submission Card - Mobile Only (at the very top, outside form card) */}
+              <div className="lg:hidden mb-6">
+                <DocumentSubmissionCard />
+              </div>
+
               {/* Enhanced Main Card with Advanced Glassmorphism */}
               <div className="relative group">
                 {/* Outer Glow Effect */}
@@ -342,11 +348,15 @@ export default function SubmissionsPage(): JSX.Element {
                 </div>
               </div>
 
-              {/* Mobile-only Submission Status Card */}
-              <div className="lg:hidden mt-8">
+              {/* Mobile-only Cards */}
+              <div className="lg:hidden mt-8 space-y-6">
+                {/* Submission Status Card - Mobile */}
                 <SubmissionStatusCard
                   nicNumber={nicValidation.isNicValid ? nic : undefined}
                 />
+
+                {/* Exam Papers Access Card - Mobile */}
+                <ExamPapersAccessCard />
               </div>
 
               {/* Mobile-only Register Now Card */}
@@ -430,6 +440,9 @@ export default function SubmissionsPage(): JSX.Element {
 
             {/* Right Column: Registration (Desktop Only) */}
             <div className="hidden lg:block lg:col-span-3 space-y-4">
+              {/* Exam Papers Access Card */}
+              <ExamPapersAccessCard />
+
               {/* Submission Status */}
               <SubmissionStatusCard
                 nicNumber={nicValidation.isNicValid ? nic : undefined}
