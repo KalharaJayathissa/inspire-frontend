@@ -121,7 +121,7 @@ const HeroSection = () => {
           <div className="pt-8 sm:pt-2">
             <div className="text-center space-y-6">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1">
-                 Hurry!, don’t miss your chance!!
+                 Hurry Up!, do not miss your chance!!
               </h2>
               <div className="bg-green/90 backdrop-blur-sm border border-gray-200 rounded-2xl p-4 sm:p-6 shadow-xl max-w-4xl mx-auto">
                 <Countdowntimer2 />
