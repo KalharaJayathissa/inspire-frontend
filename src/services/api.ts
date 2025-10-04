@@ -1,6 +1,5 @@
 import { get } from "http";
 
-
 /**
  * Default download count fallback value
  * This value is used when:
@@ -14,12 +13,10 @@ const DEFAULT_DOWNLOAD_COUNT = 0;
 
 // Authentication is handled through localStorage tokens
 
-import { supabase } from '../supabaseClient.js';
-import { toast } from '../hooks/use-toast';
+import { supabase } from "../supabaseClient.js";
+import { toast } from "../hooks/use-toast";
 
 // Authentication is handled through Supabase sessions
-
-
 
 export interface LoginResponse {
   access_token: string;
@@ -112,21 +109,24 @@ export const SUBJECT_CODES = {
 // Helper function to get Supabase session token
 const getSupabaseToken = async (): Promise<string | null> => {
   try {
-    const { data: { session }, error } = await supabase.auth.getSession();
-    
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.getSession();
+
     if (error) {
-      console.error('Error getting Supabase session:', error);
+      console.error("Error getting Supabase session:", error);
       return null;
     }
-    
+
     if (!session?.access_token) {
-      console.log('No active Supabase session found');
+      console.log("No active Supabase session found");
       return null;
     }
-    
+
     return session.access_token;
   } catch (error) {
-    console.error('Failed to get Supabase token:', error);
+    console.error("Failed to get Supabase token:", error);
     return null;
   }
 };
@@ -275,17 +275,21 @@ export const handleTokenExpiration = (redirectToLogin = true) => {
     //console.log('🔄 Redirecting to login page...');
     //window.location.href = "/login";
     console.log("🔄token expired");
-
   }
 
   return { success: true, message: "Token expired, redirected to login" };
 };
 
-
 // Function to check if Supabase session is valid
-export const checkTokenExpiration = async (token?: string, autoRedirect = true) => {
+export const checkTokenExpiration = async (
+  token?: string,
+  autoRedirect = true
+) => {
   try {
-    const { data: { session }, error } = await supabase.auth.getSession();
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.getSession();
 
     if (error || !session) {
       //console.log('❌ No valid Supabase session found');
@@ -298,21 +302,23 @@ export const checkTokenExpiration = async (token?: string, autoRedirect = true) 
     // Supabase handles token refresh automatically
     return { expired: false, valid: true };
   } catch (error) {
-    console.error('Error checking Supabase session:', error);
+    console.error("Error checking Supabase session:", error);
 
     if (autoRedirect) {
       handleTokenExpiration();
     }
     return { expired: true, valid: false };
   }
-
 };
 
 // Function to check current Supabase session
 export const checkCurrentToken = async () => {
   try {
-    const { data: { session }, error } = await supabase.auth.getSession();
-    
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.getSession();
+
     if (error || !session) {
       //console.log('❌ No Supabase session found');
       return null;
@@ -321,10 +327,10 @@ export const checkCurrentToken = async () => {
     return {
       valid: true,
       expired: false,
-      session: session
+      session: session,
     };
   } catch (error) {
-    console.error('Error checking current Supabase session:', error);
+    console.error("Error checking current Supabase session:", error);
     return null;
   }
 };
@@ -334,12 +340,11 @@ const validateTokenBeforeRequest = async (): Promise<string | null> => {
   const token = await getSupabaseToken();
 
   if (!token) {
-    console.log('❌ No Supabase session found - redirecting to login');
+    console.log("❌ No Supabase session found - redirecting to login");
 
     handleTokenExpiration();
     return null;
   }
-
 
   return token;
 };
@@ -355,8 +360,6 @@ export const setupTokenMonitoring = (intervalMinutes = 5) => {
       //console.log('🔍 Token monitor: No Supabase session found');
       return;
     }
-
-
 
     // Warn if token expires in less than 10 minutes
     //if (tokenInfo.timeRemaining && tokenInfo.timeRemaining < 600) {
@@ -419,20 +422,24 @@ export const addMarks = async (
       const errorMsg = "Authentication failed - please login again";
       showErrorToast("Authentication Error", errorMsg);
       throw new Error(errorMsg);
-
     }
 
     const errorMessage = parseErrorMessage(responseText, "Failed to add marks");
-    
+
     // Handle specific error cases
-    if (errorMessage.toLowerCase().includes("already exist") || 
-        errorMessage.toLowerCase().includes("duplicate") ||
-        errorMessage.toLowerCase().includes("already added")) {
-      showErrorToast("Marks Already Added", `Marks already exist for student ${student_id}. Please update instead of adding new marks.`);
+    if (
+      errorMessage.toLowerCase().includes("already exist") ||
+      errorMessage.toLowerCase().includes("duplicate") ||
+      errorMessage.toLowerCase().includes("already added")
+    ) {
+      showErrorToast(
+        "Marks Already Added",
+        `Marks already exist for student ${student_id}. Please update instead of adding new marks.`
+      );
     } else {
       showErrorToast("Error Adding Marks", errorMessage);
     }
-    
+
     throw new Error(errorMessage);
   }
 
@@ -445,10 +452,13 @@ export const addMarks = async (
     // console.log('📥 All marks in response:', result.allMarks);
     // console.log('📥 Subject IDs in allMarks:', result.allMarks?.map((r: any) => r.subject_id) || []);
     // console.log('📥 === END ADD MARKS RESPONSE ===');
-    
+
     // Show success message
-    showSuccessToast("Marks Added Successfully!", result.message || `${marks} marks added for student ${student_id}`);
-    
+    showSuccessToast(
+      "Marks Added Successfully!",
+      result.message || `${marks} marks added for student ${student_id}`
+    );
+
     return result;
   } catch (parseError) {
     console.error("addMarks - JSON parse error:", parseError);
@@ -460,7 +470,6 @@ export const addMarks = async (
       variant: "destructive",
     });
     throw new Error(errorMsg);
-
   }
 };
 
@@ -503,7 +512,6 @@ export const getMarks = async (
         variant: "destructive",
       });
       throw new Error(errorMsg);
-
     }
 
     const responseText = await res.text();
@@ -573,7 +581,6 @@ export const updateMarks = async (
         variant: "destructive",
       });
       throw new Error(errorMsg);
-
     }
 
     const errorMessage = parseErrorMessage(
@@ -594,10 +601,13 @@ export const updateMarks = async (
 
   try {
     const result = JSON.parse(responseText);
-    
+
     // Show success message
-    showSuccessToast("Marks Updated Successfully!", result.message || `Marks changed to ${marks} for student ${student_id}`);
-    
+    showSuccessToast(
+      "Marks Updated Successfully!",
+      result.message || `Marks changed to ${marks} for student ${student_id}`
+    );
+
     return result;
   } catch (parseError) {
     console.error("updateMarks - JSON parse error:", parseError);
@@ -609,7 +619,6 @@ export const updateMarks = async (
       variant: "destructive",
     });
     throw new Error(errorMsg);
-
   }
 };
 
@@ -655,7 +664,6 @@ export const deleteMarks = async (
         variant: "destructive",
       });
       throw new Error(errorMsg);
-
     }
 
     const errorMessage = parseErrorMessage(
@@ -679,10 +687,13 @@ export const deleteMarks = async (
     // console.log('📥 Deleted marks:', result.deletedMarks);
     // console.log('📥 All marks in response:', result.allMarks);
     // console.log('📥 === END DELETE MARKS RESPONSE ===');
-    
+
     // Show success message
-    showSuccessToast("Marks Deleted Successfully!", result.message || `Marks removed for student ${student_id}`);
-    
+    showSuccessToast(
+      "Marks Deleted Successfully!",
+      result.message || `Marks removed for student ${student_id}`
+    );
+
     return result;
   } catch (parseError) {
     console.error("deleteMarks - JSON parse error:", parseError);
@@ -694,7 +705,6 @@ export const deleteMarks = async (
       variant: "destructive",
     });
     throw new Error(errorMsg);
-
   }
 };
 
@@ -717,59 +727,62 @@ export const getAllStudents = async (): Promise<GetAllStudentsResponse> => {
   }
 
   //console.log('🎓 Making API request to:', `${API_BASE}/marker/getAllStudents`);
-  
+
   try {
     const res = await fetch(`${API_BASE}/marker/getAllStudents`, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
     });
 
-  // console.log('🎓 Response status:', res.status);
-  // console.log('🎓 Response ok:', res.ok);
+    // console.log('🎓 Response status:', res.status);
+    // console.log('🎓 Response ok:', res.ok);
 
-  if (!res.ok) {
-    const responseText = await res.text();
-    console.error("🎓 Error response:", responseText);
+    if (!res.ok) {
+      const responseText = await res.text();
+      console.error("🎓 Error response:", responseText);
 
-    if (res.status === 401) {
-      console.error("🎓 Unauthorized - handling token expiration");
-      handleTokenExpiration();
-      const errorMsg = 'Unauthorized access';
-      showErrorToast("Authentication Error", errorMsg);
-      throw new Error(errorMsg);
+      if (res.status === 401) {
+        console.error("🎓 Unauthorized - handling token expiration");
+        handleTokenExpiration();
+        const errorMsg = "Unauthorized access";
+        showErrorToast("Authentication Error", errorMsg);
+        throw new Error(errorMsg);
+      }
+
+      const errorMessage = parseErrorMessage(
+        responseText,
+        "Failed to get students"
+      );
+      showErrorToast("Error Loading Student Data", errorMessage);
+
+      throw new Error(errorMessage);
     }
 
-    const errorMessage = parseErrorMessage(responseText, "Failed to get students");
-    showErrorToast("Error Loading Student Data", errorMessage);
-
-    throw new Error(errorMessage);
-  }
-
-  const responseText = await res.text();
-  try {
-    const result = JSON.parse(responseText);
-    // console.log('📥 === GET ALL STUDENTS API RESPONSE ===');
-    // console.log('📥 Full response object:', result);
-    // console.log('📥 NICs array:', result.nics);
-    // console.log('📥 Total count:', result.totalCount);
-    // console.log('📥 === END GET ALL STUDENTS RESPONSE ===');
-    return result;
-  } catch (parseError) {
-    console.error('getAllStudents - JSON parse error:', parseError);
-    console.error('getAllStudents - Raw response:', responseText);
-    const errorMsg = 'Invalid JSON response from server';
-    showErrorToast("Error Loading Student Data", errorMsg);
-    throw new Error(errorMsg);
-  }
+    const responseText = await res.text();
+    try {
+      const result = JSON.parse(responseText);
+      // console.log('📥 === GET ALL STUDENTS API RESPONSE ===');
+      // console.log('📥 Full response object:', result);
+      // console.log('📥 NICs array:', result.nics);
+      // console.log('📥 Total count:', result.totalCount);
+      // console.log('📥 === END GET ALL STUDENTS RESPONSE ===');
+      return result;
+    } catch (parseError) {
+      console.error("getAllStudents - JSON parse error:", parseError);
+      console.error("getAllStudents - Raw response:", responseText);
+      const errorMsg = "Invalid JSON response from server";
+      showErrorToast("Error Loading Student Data", errorMsg);
+      throw new Error(errorMsg);
+    }
   } catch (networkError) {
-    console.error('🎓 Network error in getAllStudents:', networkError);
-    const errorMsg = 'Could not connect to the server. Please check your connection and try again.';
+    console.error("🎓 Network error in getAllStudents:", networkError);
+    const errorMsg =
+      "Could not connect to the server. Please check your connection and try again.";
     showErrorToast("Connection Error", errorMsg);
     throw new Error(errorMsg);
-
   }
 };
 
@@ -790,7 +803,6 @@ export const searchStudents = async (
     console.error("🔍 No Supabase session found - redirecting to login");
     handleTokenExpiration();
     throw new Error("No authentication token found");
-
   }
 
   //console.log('🔍 Making API request to:', `${API_BASE}/marker/searchStudents`);
@@ -856,7 +868,7 @@ export interface IncrementDownloadResponse {
 // Get download count for a specific exam paper
 export const getDownloadCount = async (paperId: string): Promise<number> => {
   const API_BASE_URL =
-    import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+    import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
   try {
     const res = await fetch(`${API_BASE_URL}/api/downloads/${paperId}`, {
@@ -888,7 +900,7 @@ export const incrementDownloadCount = async (
   paperId: string
 ): Promise<number> => {
   const API_BASE_URL =
-    import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+    import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
   try {
     const res = await fetch(
@@ -922,7 +934,7 @@ export const getAllDownloadCounts = async (
   paperIds: string[]
 ): Promise<Record<string, number>> => {
   const API_BASE_URL =
-    import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+    import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
   try {
     const res = await fetch(`${API_BASE_URL}/api/downloads/batch`, {
