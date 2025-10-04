@@ -66,6 +66,7 @@ const App = () => (
           },
         }}
       />
+      <ShadcnToaster />
       <BrowserRouter>
         <Routes>
           <Route path="/invigilator" element={<Invigilator />} />
