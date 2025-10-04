@@ -1,5 +1,16 @@
 import { get } from "http";
 
+/**
+ * Default download count fallback value
+ * This value is used when:
+ * - A paper's download count cannot be fetched from the backend
+ * - Backend API is unavailable or returns an error
+ * - A paper doesn't exist in the download tracking database yet
+ *
+ * You can adjust this value as needed for your application.
+ */
+const DEFAULT_DOWNLOAD_COUNT = 0;
+
 // Authentication is handled through localStorage tokens
 
 export interface LoginResponse {
@@ -702,5 +713,117 @@ export const searchStudents = async (
     console.error("searchStudents - JSON parse error:", parseError);
     console.error("searchStudents - Raw response:", responseText);
     throw new Error("Invalid JSON response from server");
+  }
+};
+
+// Download tracking interfaces
+export interface DownloadTrackingResponse {
+  message: string;
+  download_count: number;
+  paper_id: string;
+}
+
+export interface IncrementDownloadResponse {
+  message: string;
+  new_count: number;
+  paper_id: string;
+}
+
+// Get download count for a specific exam paper
+export const getDownloadCount = async (paperId: string): Promise<number> => {
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/downloads/${paperId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      if (res.status === 404) {
+        // Paper not found in downloads table, return default count
+        return DEFAULT_DOWNLOAD_COUNT;
+      }
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+
+    const data: DownloadTrackingResponse = await res.json();
+    return data.download_count;
+  } catch (error) {
+    console.error("Error fetching download count:", error);
+    // Return default count if fetch fails
+    return DEFAULT_DOWNLOAD_COUNT;
+  }
+};
+
+// Increment download count for a specific exam paper
+export const incrementDownloadCount = async (
+  paperId: string
+): Promise<number> => {
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+
+  try {
+    const res = await fetch(
+      `${API_BASE_URL}/api/downloads/${paperId}/increment`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          paper_id: paperId,
+          timestamp: new Date().toISOString(),
+        }),
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+
+    const data: IncrementDownloadResponse = await res.json();
+    return data.new_count;
+  } catch (error) {
+    console.error("Error incrementing download count:", error);
+    throw error;
+  }
+};
+
+// Get all download counts at once (batch operation)
+export const getAllDownloadCounts = async (
+  paperIds: string[]
+): Promise<Record<string, number>> => {
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/downloads/batch`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        paper_ids: paperIds,
+      }),
+    });
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+
+    const data = await res.json();
+    return data.download_counts;
+  } catch (error) {
+    console.error("Error fetching all download counts:", error);
+    // Return default counts for all papers
+    const defaultCounts: Record<string, number> = {};
+    paperIds.forEach((id) => {
+      defaultCounts[id] = DEFAULT_DOWNLOAD_COUNT;
+    });
+    return defaultCounts;
   }
 };

@@ -106,13 +106,13 @@ const HeroSection = () => {
             <RegisterButton
               label="📄 Submit Answers"
               navigateTo="/submissions"
-              variant="secondary"
+              variant="primary"
               icon="upload"
             />
             <RegisterButton
               label="📚 Exam Papers"
               navigateTo="/exam-papers"
-              variant="tertiary"
+              variant="primary"
               icon="document"
             />
           </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Download,
   FileText,
@@ -8,6 +8,7 @@ import {
   GraduationCap,
   Atom,
   Calculator,
+  TrendingDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +23,14 @@ import {
 } from "@/components/ui/card";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { getAllDownloadCounts, incrementDownloadCount } from "@/services/api";
+
+/**
+ * Default download count fallback value for UI display
+ * This should match the DEFAULT_DOWNLOAD_COUNT in api.ts
+ * Used when download counts cannot be loaded from backend
+ */
+const DEFAULT_DOWNLOAD_COUNT = 0;
 
 interface ExamPaper {
   id: string;
@@ -34,11 +43,15 @@ interface ExamPaper {
   description: string;
   icon: React.ReactNode;
   color: string;
+  downloadCount?: number;
 }
 
 const ExamPapers = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("all");
+  const [downloadCounts, setDownloadCounts] = useState<Record<string, number>>(
+    {}
+  );
 
   const examPapers: ExamPaper[] = [
     {
@@ -123,6 +136,27 @@ const ExamPapers = () => {
 
   const subjects = ["all", "Chemistry", "Mathematics", "Physics"];
 
+  // Fetch all download counts at once (more efficient)
+  useEffect(() => {
+    const fetchAllDownloadCounts = async () => {
+      const paperIds = examPapers.map((paper) => paper.id);
+      try {
+        const counts = await getAllDownloadCounts(paperIds);
+        setDownloadCounts(counts);
+      } catch (error) {
+        console.error("Failed to fetch download counts:", error);
+        // Set default counts for all papers
+        const defaultCounts: Record<string, number> = {};
+        paperIds.forEach((id) => {
+          defaultCounts[id] = DEFAULT_DOWNLOAD_COUNT;
+        });
+        setDownloadCounts(defaultCounts);
+      }
+    };
+
+    fetchAllDownloadCounts();
+  }, []);
+
   const filteredPapers = examPapers.filter((paper) => {
     const matchesSearch =
       paper.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -134,14 +168,40 @@ const ExamPapers = () => {
     return matchesSearch && matchesSubject;
   });
 
-  const handleDownload = (fileName: string, title: string) => {
-    const link = document.createElement("a");
-    link.href = `/exam_papers/${fileName}`;
-    link.download = fileName;
-    link.target = "_blank";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleDownload = async (
+    fileName: string,
+    title: string,
+    paperId: string
+  ) => {
+    try {
+      // Increment download count through backend API
+      const newCount = await incrementDownloadCount(paperId);
+
+      // Update local download count state
+      setDownloadCounts((prev) => ({
+        ...prev,
+        [paperId]: newCount,
+      }));
+
+      // Trigger the actual download
+      const link = document.createElement("a");
+      link.href = `/exam_papers/${fileName}`;
+      link.download = fileName;
+      link.target = "_blank";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Failed to track download:", error);
+      // Still allow download even if tracking fails
+      const link = document.createElement("a");
+      link.href = `/exam_papers/${fileName}`;
+      link.download = fileName;
+      link.target = "_blank";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   };
 
   const getSubjectStats = () => {
@@ -184,15 +244,13 @@ const ExamPapers = () => {
               Kegalle Engineering Students' Society (KESS) to support your
               academic journey. <br/>© All rights reserved.
             </p> */}
-            
             <p className="text-sm text-gray-500 text-center mt-4">
               © All exam papers and related materials are the intellectual
               property of the Kegalle Engineering Students' Society (KESS).
               Unauthorized copying, distribution, or reproduction of these
               resources is strictly prohibited. All rights reserved.
             </p>
-            `
-            {/* Action Buttons */}
+            `{/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-2xl mx-auto">
               <div className="flex flex-col sm:flex-row items-center gap-4">
                 <span className="text-gray-600 font-medium">
@@ -351,6 +409,17 @@ const ExamPapers = () => {
                           {paper.fileSize}
                         </span>
                       </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-500">Downloads:</span>
+                        <div className="flex items-center gap-1">
+                          <TrendingDown className="w-4 h-4 text-green-600" />
+                          <span className="font-medium text-gray-700">
+                            {downloadCounts[paper.id] !== undefined
+                              ? `${downloadCounts[paper.id]}+`
+                              : `${DEFAULT_DOWNLOAD_COUNT}+`}
+                          </span>
+                        </div>
+                      </div>
                       <div className="flex items-center gap-2 text-sm text-gray-500">
                         <FileText className="w-4 h-4" />
                         <span className="truncate">{paper.fileName}</span>
@@ -361,7 +430,7 @@ const ExamPapers = () => {
                   <CardFooter>
                     <Button
                       onClick={() =>
-                        handleDownload(paper.fileName, paper.title)
+                        handleDownload(paper.fileName, paper.title, paper.id)
                       }
                       className="w-full h-12 bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 hover:from-green-700 hover:via-emerald-700 hover:to-teal-700 text-white font-bold shadow-lg hover:shadow-[0_15px_35px_rgba(34,197,94,0.4)] hover:scale-105 hover:-translate-y-1 transition-all duration-300 group border border-white/20"
                     >
