@@ -60,7 +60,7 @@ const ExamPapers = () => {
       subject: "Chemistry",
       part: "Part I",
       year: "2025",
-      fileSize: "2.4 MB",
+      fileSize: "5.4 MB",
       fileName: "Chemistry part I ©2025 KESS Inspire.pdf",
       description:
         "Comprehensive chemistry examination covering organic and inorganic chemistry fundamentals",
@@ -73,7 +73,7 @@ const ExamPapers = () => {
       subject: "Chemistry",
       part: "Part II",
       year: "2025",
-      fileSize: "2.1 MB",
+      fileSize: "8.5 MB",
       fileName: "Chemistry part II ©2025 KESS Inspire.pdf",
       description:
         "Advanced chemistry concepts including physical chemistry and analytical methods",
@@ -86,7 +86,7 @@ const ExamPapers = () => {
       subject: "Mathematics",
       part: "Applied",
       year: "2025",
-      fileSize: "1.8 MB",
+      fileSize: "1.9 MB",
       fileName: "Mathematics Applied ©2025 KESS Inspire.pdf",
       description:
         "Applied mathematics covering calculus, statistics, and real-world problem solving",
@@ -99,7 +99,7 @@ const ExamPapers = () => {
       subject: "Mathematics",
       part: "Pure",
       year: "2025",
-      fileSize: "2.0 MB",
+      fileSize: "522 KB",
       fileName: "Mathematics Pure ©KESS Inspire.pdf",
       description:
         "Pure mathematics including algebra, geometry, and mathematical proofs",
@@ -112,7 +112,7 @@ const ExamPapers = () => {
       subject: "Physics",
       part: "Part I",
       year: "2025",
-      fileSize: "2.3 MB",
+      fileSize: "833 KB",
       fileName: "Pyshics part I ©2025 KESS Inspire.pdf",
       description:
         "Fundamental physics concepts including mechanics, waves, and thermodynamics",
@@ -125,7 +125,7 @@ const ExamPapers = () => {
       subject: "Physics",
       part: "Part II",
       year: "2025",
-      fileSize: "2.5 MB",
+      fileSize: "1.4 MB",
       fileName: "Physics part II ©2025 KESS inspire.pdf",
       description:
         "Advanced physics topics including electromagnetism and quantum mechanics",
