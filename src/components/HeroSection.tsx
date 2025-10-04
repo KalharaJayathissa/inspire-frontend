@@ -5,7 +5,7 @@ import CountdownTimer from "@/components/CountdownTimer";
 import { useNavigate } from "react-router-dom";
 import Countdowntimer2 from "./Countdowntimer2";
 import BackgroundImg from "@/assets/Background.jpg";
-import SubmissionNavigatorButton from "./submission/SubmissionNavigatorButton";
+import RegisterButton from "./RegisterButton";
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -94,23 +94,27 @@ const HeroSection = () => {
             achievements and inspire excellence.
           </p>
 
-          {/* Single Register Now Button */}
-          <div className="flex justify-center items-center pt-2 ">
-            {/* <Button
+          {/* Action Buttons - Register Now, Submit Answers, and Exam Papers */}
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 pt-4">
+            <RegisterButton
+              label="Register Now!"
+              navigateTo="/register"
               onClick={scrollToForm}
-              size="lg"
-              className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-500 hover:to-blue-800 text-white font-semibold text-3xl px-24 py-10 rounded-full shadow-xl hover:shadow-orange-500/25 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 group"
-            >
-              Register Now
-              <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-1 transition-transform" />
-            </Button> */}
-            <Button
-              onClick={scrollToForm}
-              size="lg"
-              className="bg-[#2D620A] backdrop-blur-md text-white-700 font-semibold text-2xl px-24 py-9 rounded-2xl border border-green-600 shadow-lg hover:bg-ice/90 hover:shadow-green-300/40 transition-all duration-300 transform hover:scale-105"
-            >
-              Register Now!
-            </Button>
+              variant="primary"
+              icon="arrow"
+            />
+            <RegisterButton
+              label="📄 Submit Answers"
+              navigateTo="/submissions"
+              variant="primary"
+              icon="upload"
+            />
+            <RegisterButton
+              label="📚 Exam Papers"
+              navigateTo="/exam-papers"
+              variant="primary"
+              icon="document"
+            />
           </div>
 
           {/* Countdown Section */}
@@ -124,8 +128,6 @@ const HeroSection = () => {
               </div> */}
             </div>
           </div>
-
-          <SubmissionNavigatorButton />
         </div>
       </div>
     </section>
