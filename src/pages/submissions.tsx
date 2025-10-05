@@ -565,8 +565,8 @@ export default function SubmissionsPage(): JSX.Element {
                 </div>
               </div>
               <p className="text-sm text-white font-medium">
-                © All right reserved. Kegalle Engineering Students' Society
-                (KESS)
+                © 2025 Kegalle Engineering Students' Society (KESS). All rights
+                reserved.
               </p>
             </div>
           </div>

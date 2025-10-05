@@ -33,13 +33,16 @@ const AboutSection = () => {
   ];
 
   return (
-    <section id="about" className="py-16 sm:py-20 lg:py-32 xl:py-24 relative overflow-hidden bg-gray-50 ">
+    <section
+      id="about"
+      className="py-16 sm:py-20 lg:py-32 xl:py-24 relative overflow-hidden bg-gray-50 "
+    >
       {/* Shared education-themed light green background */}
       <EducationBackground />
 
-  <div className="container mx-w-2xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 ">
-      <Timeline />
-  <div className="max-w-4xl mx-auto mt-12">
+      <div className="container mx-w-2xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 ">
+        <Timeline />
+        <div className="max-w-4xl mx-auto mt-12">
           {/* Section Header */}
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">
@@ -97,16 +100,16 @@ const AboutSection = () => {
             </p>
           </div>
           {/* Logo Carousel with green borders and background-removed images */}
-          
         </div>
       </div>
       <div className="my-4">
-            <LogoCarousel />
+        <LogoCarousel />
       </div>
       <div className="flex items-center justify-center px-4">
-      <p className="text-sm sm:text-base lg:text-lg text-center font-semibold text-gray-900 mb-4 sm:mb-6">
-        © All right reserved. Kegalle Engineering Students' Society (KESS)
-      </p>
+        <p className="text-sm sm:text-base lg:text-lg text-center font-semibold text-gray-900 mb-4 sm:mb-6">
+          © 2025 Kegalle Engineering Students' Society (KESS). All rights
+          reserved.
+        </p>
       </div>
     </section>
   );

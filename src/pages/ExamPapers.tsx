@@ -503,8 +503,7 @@ const ExamPapers = () => {
       {/* Copyright Footer */}
       <div className="text-center py-8 border-t border-green-200/50 bg-white/30 backdrop-blur-sm">
         <p className="text-sm text-gray-700 font-medium tracking-wide">
-          © 2025 All rights reserved. Kegalle Engineering Students' Society
-          (KESS)
+         © 2025 Kegalle Engineering Students' Society (KESS). All rights reserved.
         </p>
       </div>
     </div>
