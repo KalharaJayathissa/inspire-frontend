@@ -43,6 +43,7 @@ interface ExamPaper {
   description: string;
   icon: React.ReactNode;
   color: string;
+  medium: string;
   downloadCount?: number;
 }
 
@@ -66,6 +67,7 @@ const ExamPapers = () => {
         "Comprehensive chemistry examination covering organic and inorganic chemistry fundamentals",
       icon: <Atom className="w-6 h-6" />,
       color: "bg-gradient-to-br from-green-500 to-emerald-600",
+      medium: "සිංහල",
     },
     {
       id: "2",
@@ -79,6 +81,7 @@ const ExamPapers = () => {
         "Advanced chemistry concepts including physical chemistry and analytical methods",
       icon: <Atom className="w-6 h-6" />,
       color: "bg-gradient-to-br from-green-500 to-emerald-600",
+      medium: "සිංහල",
     },
     {
       id: "3",
@@ -92,6 +95,7 @@ const ExamPapers = () => {
         "Applied mathematics covering calculus, statistics, and real-world problem solving",
       icon: <Calculator className="w-6 h-6" />,
       color: "bg-gradient-to-br from-blue-500 to-indigo-600",
+      medium: "සිංහල",
     },
     {
       id: "4",
@@ -105,6 +109,7 @@ const ExamPapers = () => {
         "Pure mathematics including algebra, geometry, and mathematical proofs",
       icon: <Calculator className="w-6 h-6" />,
       color: "bg-gradient-to-br from-blue-500 to-indigo-600",
+      medium: "සිංහල",
     },
     {
       id: "5",
@@ -118,6 +123,7 @@ const ExamPapers = () => {
         "Fundamental physics concepts including mechanics, waves, and thermodynamics",
       icon: <Atom className="w-6 h-6" />,
       color: "bg-gradient-to-br from-purple-500 to-violet-600",
+      medium: "සිංහල",
     },
     {
       id: "6",
@@ -131,6 +137,7 @@ const ExamPapers = () => {
         "Advanced physics topics including electromagnetism and quantum mechanics",
       icon: <Atom className="w-6 h-6" />,
       color: "bg-gradient-to-br from-purple-500 to-violet-600",
+      medium: "සිංහල",
     },
   ];
 
@@ -420,6 +427,12 @@ const ExamPapers = () => {
                           </span>
                         </div>
                       </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-500">Medium:</span>
+                        <span className="font-medium text-gray-700">
+                          {paper.medium}
+                        </span>
+                      </div>
                       <div className="flex items-center gap-2 text-sm text-gray-500">
                         <FileText className="w-4 h-4" />
                         <span className="truncate">{paper.fileName}</span>
@@ -503,7 +516,8 @@ const ExamPapers = () => {
       {/* Copyright Footer */}
       <div className="text-center py-8 border-t border-green-200/50 bg-white/30 backdrop-blur-sm">
         <p className="text-sm text-gray-700 font-medium tracking-wide">
-         © 2025 Kegalle Engineering Students' Society (KESS). All rights reserved.
+          © 2025 Kegalle Engineering Students' Society (KESS). All rights
+          reserved.
         </p>
       </div>
     </div>
