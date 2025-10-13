@@ -15,6 +15,8 @@ function AdminPage() {
       console.log("Fetching students...");
       const data = await getstudents();
       console.log("Students data received:", data);
+      console.log("First student:", data[0]);
+      console.log("First student keys:", data[0] ? Object.keys(data[0]) : "No data");
       setStudents(data);
     } catch (err) {
       console.error("Error fetching students:", err);
