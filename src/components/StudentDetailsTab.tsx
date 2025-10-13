@@ -69,9 +69,9 @@ const StudentDetailsTab: React.FC<StudentDetailsTabProps> = ({
     return { date: formatDate, time: formatTime };
   };
 
-  // Get school name by ID
+  // Get school name - now directly from database
   const getSchoolName = (school_name: string) => {
-    return schools[school_name] || schools[0]; // fallback to 'Unknown'
+    return school_name || "Unknown"; // fallback to 'Unknown' if empty
   };
 
   // Filter and sort students based on selected school and search term (newest first)
