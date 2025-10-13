@@ -13,6 +13,7 @@ interface Student {
   exam_location: string;
   medium: string;
   registered_at: string;
+  school_name: string; // Optional, if available from API
 }
 
 interface StudentDetailsTabProps {
@@ -69,8 +70,8 @@ const StudentDetailsTab: React.FC<StudentDetailsTabProps> = ({
   };
 
   // Get school name by ID
-  const getSchoolName = (schoolId: number, school_name: string) => {
-    return schools[schoolId] || school_name; // fallback to 'Unknown'
+  const getSchoolName = (school_name: string) => {
+    return schools[school_name] || schools[0]; // fallback to 'Unknown'
   };
 
   // Filter and sort students based on selected school and search term (newest first)
@@ -96,7 +97,7 @@ const StudentDetailsTab: React.FC<StudentDetailsTabProps> = ({
           student.subject_stream?.toLowerCase().includes(term) ||
           student.exam_location?.toLowerCase().includes(term) ||
           student.medium?.toLowerCase().includes(term) ||
-          getSchoolName(student.school_id)?.toLowerCase().includes(term)
+          getSchoolName(student.school_name)?.toLowerCase().includes(term)
       );
     }
 
@@ -344,9 +345,9 @@ const StudentDetailsTab: React.FC<StudentDetailsTabProps> = ({
                       <td className="px-4 py-3">
                         <div
                           className="max-w-xs truncate"
-                          title={getSchoolName(student.school_id)}
+                          title={getSchoolName(student.school_name)}
                         >
-                          {getSchoolName(student.school_id)}
+                          {getSchoolName(student.school_name)}
                         </div>
                       </td>
                       <td className="px-4 py-3">
