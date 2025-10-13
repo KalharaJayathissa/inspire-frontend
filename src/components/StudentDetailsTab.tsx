@@ -69,8 +69,8 @@ const StudentDetailsTab: React.FC<StudentDetailsTabProps> = ({
   };
 
   // Get school name by ID
-  const getSchoolName = (schoolId: number) => {
-    return schools[schoolId] || schools[0]; // fallback to 'Unknown'
+  const getSchoolName = (schoolId: number, school_name: string) => {
+    return schools[schoolId] || school_name; // fallback to 'Unknown'
   };
 
   // Filter and sort students based on selected school and search term (newest first)
